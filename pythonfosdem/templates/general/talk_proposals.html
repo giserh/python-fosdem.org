@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        {#
+        {{ fh.render_index_header(_('Talks'), 'general.index') }}
+        #}
+        {% call(item) fh.render_index(records, 'talks',
+                               _('Firstname'), _('Lastname'), _('Email'), _('Title')) %}
+            {{ fh.td(item.firstname) }}
+            {{ fh.td(item.lastname) }}
+            {{ fh.td(item.email) }}
+            {{ fh.td(item.title) }}
+        {% endcall %}
+    </div>
+</div>
+{% endblock %}

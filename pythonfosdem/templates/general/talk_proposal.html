@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{{ _('Submit Your Talk') }}</h2>
+</div>
+{% call fh.render_horizontal_form(form, 'general.talk_proposal', 'talk-proposal-form') %}
+    <div class='row-fluid'>
+        <div class='span12'>
+            {% call fh.fieldset(_('About Your Talk')) %}
+                {{ fh.inline_horizontal_field(form.title, class='span11') }}
+                {{ fh.inline_horizontal_field(form.description, class='span11', rows=4) }}
+            {% endcall %}
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span6">
+            {% call fh.fieldset(_('About Yourself') ) %}
+                {{ fh.render_horizontal_fields(form, 'firstname lastname company') }}
+            {% endcall %}
+        </div>
+        <div class="span6">
+            {% call fh.fieldset(_('Internet')) %}
+                {{ fh.render_horizontal_fields(form, ' twitter email site_url') }}
+            {% endcall %}
+        </div>
+        {{ fh.inline_horizontal_field(form.biography, class='span11', rows=4) }}
+    </div>
+{% endcall %}
+
+{% endblock %}
+
+{% block final_js %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.10.0/jquery.validate.min.js"></script>
+    <script>
+        $(function(){
+         $('#talk-proposal-form').validate(
+         {
+            debug: true,
+            rules: {
+                firstname: {
+                    minlength: 4,
+                    required: true
+                },
+                lastname: {
+                    minlength: 4,
+                    required: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                company: {
+                    minlength: 4,
+                    maxlength: 128,
+                },
+                twitter: {
+                    minlength: 4,
+                    maxlength: 128,
+                },
+                site_url: {
+                    url: true,
+                },
+                title: {
+                    minlength: 4, maxlength: 128,
+                    required: true,
+                },
+                description: {
+                    required: true,
+                },
+                biography: {
+                    required: true,
+                }
+            },
+          highlight: function(label) {
+            console.log(label);
+            $(label).closest('.control-group').addClass('error');
+          },
+          success: function(label) {
+            label
+              .text('OK!').addClass('valid')
+              .closest('.control-group').addClass('success');
+          }
+         });
+        }); // end document.ready    
+    </script>
+{% endblock %}

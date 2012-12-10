@@ -1,0 +1,219 @@
+{% import "bootstrap_wtf.html" as wtf %}
+{%- macro td(content, class=None) -%}
+    {% if class %}
+        <td class="">{{ content }}</td>
+    {% else %}
+        <td>{{ content }}</td>
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro render_index_header(title, endpoint, endpoint_label=None) -%}
+    <h2>{{ title }}
+        <small>   
+            <a href="{{ url_for(endpoint) }}"
+               class="btn btn-primary btn-small"><i class="icon-plus"></i> {{ _('New') if not endpoint_label else endpoint_label }}</a>
+        </small>
+    </h2>
+{%- endmacro -%}
+
+{%- macro render_index(iterable, model) -%}
+<table class="table table-striped table-condensed table-bordered">
+    <thead>
+        <tr>
+            {% for header in varargs %}
+            <th>{{ header }}</th>
+            {% endfor %}
+            <th>{{ _('Created On') }}</th>
+            <!-- <th>{{ _('Actions') }}</th> -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in iterable %}
+            <tr id="{{ model }}-{{item.id}}">
+                {{ caller(item) }}
+                <td>
+                    {{ item.created_on }}
+                </td>
+                {#
+                <td>
+                    {{ render_edit_button(model, item.id) }}
+                    {{ render_delete_button(model, item.id) }}
+                </td>
+                #}
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{%- endmacro -%}
+
+{%- macro render_field_errors(field) %}
+    {%- if field.errors %}
+        {%- for error in field.errors -%}
+        <p class='inline-block'>{{ error }}</p>
+        {%- endfor %}
+    {%- endif %}
+{%- endmacro %}
+
+{%- macro render_field_description(field) %}
+    {%- if field.description %}
+        <p class='inline-block muted'><em>{{field.description }}</em></p>
+    {%- endif %}
+{%- endmacro %}
+
+{%- macro render_email_field(field) -%}
+{{ field.label(class="control-label") }}
+<div class="controls">
+    <div class='input-prepend'>
+        <span class='add-on'><i class="icon-envelope"></i></span>
+        {% if field.placeholder %}
+            {{ field(placeholder=field.placeholder, **kwargs)|safe }}
+        {% else %}
+            {{field(**kwargs)|safe}}
+        {% endif %}
+    </div>
+    {{ render_field_errors(field) }}
+    {{ render_field_description(field) }}
+</div>
+{%- endmacro -%}
+
+{%- macro render_twitter_field(field) -%}
+{{ field.label(class="control-label") }}
+<div class="controls">
+    <div class='input-prepend'>
+        <span class='add-on'>@</span>
+        {% if field.placeholder %}
+            {{ field(placeholder=field.placeholder, **kwargs)|safe }}
+        {% else %}
+            {{field(**kwargs)|safe}}
+        {% endif %}
+    </div>
+    {{ render_field_errors(field) }}
+    {{ render_field_description(field) }}
+</div>
+{%- endmacro -%}
+
+{%- macro render_url_field(field) -%}
+{{ field.label(class="control-label") }}
+<div class="controls preprend">
+    <div class='input-prepend'>
+        <span class='add-on'><i class="icon-home"></i></span>
+        {% if field.placeholder %}
+            {{ field(placeholder=field.placeholder, **kwargs)|safe }}
+        {% else %}
+            {{field(**kwargs)|safe}}
+        {% endif %}
+    </div>
+    {{ render_field_errors(field) }}
+    {{ render_field_description(field) }}
+</div>
+{%- endmacro -%}
+
+{%- macro render_field(field) %}
+    {{ field.label(class="control-label") }}
+    <div class="controls">
+        {% if field.placeholder %}
+            {{ field(placeholder=field.placeholder, **kwargs)|safe }}
+        {% else %}
+            {{field(**kwargs)|safe}}
+        {% endif %}
+        {{ render_field_errors(field) }}
+        {{ render_field_description(field) }}
+    </div>
+{%- endmacro %}
+
+{%- macro inline_horizontal_field(field) %}
+<div class="control-group {% if field.errors %}error{% endif %}">
+    {% if field.type == 'EmailField' %}
+        {{ render_email_field(field) }}
+    {% elif field.type == 'URLField' %}
+        {{ render_url_field(field) }}
+    {% elif field.type == 'TwitterField' %}
+        {{ render_twitter_field(field) }}
+    {% else %}
+        {{ render_field(field, **kwargs) }}
+    {% endif %}
+</div>
+{% endmacro %}
+
+{%- macro model_show(model, record_id, label) -%}
+    <a href="{{ url_for('admin.model_show', model=model, record_id=record_id) }}">{{ label }}</a>
+{%- endmacro -%}
+
+{%- macro render_edit_button(model, record_id) -%}
+    <a href="{{ url_for('admin.%s_edit' % model, record_id=record_id) }}"
+        class="btn btn-danger btn-small"><i class="icon-trash"></i> {{ _('Edit') }}</a>
+
+{%- endmacro -%}
+
+{%- macro render_delete_button(model, record_id) -%}
+    <a href="#{{ '%s-%s' % (model, record_id) }}"
+        data-model="{{ model }}" data-model-id="{{ record_id }}" 
+        class="on-delete btn btn-danger btn-small"><i class="icon-trash"></i> {{ _('Delete') }}</a>
+{%- endmacro -%}
+
+{%- macro render_url(address) %}
+    {%- if address.is_none %}
+        {%- if address.is_http %}
+            <i class='icon-home'></i> <a href='{{ address.url }}'>{{ address.label }}</a>
+        {%- elif address.is_mail %}
+            <i class='icon-envelope'></i> <a href="{{ address.url }}">{{ address.label }}</a>
+        {%- endif %}
+    {%- endif %}
+{%- endmacro %}
+
+
+{%- macro render_gallery(iterable, size='span4') -%}
+    <ul class='thumbnails'>
+        {% for item in iterable %}
+        <li class='{{ size }}'>
+            <div class="thumbnail">
+                {{ caller(item) }}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+{%- endmacro -%}
+
+{%- macro render_urls(urls) -%}
+<ul class='unstyled'>
+{% for url in urls %}
+    <li>{{ form_helpers.render_url(url) }}</li>
+{% endfor %}
+</ul>
+{%- endmacro -%}
+
+{%- macro render_brand(endpoint, title) %}
+<a href="{{ url_for(endpoint) }}" class='brand'>{{title}}</a>
+{%- endmacro %}
+
+{%- macro render_horizontal_fields(form, fields) -%}
+    {% for field in fields.split() %}
+        {{ inline_horizontal_field(form|attr(field)) }}
+    {% endfor %}
+{%- endmacro -%}
+
+{%- macro render_horizontal_form(form, endpoint, id) -%}
+    <form class="form form-horizontal" enctype='multipart/form-data' method="POST" action="{{ url_for(endpoint) }}" id='{{ id }}'>
+        {{ form.csrf_token() }}
+        {{ form.hidden_tag() }}
+
+        {{ wtf.form_errors(form) }}
+
+        {{ caller() }}
+
+        <div class="row-fluid">
+            <div class="form-actions">
+                {{ form.submit(class='btn btn-primary') }}
+            </div>
+        </div>
+
+    </form>
+{%- endmacro -%}
+
+{%- macro fieldset(title=None) -%}
+    <fieldset>
+        <legend>{{ title|default(_('Unknown')) }}</legend>
+        {{ caller() }}
+    </fieldset>
+{%- endmacro -%}

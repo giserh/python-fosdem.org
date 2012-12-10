@@ -1,0 +1,116 @@
+{% extends 'bootstrap_base.html' %}
+{% import 'bootstrap_wtf.html' as wtf %}
+{% import 'form_helpers.html' as fh %}
+
+{% block style_navbar_padding %}
+    <style>
+      html,
+      body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+      }
+
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+      }
+
+      /* Set the fixed height of the footer here */
+      #footer {
+        height: 60px;
+      }
+      #footer {
+        background-color: #f5f5f5;
+      }
+
+      /* Lastly, apply responsive CSS fixes as necessary */
+      @media (max-width: 767px) {
+        #footer {
+          margin-left: -20px;
+          margin-right: -20px;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+      }
+     body {
+        padding-top: 20px;
+        padding-bottom: 40px;
+      }
+
+      /* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 700px;
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 60px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 72px;
+        line-height: 1;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 60px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }    </style>
+{% endblock %}
+
+{% block body_content %}
+<div id='wrap'>
+    <div class="container">
+        <div class="masthead">
+            <ul class="nav nav-pills pull-right">
+              <li class="active"><a href="{{ url_for('general.index') }}">{{ _('Home') }}</a></li>
+              {#
+                <li class="active"><a href="{{ url_for('general.speakers') }}">{{ _('Speakers') }}</a></li>
+                <li><a href="#">{{ _('Schedule') }}</a></li>
+                <li><a href="#">{{ _('Sponsorship') }}</a></li>
+                <li><a href="{{ url_for('general.about_us') }}">{{ _('About') }}</a></li>
+                <!-- <li><a href="#">{{ _('Contact') }}</a></li> -->
+              #}
+            </ul>
+            <h3 class="muted"><a href="{{ url_for('general.index') }}">Python @ FOSDEM 2013</a></h3>
+            <h4>{{ _('3rd February 2013') }} <small>{{ _('Brussels') }}, <strong>{{ _('Belgium') }}</strong></small></h4>
+        </div>
+
+        <hr>
+        {% block content %}{% endblock %}
+
+    </div>        
+</div>
+<!-- 
+<div id='footer'>
+    <div class='container'>
+        <p class='pull-right'><a href='#'>{{ _('Back to top') }}</a></p>
+        <p>&copy; 2012 <a href='http://wirtel.be'>Stephane Wirtel</a></p>
+    </div>
+</div>
+ -->
+{% endblock %}
+
+{% block bootstrap_js_bottom %}
+    {{ super() }}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.string/2.3.0/underscore.string.min.js"></script>
+
+    {% block final_js %}{% endblock %}
+
+{% endblock %}

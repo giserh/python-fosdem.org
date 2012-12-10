@@ -1,0 +1,6 @@
+include Makefile LICENSE AUTHORS COPYRIGHTS README.md
+include pip-requirements.txt dev-requirements.txt
+recursive-include pythonfosdem/templates *
+recursive-exclude pythonfosdem *.pyc
+recursive-exclude pythonfosdem *.pyo
+prune dist

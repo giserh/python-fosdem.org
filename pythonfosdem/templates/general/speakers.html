@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+        <hr>
+        <div class="page-header">
+            <h1>{{ _('The Speakers') }}<small> {{ _('We Bet You Will Learn Something') }}</small></h1>
+        </div>
+        <div class="row-fluid marketing">
+            <div class="span6">
+                {% for speaker in speakers[:1] %}
+                <div class="media">
+                    <a class="pull-left" href="#">
+                        <!-- <img class="media-object img-circle" src="http://placehold.it/96x96"> -->
+                        <img class="media-object img-circle" src="http://l.yimg.com/bt/api/res/1.2/k0blPzIv.nW_csfyeY0nUg--/YXBwaWQ9eW5ld3M7Zmk9aW5zZXQ7aD04NTk7cT04NTt3PTYzMA--/http://l.yimg.com/os/255/2012/11/12/barack-obama11-jpg_171211.jpg" style="height: 96px;">
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading">{{ speaker.name }}</h4>
+                        <p>{{ lipsum(1, min=10, max=30) }}</p>
+
+                        <ul>
+                            <li><a href="">Twitter</a></li>
+                            <li><a href="">Github</a></li>
+                        </ul>
+                    </div>
+                </div>                
+                {% endfor %}
+
+            </div>
+
+            <div class="span6">
+                {% for speaker in speakers[1:] %}
+                <div class="media">
+                    <a class="pull-left" href="#">
+                        <!-- <img class="media-object img-circle" src="http://placehold.it/96x96"> -->
+                        <img class="media-object img-circle" src="http://l.yimg.com/bt/api/res/1.2/k0blPzIv.nW_csfyeY0nUg--/YXBwaWQ9eW5ld3M7Zmk9aW5zZXQ7aD04NTk7cT04NTt3PTYzMA--/http://l.yimg.com/os/255/2012/11/12/barack-obama11-jpg_171211.jpg" style="height: 96px;">
+                    </a>
+                    <div class="media-body">
+                        <h4 class="media-heading">{{ speaker.name }}</h4>
+                        <p>{{ lipsum(1, min=10, max=30) }}</p>
+
+                        <ul>
+                            <li><a href="">Twitter</a></li>
+                            <li><a href="">Github</a></li>
+                        </ul>
+                    </div>
+                </div>                
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}
