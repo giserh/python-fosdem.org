@@ -31,7 +31,9 @@ def to_index():
 @blueprint.route('/')
 def index():
     form = TalkProposalForm()
-    return render_template('general/index.html', form=form)
+    return render_template('general/index.html',
+                           current_nav_link='general.index',
+                           form=form)
 
 
 # NOT YET IMPLEMENTED
@@ -53,7 +55,9 @@ def talk_proposal():
         db.session.commit()
 
         return to_index()
-    return render_template('general/talk_proposal.html', form=form)
+    return render_template('general/talk_proposal.html',
+                           current_nav_link='general.talk_proposal',
+                           form=form)
 
 
 # NOT YET IMPLEMENTED
