@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
 
-from pythonfosdem.extensions import bootstrap
-from pythonfosdem.extensions import babel
-from pythonfosdem.extensions import mail
-from pythonfosdem.extensions import db
-from pythonfosdem.config import DefaultConfig
-
 from pythonfosdem.bp_general import blueprint as bp_general
+from pythonfosdem.config import DefaultConfig
+from pythonfosdem.extensions import babel
+from pythonfosdem.extensions import bootstrap
+from pythonfosdem.extensions import db
+from pythonfosdem.extensions import mail
 
 __all__ = ['App', 'create_app']
 
