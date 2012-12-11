@@ -6,3 +6,4 @@ Flask-Script
 Flask-Uploads
 Flask-WTF
 Flask-SQLAlchemy
+gunicorn
