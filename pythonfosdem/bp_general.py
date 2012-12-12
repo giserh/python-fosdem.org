@@ -10,9 +10,11 @@
 """
 from flask import render_template
 from flask import Blueprint
+from flask import flash
 from flask import redirect
 
 from flask import url_for
+from flask.ext.babel import gettext as _
 
 from pythonfosdem.extensions import db
 # from pythonfosdem.models import Speaker
@@ -52,6 +54,7 @@ def talk_proposal():
         db.session.add(talkProposal)
         db.session.commit()
 
+        flash(_('Thank you for you proposal'), 'info')
         return to_index()
     return render_template('general/talk_proposal.html', form=form)
 
