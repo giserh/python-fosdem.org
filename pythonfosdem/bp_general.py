@@ -8,13 +8,16 @@
     :copyright: (c) 2012 by Stephane Wirtel.
     :license: BSD, see LICENSE for more details.
 """
-from flask import render_template
 from flask import Blueprint
+from flask import flash
 from flask import redirect
-
+from flask import render_template
 from flask import url_for
+from flask.ext.babel import _
+from flask.ext.mail import Message
 
 from pythonfosdem.extensions import db
+from pythonfosdem.extensions import mail
 # from pythonfosdem.models import Speaker
 from pythonfosdem.models import TalkProposal
 from pythonfosdem.forms import TalkProposalForm
@@ -30,10 +33,9 @@ def to_index():
 
 @blueprint.route('/')
 def index():
-    form = TalkProposalForm()
-    return render_template('general/index.html',
-                           current_nav_link='general.index',
-                           form=form)
+    return redirect(url_for('general.talk_proposal'))
+    # return render_template('general/index.html',
+    #                        current_nav_link='general.index')
 
 
 # NOT YET IMPLEMENTED
@@ -51,12 +53,23 @@ def talk_proposal():
         talkProposal = TalkProposal()
         form.populate_obj(talkProposal)
 
+        flash(_('Your proposal will be moderated as soon as possible'))
+
+        message = Message(_('Thank you for your proposal'),
+                          recipients=[talkProposal.email],
+                          bcc=['stephane@wirtel.be']
+                          )
+        message.body = render_template('emails/send_thank.txt', talk=talkProposal)
+        message.html = render_template('emails/send_thank.html', talk=talkProposal)
+
+        mail.send(message)
+
         db.session.add(talkProposal)
         db.session.commit()
 
         return to_index()
     return render_template('general/talk_proposal.html',
-                           current_nav_link='general.talk_proposal',
+                           current_nav_link='general.index',
                            form=form)
 
 

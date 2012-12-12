@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    pythonfosdem.models
+    pythonfosdem.config
     ~~~~~~~~~~~~~~~~~~~
 
     Default configuration for the project
@@ -21,6 +21,8 @@ class DefaultConfig(object):
 
     BOOTSTRAP_USE_CDN = True
     BOOTSTRAP_USE_MINIFIED = True
+
     SECRET_KEY = '894a4d8c281245609a348cacda11813c'
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=1)
     UPLOADED_IMAGES_DEST = os.path.join(os.getcwd(), 'uploads')
+    DEFAULT_MAIL_SENDER = ('Python @ FOSDEM 2013', 'no-reply@python-fosdem.org')

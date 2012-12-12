@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from flask import Flask
 
 from pythonfosdem.bp_general import blueprint as bp_general
@@ -19,8 +20,10 @@ class App(Flask):
 
         self.config.from_object(DefaultConfig())
 
-        if config is None:
+        if config is not None:
             self.config.from_object(config)
+        elif 'PYTHONFOSDEM_SETTINGS' in os.environ:
+            self.config.from_envvar(os.environ['PYTHONFOSDEM_SETTINGS'])
 
         self.configure_blueprints()
         self.configure_extensions()

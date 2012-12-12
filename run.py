@@ -8,10 +8,7 @@
 """
 import os
 DOCUMENT_ROOT = os.path.dirname(__file__)
-if 'VIRTUAL_ENV' in os.environ:
-    ENVIRONMENT = os.environ['VIRTUAL_ENV']
-else:
-    ENVIRONMENT = os.path.join(DOCUMENT_ROOT, 'environment')
+ENVIRONMENT = os.path.join(DOCUMENT_ROOT, 'environment')
 EGG_DIRECTORY = os.path.join(DOCUMENT_ROOT, 'eggs')
 
 activate_this = os.path.join(ENVIRONMENT, 'bin', 'activate_this.py')
@@ -19,15 +16,11 @@ execfile(activate_this, dict(__file__=activate_this))
 
 os.environ['PYTHON_EGG_CACHE'] = EGG_DIRECTORY
 
-import multiprocessing
-from gunicorn.app.base import Application
-from werkzeug.contrib.fixers import ProxyFix
-
 from pf import PythonFosdemApp, count_worker
 
 if __name__ == '__main__':
     options = {
-        'bind': '127.0.0.1:19000',
+        'bind': '127.0.0.1:19001',
         'debug': True,
         'loglevel': 'debug',
         'pidfile': '/tmp/www.python-fosdem.org.pid',
@@ -37,4 +30,3 @@ if __name__ == '__main__':
 
     pf = PythonFosdemApp(options)
     pf.run()
-
