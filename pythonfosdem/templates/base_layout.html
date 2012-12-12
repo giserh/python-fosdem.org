@@ -78,13 +78,16 @@
     <div class="container">
         <div class="masthead">
             <ul class="nav nav-pills pull-right">
-              <li class="active"><a href="{{ url_for('general.index') }}">{{ _('Home') }}</a></li>
+              {% for endpoint, label in [('general.index', _('Home'))] %}
+              <li  class="{% if current_nav_link == endpoint %}active{% endif %}"><a href="{{ url_for(endpoint) }}">{{ label }}</a></li>
+              {% endfor %}
+              <li><a href="http://fosdem.org">{{ _('About FOSDEM') }}</a></li>
               {#
                 <li class="active"><a href="{{ url_for('general.speakers') }}">{{ _('Speakers') }}</a></li>
                 <li><a href="#">{{ _('Schedule') }}</a></li>
                 <li><a href="#">{{ _('Sponsorship') }}</a></li>
                 <li><a href="{{ url_for('general.about_us') }}">{{ _('About') }}</a></li>
-                <!-- <li><a href="#">{{ _('Contact') }}</a></li> -->
+                <li><a href="#">{{ _('Contact') }}</a></li>
               #}
             </ul>
             <h3 class="muted"><a href="{{ url_for('general.index') }}">Python @ FOSDEM 2013</a></h3>
@@ -104,14 +107,13 @@
 
     </div>        
 </div>
-<!-- 
 <div id='footer'>
     <div class='container'>
         <p class='pull-right'><a href='#'>{{ _('Back to top') }}</a></p>
-        <p>&copy; 2012 <a href='http://wirtel.be'>Stephane Wirtel</a></p>
+        <!-- <p>&copy; 2012 <a href='http://wirtel.be'>Stephane Wirtel</a></p> -->
+        <p style='text-align: center;'><a href="http://twitter.com/pythonfosdem">@pythonfosdem</a></p>
     </div>
 </div>
- -->
 {% endblock %}
 
 {% block bootstrap_js_bottom %}
