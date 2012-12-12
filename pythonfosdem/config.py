@@ -21,6 +21,7 @@ class DefaultConfig(object):
 
     BOOTSTRAP_USE_CDN = True
     BOOTSTRAP_USE_MINIFIED = True
+    BOOTSTRAP_GOOGLE_ANALYTICS_ACCOUNT = 'UA-36988900-1'
 
     SECRET_KEY = '894a4d8c281245609a348cacda11813c'
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=1)
