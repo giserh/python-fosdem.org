@@ -95,7 +95,19 @@
               #}
             </ul>
             <h3 class="muted"><a href="{{ url_for('general.index') }}">Python @ FOSDEM 2013</a></h3>
+<<<<<<< HEAD
             <h4>{{ _('Sunday, 3rd February 2013') }} <small>{{ _('Brussels') }}, <strong>{{ _('Belgium') }}</strong></small></h4>
+=======
+            <h4>{{ _('3rd February 2013') }} <small>{{ _('Brussels') }}, <strong>{{ _('Belgium') }}</strong></small></h4>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}">{{ message }}</li>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+>>>>>>> 73a479f4b6fa9974a36a97f524229c6339bb013f
         </div>
 
         <hr>

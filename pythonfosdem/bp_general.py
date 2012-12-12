@@ -53,7 +53,7 @@ def talk_proposal():
         talkProposal = TalkProposal()
         form.populate_obj(talkProposal)
 
-        flash(_('Your proposal will be moderated as soon as possible'))
+        flash(_('Your proposal will be moderated as soon as possible'), 'info')
 
         message = Message(_('Thank you for your proposal'),
                           recipients=[talkProposal.email],
