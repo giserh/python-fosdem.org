@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>{{ _('Talk Proposal for Python @ FOSDEM 2013') }}</title>
+    </head>
+    <body>
+        <h2>{{ _('Dear') }} {{ talk.first_name }} {{ talk.last_name }},</h2>
+
+        <h3>{{ _('Thank you for your proposal') }}</h3>
+
+        <p>{{ _('Please find below the details about your talk') }}</p>
+
+        <p>{{ _('Here is the description of your talk') }}:</p>
+        <ul>
+        <li>{{ _('Entitled') }} {{ talk.title }}</li>
+        <li>{{ _('Description') }}: {{ talk.description }}</li>
+        </ul>
+
+        <p>{{ _('You will receive a notification by email after approval of your talk.') }}</p>
+
+        <p>{{ _('Best Regards') }},</p>
+
+        <p><b>{{ _('The Python@FOSDEM 2013 Team') }}</b></p>
+    </body>
+</html>

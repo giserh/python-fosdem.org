@@ -62,55 +62,73 @@
 {%- endmacro %}
 
 {%- macro render_email_field(field) -%}
-{{ field.label(class="control-label") }}
-<div class="controls">
-    <div class='input-prepend'>
-        <span class='add-on'><i class="icon-envelope"></i></span>
-        {% if field.placeholder %}
-            {{ field(placeholder=field.placeholder, **kwargs)|safe }}
-        {% else %}
-            {{field(**kwargs)|safe}}
-        {% endif %}
+    {% if field.flags.required %}
+        {{ field.label(class="control-label required") }}
+    {% else %}
+        {{ field.label(class="control-label") }}
+    {% endif %}
+
+    <div class="controls">
+        <div class='input-prepend'>
+            <span class='add-on'><i class="icon-envelope"></i></span>
+            {% if field.placeholder %}
+                {{ field(placeholder=field.placeholder, **kwargs)|safe }}
+            {% else %}
+                {{field(**kwargs)|safe}}
+            {% endif %}
+        </div>
+        {{ render_field_errors(field) }}
+        {{ render_field_description(field) }}
     </div>
-    {{ render_field_errors(field) }}
-    {{ render_field_description(field) }}
-</div>
 {%- endmacro -%}
 
 {%- macro render_twitter_field(field) -%}
-{{ field.label(class="control-label") }}
-<div class="controls">
-    <div class='input-prepend'>
-        <span class='add-on'>@</span>
-        {% if field.placeholder %}
-            {{ field(placeholder=field.placeholder, **kwargs)|safe }}
-        {% else %}
-            {{field(**kwargs)|safe}}
-        {% endif %}
+    {% if field.flags.required %}
+        {{ field.label(class="control-label required") }}
+    {% else %}
+        {{ field.label(class="control-label") }}
+    {% endif %}
+    <div class="controls">
+        <div class='input-prepend'>
+            <span class='add-on'>@</span>
+            {% if field.placeholder %}
+                {{ field(placeholder=field.placeholder, **kwargs)|safe }}
+            {% else %}
+                {{field(**kwargs)|safe}}
+            {% endif %}
+        </div>
+        {{ render_field_errors(field) }}
+        {{ render_field_description(field) }}
     </div>
-    {{ render_field_errors(field) }}
-    {{ render_field_description(field) }}
-</div>
 {%- endmacro -%}
 
 {%- macro render_url_field(field) -%}
-{{ field.label(class="control-label") }}
-<div class="controls preprend">
-    <div class='input-prepend'>
-        <span class='add-on'><i class="icon-home"></i></span>
-        {% if field.placeholder %}
-            {{ field(placeholder=field.placeholder, **kwargs)|safe }}
-        {% else %}
-            {{field(**kwargs)|safe}}
-        {% endif %}
+    {% if field.flags.required %}
+        {{ field.label(class="control-label required") }}
+    {% else %}
+        {{ field.label(class="control-label") }}
+    {% endif %}
+    <div class="controls preprend">
+        <div class='input-prepend'>
+            <span class='add-on'><i class="icon-home"></i></span>
+            {% if field.placeholder %}
+                {{ field(placeholder=field.placeholder, **kwargs)|safe }}
+            {% else %}
+                {{field(**kwargs)|safe}}
+            {% endif %}
+        </div>
+        {{ render_field_errors(field) }}
+        {{ render_field_description(field) }}
     </div>
-    {{ render_field_errors(field) }}
-    {{ render_field_description(field) }}
-</div>
 {%- endmacro -%}
 
 {%- macro render_field(field) %}
-    {{ field.label(class="control-label") }}
+    {% if field.flags.required %}
+        {{ field.label(class="control-label required") }}
+    {% else %}
+        {{ field.label(class="control-label") }}
+    {% endif %}
+
     <div class="controls">
         {% if field.placeholder %}
             {{ field(placeholder=field.placeholder, **kwargs)|safe }}
