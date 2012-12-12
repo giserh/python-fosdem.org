@@ -23,7 +23,7 @@ class App(Flask):
         if config is not None:
             self.config.from_object(config)
         elif 'PYTHONFOSDEM_SETTINGS' in os.environ:
-            self.config.from_envvar(os.environ['PYTHONFOSDEM_SETTINGS'])
+            self.config.from_envvar('PYTHONFOSDEM_SETTINGS')
 
         self.configure_blueprints()
         self.configure_extensions()
