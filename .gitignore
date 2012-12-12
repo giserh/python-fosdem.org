@@ -33,3 +33,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+.*.swp
+
+# database
+pythonfosdem/pythonfosdem.db
