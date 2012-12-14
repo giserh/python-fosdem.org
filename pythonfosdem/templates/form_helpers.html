@@ -62,32 +62,10 @@
 {%- endmacro %}
 
 {%- macro render_email_field(field) -%}
-    {% if field.flags.required %}
-        {{ field.label(class="control-label required") }}
-    {% else %}
-        {{ field.label(class="control-label") }}
-    {% endif %}
-
-    <div class="controls">
-        <div class='input-prepend'>
-            <span class='add-on'><i class="icon-envelope"></i></span>
-            {% if field.placeholder %}
-                {{ field(placeholder=field.placeholder, **kwargs)|safe }}
-            {% else %}
-                {{field(**kwargs)|safe}}
-            {% endif %}
-        </div>
-        {{ render_field_errors(field) }}
-        {{ render_field_description(field) }}
-    </div>
+    {{ render_prepend_field(field, 'icon-envelope') }}
 {%- endmacro -%}
 
 {%- macro render_twitter_field(field) -%}
-    {% if field.flags.required %}
-        {{ field.label(class="control-label required") }}
-    {% else %}
-        {{ field.label(class="control-label") }}
-    {% endif %}
     <div class="controls">
         <div class='input-prepend'>
             <span class='add-on'>@</span>
@@ -103,14 +81,13 @@
 {%- endmacro -%}
 
 {%- macro render_url_field(field) -%}
-    {% if field.flags.required %}
-        {{ field.label(class="control-label required") }}
-    {% else %}
-        {{ field.label(class="control-label") }}
-    {% endif %}
+    {{ render_prepend_field(field, 'icon-home') }}
+{%- endmacro -%}
+
+{%- macro render_prepend_field(field, icon_name) %}
     <div class="controls preprend">
         <div class='input-prepend'>
-            <span class='add-on'><i class="icon-home"></i></span>
+            <span class='add-on'><i class="{{ icon_name }}"></i></span>
             {% if field.placeholder %}
                 {{ field(placeholder=field.placeholder, **kwargs)|safe }}
             {% else %}
@@ -120,15 +97,9 @@
         {{ render_field_errors(field) }}
         {{ render_field_description(field) }}
     </div>
-{%- endmacro -%}
+{%- endmacro %}
 
 {%- macro render_field(field) %}
-    {% if field.flags.required %}
-        {{ field.label(class="control-label required") }}
-    {% else %}
-        {{ field.label(class="control-label") }}
-    {% endif %}
-
     <div class="controls">
         {% if field.placeholder %}
             {{ field(placeholder=field.placeholder, **kwargs)|safe }}
@@ -142,6 +113,11 @@
 
 {%- macro inline_horizontal_field(field) %}
 <div class="control-group {% if field.errors %}error{% endif %}">
+    {% if field.flags.required %}
+        {{ field.label(field.label.text + ' *', class="control-label") }}
+    {% else %}
+        {{ field.label(class="control-label") }}
+    {% endif %}
     {% if field.type == 'EmailField' %}
         {{ render_email_field(field) }}
     {% elif field.type == 'URLField' %}
