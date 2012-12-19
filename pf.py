@@ -31,7 +31,7 @@ class PythonFosdemApp(Application):
         return config
 
     def load(self):
-        application = create_app(DefaultConfig)
+        application = create_app()
         application.wsgi_app = ProxyFix(application.wsgi_app)
         return application
 
