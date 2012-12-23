@@ -3,7 +3,8 @@ Flask-Babel
 Flask-Bootstrap
 Flask-Mail
 Flask-Script
+Flask-SQLAlchemy
 Flask-Uploads
 Flask-WTF
-Flask-SQLAlchemy
 gunicorn
+psycopg2

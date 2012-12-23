@@ -4,10 +4,17 @@
     ~~~~~~~~
 
     :copyright: (c) 2012 by Stephane Wirtel.
+    :copyright: (c) 2012 by Christophe Simonis.
     :license: BSD, see LICENSE for more details.
 """
+import os
 from setuptools import setup
 from setuptools import find_packages
+
+HERE = os.path.dirname(__file__)
+
+with open(os.path.join(HERE, 'pip-requirements.txt')) as fp:
+    reqs = fp.readlines()
 
 setup(
     name='PythonFOSDEM',
@@ -17,17 +24,6 @@ setup(
     url='http://github.com/matrixise/python-fosdem.org',
     license='BSD',
     packages=find_packages(),
-    install_requires=[
-        'Flask',
-        'Flask-Babel',
-        'Flask-Bootstrap',
-        'Flask-Mail',
-        'Flask-Script',
-        'Flask-Uploads',
-        'Flask-WTF',
-        'Flask-SQLAlchemy',
-        'gunicorn',
-        'psycopg2',
-    ],
+    install_requires=reqs,
     include_package_data=True,
 )
