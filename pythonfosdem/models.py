@@ -18,6 +18,14 @@ class CommonMixin(object):
         return datetime.date(self.created_at.year, self.created_at.month, self.created_at.day)
 
 
+class Event(db.Model, CommonMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime(timezone=True),
+                           default=datetime.datetime.utcnow,
+                           nullable=False)
+    name = db.Column(db.String(255, convert_unicode=True), nullable=False)
+
+
 class Speaker(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
@@ -28,6 +36,8 @@ class Speaker(db.Model, CommonMixin):
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
                            nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    event = db.relationship('Event', backref=db.backref('speakers', lazy='dynamic'))
 
 
 class Talk(db.Model, CommonMixin):
@@ -42,6 +52,8 @@ class Talk(db.Model, CommonMixin):
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
                            nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
 
 
 class TalkProposal(db.Model, CommonMixin):
@@ -58,3 +70,5 @@ class TalkProposal(db.Model, CommonMixin):
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
                            nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    event = db.relationship('Event', backref=db.backref('talk_proposals', lazy='dynamic'))
