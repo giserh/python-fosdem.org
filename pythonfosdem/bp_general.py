@@ -33,9 +33,9 @@ def to_index():
 
 @blueprint.route('/')
 def index():
-    return redirect(url_for('general.talk_proposal'))
-    # return render_template('general/index.html',
-    #                        current_nav_link='general.index')
+    # return redirect(url_for('general.talk_proposal'))
+    return render_template('general/index.html',
+                           current_nav_link='general.index')
 
 
 # NOT YET IMPLEMENTED
@@ -44,9 +44,14 @@ def index():
 #     speakers = Speaker.query.all()
 #     return render_template('general/speakers.html', speakers=speakers)
 
-
-@blueprint.route('/talk_proposal', methods=['GET', 'POST'])
+@blueprint.route('/talk_proposal')
 def talk_proposal():
+    return render_template('general/closed_talk_proposal.html',
+                           current_nav_link='general.index')
+
+
+#@blueprint.route('/talk_proposal', methods=['GET', 'POST'])
+def open_talk_proposal():
     talkProposal = TalkProposal()
     form = TalkProposalForm(obj=talkProposal)
     if form.validate_on_submit():
