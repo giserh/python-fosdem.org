@@ -36,8 +36,8 @@ class Speaker(db.Model, CommonMixin):
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
                            nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    event = db.relationship('Event', backref=db.backref('speakers', lazy='dynamic'))
+    #    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    #    event = db.relationship('Event', backref=db.backref('speakers', lazy='dynamic'))
 
 
 class Talk(db.Model, CommonMixin):
@@ -52,8 +52,8 @@ class Talk(db.Model, CommonMixin):
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
                            nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
+    #    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    #    event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
 
 
 class TalkProposal(db.Model, CommonMixin):
@@ -70,5 +70,5 @@ class TalkProposal(db.Model, CommonMixin):
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
                            nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    event = db.relationship('Event', backref=db.backref('talk_proposals', lazy='dynamic'))
+    #event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    #event = db.relationship('Event', backref=db.backref('talk_proposals', lazy='dynamic'))
