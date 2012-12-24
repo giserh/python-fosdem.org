@@ -13,6 +13,9 @@ from pythonfosdem.extensions import babel
 from pythonfosdem.extensions import bootstrap
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
+from pythonfosdem.extensions import security
+
+from pythonfosdem.models import user_datastore
 
 __all__ = ['App', 'create_app']
 
@@ -42,6 +45,7 @@ class App(Flask):
         babel.init_app(self)
         mail.init_app(self)
         db.init_app(self)
+        security.init_app(self, user_datastore)
 
     def configure_error_handlers(self):
         @self.errorhandler(404)

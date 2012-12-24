@@ -26,3 +26,8 @@ class DefaultConfig(object):
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=1)
     UPLOADED_IMAGES_DEST = os.path.join(os.getcwd(), 'uploads')
     DEFAULT_MAIL_SENDER = ('Python @ FOSDEM 2013', 'no-reply@python-fosdem.org')
+
+    #SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'       # FIXME cannot log-in with unencrypted password. check how to configure passlib correclty
+    SECURITY_PASSWORD_HASH = 'plaintext'
+    SECURITY_PASSWORD_SALT = 'pepper'
+    SECURITY_EMAIL_SENDER = 'no-reply@python-fosdem.org'

@@ -1,0 +1,13 @@
+About security:
+    change views to add link to /login and  /logout
+    add link to /talk_proposals if user can access it
+    change design of /login
+    do a /u/<user> page
+    do a /profile page (for connected users)
+
+    questions:
+        allow registration? for what purpose?
+
+
+create function to Convert talk proposal to "speaker + talk"
+

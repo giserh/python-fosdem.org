@@ -15,6 +15,7 @@ from flask import render_template
 from flask import url_for
 from flask.ext.babel import _
 from flask.ext.mail import Message
+from flask.ext.security import roles_required
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
@@ -85,7 +86,8 @@ def open_talk_proposal():
 
 
 # NOT YET IMPLEMENTED
-# @blueprint.route('/talk_proposals')
-# def talk_proposals():
-#     records = TalkProposal.query.all()
-#     return render_template('general/talk_proposals.html', records=records)
+@blueprint.route('/talk_proposals')
+@roles_required('admin')
+def talk_proposals():
+    records = TalkProposal.query.all()
+    return render_template('general/talk_proposals.html', records=records)
