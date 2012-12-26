@@ -16,6 +16,7 @@ from flask import url_for
 from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.security import roles_required
+from flask.ext.login import login_required
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
@@ -87,6 +88,7 @@ def open_talk_proposal():
 
 # NOT YET IMPLEMENTED
 @blueprint.route('/talk_proposals')
+@login_required
 @roles_required('admin')
 def talk_proposals():
     records = TalkProposal.query.all()
