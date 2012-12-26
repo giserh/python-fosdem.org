@@ -95,7 +95,7 @@
               {% if current_user.is_authenticated() %}
               <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ current_user.name }} <b class="caret"></b></a>
                   <ul class="dropdown-menu">
-                      <li><a href="{{ url_for('.profile')}}">{{ _('Profile') }}</a></li>
+                      <li><a href="{{ url_for('general.profile')}}">{{ _('Profile') }}</a></li>
                       <li><a href="{{ url_for('security.logout') }}">{{ _('Log out') }}</a></li>
                   </ul>
               </li>
