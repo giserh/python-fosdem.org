@@ -13,10 +13,31 @@ from flask.ext.script import Manager
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
 from pythonfosdem.models import user_datastore
+import pythonfosdem.models
+import pythonfosdem.xml_importer
 
 
 def main():
     manager = Manager(create_app)
+
+    @manager.command
+    def import_data(filename):
+        from collections import OrderedDict
+
+        with open(filename, 'r') as fp:
+            records = OrderedDict()
+            pythonfosdem.xml_importer.parse(records, fp)
+
+            # from pprint import pprint as pp
+            # pp(dict((xml_id, record.to_struct())
+            #    for xml_id, record in records.iteritems()))
+
+            for xml_id, record in records.iteritems():
+                ModelClass = getattr(pythonfosdem.models, record.model)
+                instance = ModelClass(**record.fields)
+                db.session.add(instance)
+
+            db.session.commit()
 
     @manager.command
     def db_populate():

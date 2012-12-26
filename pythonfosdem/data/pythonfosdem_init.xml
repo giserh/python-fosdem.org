@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pf>
+    <record model='Role' id='role_admin'>
+        <field name='name'>admin</field>
+    </record>
+    <record model='Role' id='role_speaker'>
+        <field name='name'>speaker</field>
+    </record>
+    <record model='Role' id='role_jury_member'>
+        <field name='name'>jury_member</field>
+    </record>
+</pf>

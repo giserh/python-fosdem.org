@@ -23,9 +23,20 @@ class CommonMixin(object):
         return datetime.date(self.created_at.year, self.created_at.month, self.created_at.day)
 
 
+class ModelData(db.Model, CommonMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+
+    ref_model = db.Column(db.String(80), nullable=False)
+    ref_id = db.Column(db.Integer, nullable=False)
+
+    created_at = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow, nullable=False)
+
+
 roles_users = db.Table('roles_users',
                        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
                        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+
 
 class Role(db.Model, RoleMixin, CommonMixin):
     id = db.Column(db.Integer(), primary_key=True)
