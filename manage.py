@@ -16,6 +16,7 @@ from pythonfosdem.models import user_datastore
 
 def main():
     manager = Manager(create_app)
+    manager.add_option('-c', '--config', dest='config', required=False)
 
     @manager.command
     def db_populate():

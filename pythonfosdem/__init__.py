@@ -29,7 +29,11 @@ class App(Flask):
         self.config.from_object(DefaultConfig())
 
         if config is not None:
-            self.config.from_object(config)
+            if isinstance(config, basestring):
+                self.config.from_pyfile(config)
+            else:
+                self.config.from_object(config)
+
         if 'PYTHONFOSDEM_SETTINGS' in os.environ:
             self.config.from_pyfile(os.environ['PYTHONFOSDEM_SETTINGS'])
 
