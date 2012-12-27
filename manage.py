@@ -1,15 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    manage.py
-    ~~~~~~~~~
+manage.py
+~~~~~~~~~
 
-    The command line of Python-FOSDEM.org
+The command line of Python-FOSDEM.org
 
-    :copyright: (c) 2012 by Stephane Wirtel.
-    :license: BSD, see LICENSE for more details.
+:copyright: (c) 2012 by Stephane Wirtel.
+:license: BSD, see LICENSE for more details.
+
+Usage:
+    manage.py -h | --help
+    manage.py run [-p PORT | --port=PORT]
+    manage.py drop
+    manage.py create [-d|--drop]
+    manage.py import <FILE>...
+
+Options:
+    -p PORT --port=PORT     Specify on with port the server must run [default: 5000]
+    -d --drop               Drop database before recreating
+
 """
-from flask.ext.script import Manager
+import docopt
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
 import pythonfosdem.tools
@@ -18,10 +30,6 @@ import pythonfosdem.xml_importer
 
 
 def main():
-    manager = Manager(create_app)
-    manager.add_option('-c', '--config', dest='config', required=False)
-
-    @manager.command
     def import_xml(filename):
         with open(filename, 'r') as fp:
             xml_records = pythonfosdem.xml_importer.parse(fp)
@@ -61,15 +69,21 @@ def main():
 
             db.session.commit()
 
-    @manager.command
-    def db_create():
-        db.create_all()
+    app = create_app()
+    with app.test_request_context():
+        opts = docopt.docopt(__doc__)
+        if opts.get('drop') or opts.get('--drop'):
+            db.drop_all()
+        if opts.get('create'):
+            db.create_all()
 
-    @manager.command
-    def db_drop():
-        db.drop_all()
+        if opts.get('import'):
+            for f in opts['<FILE>']:
+                import_xml(f)
 
-    manager.run()
+        if opts.get('run'):
+            app.run(port=int(opts['--port']))
+
 
 if __name__ == '__main__':
     main()

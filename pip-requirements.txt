@@ -1,8 +1,8 @@
+docopt
 Flask
 Flask-Babel
 Flask-Bootstrap
 Flask-Mail
-Flask-Script
 Flask-Security
 Flask-SQLAlchemy
 Flask-Uploads
