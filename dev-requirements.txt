@@ -1,3 +1,1 @@
-yolk
-pip-tools
-sphinx
+pudb

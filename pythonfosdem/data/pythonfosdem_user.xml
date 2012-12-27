@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pf>
+    <record model='User' id='user_stephane_wirtel'>
+        <field name='name'>Stephane Wirtel</field>
+        <field name='password'>secret</field>
+        <field name='email'>stephane@wirtel.be</field>
+        <field name='active'>1</field>
+        <field name='roles'>role_admin,role_jury_member</field>
+    </record>
+    <record model='User' id='user_christophe_simonis'>
+        <field name='name'>Christophe Simonis</field>
+        <field name='password'>secret</field>
+        <field name='email'>christophe@simonis.kn.gl</field>
+        <field name='active'>1</field>
+        <field name='roles'>role_admin,role_jury_member</field>
+    </record>
+    <record model='User' id='user_ludovic_gasc'>
+        <field name='name'>Ludovic Gasc</field>
+        <field name='password'>secret</field>
+        <field name='email'>gmludo@gmail.com</field>
+        <field name='active'>1</field>
+        <field name='roles'>role_jury_member</field>
+    </record>
+    <record model='User' id='user_tarek_ziade'>
+        <field name='name'>Tarek Ziade</field>
+        <field name='password'>secret</field>
+        <field name='email'>tarek@ziade.org</field>
+        <field name='active'>1</field>
+        <field name='roles'>role_jury_member</field>
+    </record>
+</pf>

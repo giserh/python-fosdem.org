@@ -14,7 +14,7 @@ import os
 
 class DefaultConfig(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///pythonfosdem.db'
-    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_ECHO = True
     DEBUG = True
 
     BABEL_DEFAULT_LOCALE = 'fr_BE'
