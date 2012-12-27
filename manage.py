@@ -13,6 +13,7 @@ from flask.ext.script import Manager
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
 from pythonfosdem.models import user_datastore
+import pythonfosdem.tools
 import pythonfosdem.models
 import pythonfosdem.xml_importer
 
@@ -25,17 +26,36 @@ def main():
         from collections import OrderedDict
 
         with open(filename, 'r') as fp:
-            records = OrderedDict()
-            pythonfosdem.xml_importer.parse(records, fp)
+            xml_records = OrderedDict()
+            pythonfosdem.xml_importer.parse(xml_records, fp)
 
-            # from pprint import pprint as pp
-            # pp(dict((xml_id, record.to_struct())
-            #    for xml_id, record in records.iteritems()))
+            for xml_id, xml_record in xml_records.iteritems():
+                instance, proxy = pythonfosdem.tools.create_or_update(xml_record.model, xml_id)
 
-            for xml_id, record in records.iteritems():
-                ModelClass = getattr(pythonfosdem.models, record.model)
-                instance = ModelClass(**record.fields)
+                for field_name, field_value in xml_record.fields.iteritems():
+                    current_field = getattr(instance, field_name)
+
+                    if pythonfosdem.tools.is_relationship(proxy, field_name):
+                        for nested_xml_id in xml_record.fields[field_name].split(','):
+                            ref_model, ref_id, record = pythonfosdem.tools.get_xml_id_or_raise(nested_xml_id)
+
+                            if nested_xml_id.startswith('-'):
+                                current_field.remove(record)
+                            else:
+                                current_field.append(record)
+
+                    else:
+                        setattr(instance, field_name, field_value)
+
                 db.session.add(instance)
+                db.session.flush()
+
+                if not instance.id:
+                    instance_model_data = pythonfosdem.models.ModelData(name=xml_id,
+                                                                        ref_model=xml_record.model,
+                                                                        ref_id=instance.id)
+                    db.session.add(instance_model_data)
+                    db.session.flush()
 
             db.session.commit()
 
