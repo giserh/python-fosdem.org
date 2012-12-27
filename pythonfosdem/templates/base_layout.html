@@ -88,7 +88,11 @@
     <div class="container">
         <div class="masthead">
             <ul class="nav nav-pills pull-right">
-              {% for endpoint, label in [('general.index', _('Home'))] %}
+              {% set links = [('general.index', _('Home'))] %}
+              {% if current_user.has_role('jury_member') %}
+                {% set links = links + [('general.talk_proposals', _('Talk Proposals'))] %}
+              {% endif %}
+              {% for endpoint, label in links %}
               <li class="{% if request.endpoint == endpoint %}active{% endif %}"><a href="{{ url_for(endpoint) }}">{{ label }}</a></li>
               {% endfor %}
 
