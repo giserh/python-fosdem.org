@@ -12,7 +12,6 @@
 from flask.ext.script import Manager
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
-from pythonfosdem.models import user_datastore
 import pythonfosdem.tools
 import pythonfosdem.models
 import pythonfosdem.xml_importer
@@ -23,12 +22,13 @@ def main():
     manager.add_option('-c', '--config', dest='config', required=False)
 
     @manager.command
-    def import_data(filename):
+    def import_xml(filename):
         with open(filename, 'r') as fp:
             xml_records = pythonfosdem.xml_importer.parse(fp)
 
             for xml_id, xml_record in xml_records.iteritems():
                 instance, proxy = pythonfosdem.tools.create_or_update(xml_record.model, xml_id)
+                instance_is_new = instance.id is None
 
                 for field_name, field_value in xml_record.fields.iteritems():
                     current_field = getattr(instance, field_name)
@@ -52,7 +52,7 @@ def main():
                 db.session.add(instance)
                 db.session.flush()
 
-                if not instance.id:
+                if instance_is_new:
                     instance_model_data = pythonfosdem.models.ModelData(name=xml_id,
                                                                         ref_model=xml_record.model,
                                                                         ref_id=instance.id)
@@ -60,46 +60,6 @@ def main():
                     db.session.flush()
 
             db.session.commit()
-
-    @manager.command
-    def db_populate():
-        admin = user_datastore.create_role(name='admin')
-        speaker = user_datastore.create_role(name='speaker')     # noqa
-        jury_member = user_datastore.create_role(name='jury_member')
-
-        stephane = user_datastore.create_user(name=u'Stéphane Wirtel',
-                                              password='1234',
-                                              email='stephane@wirtel.be',
-                                              active=True,
-                                              )
-
-        christophe = user_datastore.create_user(name='Christophe Simonis',
-                                                password='1234',
-                                                email='christophe@simonis.kn.gl',
-                                                active=True,
-                                                )
-
-        tarek = user_datastore.create_user(name='Tarek Ziade',
-                                           password='1234',
-                                           email='tarek@ziade.org',
-                                           active=True)
-
-        ludovic = user_datastore.create_user(name='Ludovic Gasc',
-                                             password='1234',
-                                             email='gmludo@gmail.com',
-                                             active=True)
-
-        # TODO create Ludo and Tarek
-
-        user_datastore.add_role_to_user(stephane, admin)
-        user_datastore.add_role_to_user(christophe, admin)
-
-        user_datastore.add_role_to_user(stephane, jury_member)
-        user_datastore.add_role_to_user(christophe, jury_member)
-        user_datastore.add_role_to_user(tarek, jury_member)
-        user_datastore.add_role_to_user(ludovic, jury_member)
-
-        db.session.commit()
 
     @manager.command
     def db_create():
