@@ -11,7 +11,9 @@
             {{ fh.td(item.firstname) }}
             {{ fh.td(item.lastname) }}
             {{ fh.td(item.email) }}
-            {{ fh.td(item.title) }}
+            <td>
+                <a href="{{ url_for('general.talk_proposal_show', record_id=item.id) }}">{{ item.title }}</a>
+            </td>
         {% endcall %}
     </div>
 </div>

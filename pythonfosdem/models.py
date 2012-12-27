@@ -114,3 +114,18 @@ class TalkProposal(db.Model, CommonMixin):
                            nullable=False)
     #event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     #event = db.relationship('Event', backref=db.backref('talk_proposals', lazy='dynamic'))
+
+
+class TalkProposalVote(db.Model, CommonMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime(timezone=True),
+                           default=datetime.datetime.utcnow,
+                           nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User')
+
+    talk_proposal_id = db.Column(db.Integer, db.ForeignKey('talk_proposal.id'), nullable=False)
+    talk_proposal = db.relationship('TalkProposal')
+
+    value = db.Column(db.Integer, nullable=False, default=False)
