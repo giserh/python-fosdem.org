@@ -28,6 +28,7 @@ __all__ = ['blueprint']
 
 blueprint = Blueprint('general', __name__, template_folder='templates')
 
+
 def to_index():
     return redirect(url_for('general.index'))
 
@@ -37,16 +38,18 @@ def index():
     # return redirect(url_for('general.talk_proposal'))
     return render_template('general/index.html')
 
+
 @blueprint.route('/profile')
 @login_required
 def profile():
-    return 'you are {0.name}'.format(current_user)
+    return render_template('general/user_profile.html', user=current_user)
 
 # NOT YET IMPLEMENTED
 # @blueprint.route('/speakers')
 # def speakers():
 #     speakers = Speaker.query.all()
 #     return render_template('general/speakers.html', speakers=speakers)
+
 
 @blueprint.route('/talk_proposal')
 def talk_proposal():
