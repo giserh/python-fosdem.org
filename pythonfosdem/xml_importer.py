@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from collections import OrderedDict
 from lxml import etree
 
 
@@ -11,14 +12,9 @@ class Record(object):
     def field(self, name, value):
         self.fields[name] = value
 
-    def to_struct(self):
-        return {
-            '_instance_': (self.model, None, self.xml_id),
-            'fields': self.fields.items()
-        }
 
-
-def parse(records, file_like):
+def parse(file_like):
+    records = OrderedDict()
     content = file_like.read()
 
     tree = etree.fromstring(content)
@@ -30,3 +26,5 @@ def parse(records, file_like):
 
         for field in item_record.findall('field'):
             records[xml_id].fields[field.get('name')] = field.text
+
+    return records

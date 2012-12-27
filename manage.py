@@ -23,11 +23,8 @@ def main():
 
     @manager.command
     def import_data(filename):
-        from collections import OrderedDict
-
         with open(filename, 'r') as fp:
-            xml_records = OrderedDict()
-            pythonfosdem.xml_importer.parse(xml_records, fp)
+            xml_records = pythonfosdem.xml_importer.parse(fp)
 
             for xml_id, xml_record in xml_records.iteritems():
                 instance, proxy = pythonfosdem.tools.create_or_update(xml_record.model, xml_id)
@@ -37,9 +34,13 @@ def main():
 
                     if pythonfosdem.tools.is_relationship(proxy, field_name):
                         for nested_xml_id in xml_record.fields[field_name].split(','):
+                            operator = '+'
+                            if nested_xml_id[0] in ('+', '-'):
+                                operator, nested_xml_id = nested_xml_id[0], nested_xml_id[1:]
+
                             ref_model, ref_id, record = pythonfosdem.tools.get_xml_id_or_raise(nested_xml_id)
 
-                            if nested_xml_id.startswith('-'):
+                            if operator == '-':
                                 current_field.remove(record)
                             else:
                                 current_field.append(record)
