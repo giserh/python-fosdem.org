@@ -6,6 +6,7 @@ from flask import render_template
 
 from flask.ext.babel import _
 from flask.ext.mail import Message
+from flask.ext.security.core import current_user
 
 from pythonfosdem.bp_general import blueprint as bp_general
 from pythonfosdem.config import DefaultConfig
@@ -40,6 +41,7 @@ class App(Flask):
         self.configure_blueprints()
         self.configure_extensions()
         self.configure_error_handlers()
+        self.configure_templates()
 
     def configure_blueprints(self):
         self.register_blueprint(bp_general)
@@ -65,6 +67,11 @@ class App(Flask):
 
             mail.send(message)
             return render_template('errors/500.html'), 500
+
+    def configure_templates(self):
+        @self.context_processor
+        def inject_user():
+            return dict(current_user=current_user)
 
 
 def create_app(config=None):

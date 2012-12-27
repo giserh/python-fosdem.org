@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{{ _('User Profile') }}</h2>
+</div>
+<h3>{{ user.name }}</h3>
+{% if user.roles %}
+<ul>
+    {% for role in user.roles %}
+    <li>{{ role.name }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

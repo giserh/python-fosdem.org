@@ -15,8 +15,8 @@ from flask import render_template
 from flask import url_for
 from flask.ext.babel import _
 from flask.ext.mail import Message
-from flask.ext.security import roles_required
-from flask.ext.login import login_required
+from flask.ext.security import roles_accepted, login_required
+from flask.ext.security.core import current_user
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
@@ -36,9 +36,13 @@ def to_index():
 @blueprint.route('/')
 def index():
     # return redirect(url_for('general.talk_proposal'))
-    return render_template('general/index.html',
-                           current_nav_link='general.index')
+    return render_template('general/index.html')
 
+
+@blueprint.route('/profile')
+@login_required
+def profile():
+    return render_template('general/user_profile.html', user=current_user)
 
 # NOT YET IMPLEMENTED
 # @blueprint.route('/speakers')
@@ -46,10 +50,10 @@ def index():
 #     speakers = Speaker.query.all()
 #     return render_template('general/speakers.html', speakers=speakers)
 
+
 @blueprint.route('/talk_proposal')
 def talk_proposal():
-    return render_template('general/closed_talk_proposal.html',
-                           current_nav_link='general.index')
+    return render_template('general/closed_talk_proposal.html')
 
 
 #@blueprint.route('/talk_proposal', methods=['GET', 'POST'])
@@ -76,7 +80,6 @@ def open_talk_proposal():
 
         return to_index()
     return render_template('general/talk_proposal.html',
-                           current_nav_link='general.index',
                            form=form)
 
 
@@ -88,8 +91,7 @@ def open_talk_proposal():
 
 # NOT YET IMPLEMENTED
 @blueprint.route('/talk_proposals')
-@login_required
-@roles_required('admin')
+@roles_accepted('admin', 'jury_member')
 def talk_proposals():
     records = TalkProposal.query.all()
     return render_template('general/talk_proposals.html', records=records)
