@@ -15,7 +15,7 @@ from flask import render_template
 from flask import url_for
 from flask.ext.babel import _
 from flask.ext.mail import Message
-from flask.ext.security import roles_accepted
+from flask.ext.security import roles_accepted, login_required
 from flask.ext.security.core import current_user
 
 from pythonfosdem.extensions import db
@@ -38,6 +38,7 @@ def index():
     return render_template('general/index.html')
 
 @blueprint.route('/profile')
+@login_required
 def profile():
     return 'you are {0.name}'.format(current_user)
 
