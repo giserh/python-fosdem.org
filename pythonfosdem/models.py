@@ -9,6 +9,7 @@
     :license: BSD, see LICENSE for more details.
 """
 import datetime
+import hashlib
 
 from flask.ext.security import RoleMixin
 from flask.ext.security import SQLAlchemyUserDatastore
@@ -60,6 +61,13 @@ class User(db.Model, UserMixin, CommonMixin):
     company = db.Column(db.String(255))
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
+
+    def gravatar(self, size=None, default='identicon'):
+        url = 'http://www.gravatar.com/avatar/{md5}.jpg?d={default}'
+        if size is not None:
+            url += '&s={size}'
+        return url.format(md5=hashlib.md5(self.email).hexdigest, default=default, size=size)
+
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)

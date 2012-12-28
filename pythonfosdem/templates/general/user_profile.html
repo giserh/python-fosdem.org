@@ -5,6 +5,7 @@
     <h2>{{ _('User Profile') }}</h2>
 </div>
 <h3>{{ user.name }}</h3>
+<p><img src="{{ user.gravatar() }}"/></p>
 {% if user.roles %}
 <ul>
     {% for role in user.roles %}
