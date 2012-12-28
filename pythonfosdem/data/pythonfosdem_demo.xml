@@ -1,21 +1,33 @@
 <?xml version='1.0' encoding='utf-8'?>
 <pf>
-    <record model='TalkProposal' id='prop1'>
-        <field name='firstname'>John</field>
-        <field name="lastname">Doe</field>
-        <field name="email">john@doe.foo</field>
-        <field name="company">None</field>
+    <record model='User' id='user_john_doe'>
+        <field name='name'>John Doe</field>
+        <field name='password'>secret</field>
+        <field name='email'>john@doe.com</field>
+        <field name='active'>1</field>
+        <field name='roles'>role_speaker</field>
+        <field name='company'>None</field>
         <field name="biography">blah</field>
-        <field name="title">How to use xml to store data</field>
-        <field name="description">blah blah blah</field>
     </record>
-    <record model='TalkProposal' id='prop2'>
-        <field name='firstname'>Barak</field>
-        <field name="lastname">Obama</field>
+
+    <record model='User' id='user_barak_obama'>
+        <field name='name'>Barak Obama</field>
+        <field name='password'>secret</field>
         <field name="email">president@gov.us</field>
+        <field name='active'>1</field>
+        <field name='roles'>role_speaker</field>
         <field name="company">USA</field>
         <field name="biography">lol</field>
-        <field name="title">How to conquere the world</field>
+    </record>
+
+    <record model='Talk' id='talk1'>
+        <field name='user' reference='user_john_doe' />
+        <field name="name">How to use xml to store data</field>
+        <field name="description">blah blah blah</field>
+    </record>
+    <record model='Talk' id='talk2'>
+        <field name='user' reference='user_barak_obama' />
+        <field name="name">How to conquere the world</field>
         <field name="description">You seriously think I will tell you how?</field>
     </record>
 </pf>

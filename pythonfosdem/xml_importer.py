@@ -25,6 +25,9 @@ def parse(file_like):
         records[xml_id] = Record(model, xml_id)
 
         for field in item_record.findall('field'):
-            records[xml_id].fields[field.get('name')] = field.text
+            if field.get('reference'):
+                records[xml_id].fields[field.get('name')] = {'reference': field.get('reference')}
+            else:
+                records[xml_id].fields[field.get('name')] = field.text
 
     return records

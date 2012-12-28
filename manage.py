@@ -69,7 +69,10 @@ def main():
                 for field_name, field_value in xml_record.fields.iteritems():
                     current_field = getattr(instance, field_name)
 
-                    if pythonfosdem.tools.is_relationship(proxy, field_name):
+                    if isinstance(field_value, dict) and 'reference' in field_value:
+                        ref_model, ref_id, record = pythonfosdem.tools.get_xml_id_or_raise(field_value['reference'])
+                        setattr(instance, field_name, record)
+                    elif pythonfosdem.tools.is_relationship(proxy, field_name):
                         for nested_xml_id in xml_record.fields[field_name].split(','):
                             operator = '+'
                             if nested_xml_id[0] in ('+', '-'):
@@ -81,7 +84,6 @@ def main():
                                 current_field.remove(record)
                             else:
                                 current_field.append(record)
-
                     else:
                         setattr(instance, field_name, field_value)
 
