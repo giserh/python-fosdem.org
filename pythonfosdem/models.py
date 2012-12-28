@@ -66,7 +66,7 @@ class User(db.Model, UserMixin, CommonMixin):
         url = 'http://www.gravatar.com/avatar/{md5}.jpg?d={default}'
         if size is not None:
             url += '&s={size}'
-        return url.format(md5=hashlib.md5(self.email).hexdigest, default=default, size=size)
+        return url.format(md5=hashlib.md5(self.email).hexdigest(), default=default, size=size)
 
 
 # Setup Flask-Security
