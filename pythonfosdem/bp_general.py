@@ -21,6 +21,7 @@ from flask.ext.security.core import current_user
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
 # from pythonfosdem.models import Speaker
+from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkProposal
 from pythonfosdem.forms import TalkProposalForm
 
@@ -93,5 +94,6 @@ def open_talk_proposal():
 @blueprint.route('/talk_proposals')
 @roles_accepted('admin', 'jury_member')
 def talk_proposals():
-    records = TalkProposal.query.all()
+    records = Talk.query.filter_by(state='draft').all()
+    # records = TalkProposal.query.all()
     return render_template('general/talk_proposals.html', records=records)
