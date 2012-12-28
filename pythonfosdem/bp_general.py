@@ -26,7 +26,7 @@ from pythonfosdem.extensions import mail
 # from pythonfosdem.models import Speaker
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkProposal
-from pythonfosdem.models import TalkProposalVote
+from pythonfosdem.models import TalkVote
 from pythonfosdem.forms import TalkProposalForm
 
 __all__ = ['blueprint']
@@ -103,16 +103,16 @@ def talk_proposals():
     return render_template('general/talk_proposals.html', records=records)
 
 
-@blueprint.route('/talk_proposal/<int:record_id>')
+@blueprint.route('/talk/<int:record_id>')
 @roles_accepted('admin', 'jury_member')
-def talk_proposal_show(record_id):
-    talk_proposal = TalkProposal.query.get_or_404(record_id)
-    return render_template('general/talk_proposal_show.html', talk_proposal=talk_proposal)
+def talk_show(record_id):
+    talk = Talk.query.get_or_404(record_id)
+    return render_template('general/talk_show.html', talk=talk)
 
 
-@blueprint.route('/talk_proposal/vote', methods=['POST'])
+@blueprint.route('/talk/vote', methods=['POST'])
 @roles_accepted('jury_member')
-def talk_proposal_vote():
+def talk_vote():
     if not request.form:
         abort(404)
 
@@ -124,18 +124,18 @@ def talk_proposal_vote():
         'none': 0,
     }[vote]
 
-    talk_proposal = TalkProposal.query.get_or_404(record_id)
+    talk = Talk.query.get_or_404(record_id)
 
-    talk_proposal_vote = talk_proposal.current_user_vote
-    if talk_proposal_vote is None:
+    talk_vote = talk.current_user_vote
+    if talk_vote is None:
         # create new one
-        talk_proposal_vote = TalkProposalVote(user=current_user,
-                                              talk_proposal=talk_proposal,
-                                              value=vote_value)
+        talk_vote = TalkVote(user=current_user,
+                             talk=talk,
+                             value=vote_value)
     else:
-        talk_proposal_vote.value = vote_value
+        talk_vote.value = vote_value
 
-    db.session.add(talk_proposal_vote)
+    db.session.add(talk_vote)
     db.session.commit()
 
     return jsonify(success=True, record_id=record_id, vote=vote)

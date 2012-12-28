@@ -104,6 +104,18 @@ class Talk(db.Model, CommonMixin):
     #    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     #    event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
 
+    votes = db.relationship('TalkVote', backref="talk")
+
+    @property
+    def points(self):
+        return sum(v.value for v in self.votes)
+
+    @property
+    def current_user_vote(self):
+        for v in self.votes:
+            if v.user_id == current_user.id:
+                return v
+        return None
 
 class TalkProposal(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -123,20 +135,8 @@ class TalkProposal(db.Model, CommonMixin):
     #event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     #event = db.relationship('Event', backref=db.backref('talk_proposals', lazy='dynamic'))
 
-    votes = db.relationship('TalkProposalVote', backref="talk_proposal")
 
-    @property
-    def points(self):
-        return sum(v.value for v in self.votes)
-
-    @property
-    def current_user_vote(self):
-        for v in self.votes:
-            if v.user_id == current_user.id:
-                return v
-        return None
-
-class TalkProposalVote(db.Model, CommonMixin):
+class TalkVote(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
@@ -145,6 +145,6 @@ class TalkProposalVote(db.Model, CommonMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User')
 
-    talk_proposal_id = db.Column(db.Integer, db.ForeignKey('talk_proposal.id'), nullable=False)
+    talk_id = db.Column(db.Integer, db.ForeignKey('talk.id'), nullable=False)
 
     value = db.Column(db.Integer, nullable=False, default=False)
