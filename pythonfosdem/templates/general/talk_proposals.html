@@ -7,10 +7,16 @@
         {{ fh.render_index_header(_('Talks'), 'general.index') }}
         #}
         {% call(item) fh.render_index(records, 'talks',
-                               _('Speaker'), _('Email'), _('Title')) %}
+                               _('Speaker'), _('Email'), _('Title'), _('Points')) %}
             {{ fh.td(item.user.name) }}
             {{ fh.td(item.user.email) }}
             {{ fh.td(item.name) }}
+            <!--
+            <td>
+                <a href="{{ url_for('general.talk_proposal_show', record_id=item.id) }}">{{ item.title }}</a>
+            </td>
+            -->
+            {{ fh.td(item.points) }}
         {% endcall %}
     </div>
 </div>

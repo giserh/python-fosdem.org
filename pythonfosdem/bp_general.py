@@ -8,10 +8,13 @@
     :copyright: (c) 2012 by Stephane Wirtel.
     :license: BSD, see LICENSE for more details.
 """
+from flask import abort
 from flask import Blueprint
 from flask import flash
+from flask import jsonify
 from flask import redirect
 from flask import render_template
+from flask import request
 from flask import url_for
 from flask.ext.babel import _
 from flask.ext.mail import Message
@@ -23,6 +26,7 @@ from pythonfosdem.extensions import mail
 # from pythonfosdem.models import Speaker
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkProposal
+from pythonfosdem.models import TalkProposalVote
 from pythonfosdem.forms import TalkProposalForm
 
 __all__ = ['blueprint']
@@ -97,3 +101,41 @@ def talk_proposals():
     records = Talk.query.filter_by(state='draft').all()
     # records = TalkProposal.query.all()
     return render_template('general/talk_proposals.html', records=records)
+
+
+@blueprint.route('/talk_proposal/<int:record_id>')
+@roles_accepted('admin', 'jury_member')
+def talk_proposal_show(record_id):
+    talk_proposal = TalkProposal.query.get_or_404(record_id)
+    return render_template('general/talk_proposal_show.html', talk_proposal=talk_proposal)
+
+
+@blueprint.route('/talk_proposal/vote', methods=['POST'])
+@roles_accepted('jury_member')
+def talk_proposal_vote():
+    if not request.form:
+        abort(404)
+
+    record_id = request.form['record_id']
+    vote = request.form['vote']
+    vote_value = {
+        'up': 1,
+        'down': -1,
+        'none': 0,
+    }[vote]
+
+    talk_proposal = TalkProposal.query.get_or_404(record_id)
+
+    talk_proposal_vote = talk_proposal.current_user_vote
+    if talk_proposal_vote is None:
+        # create new one
+        talk_proposal_vote = TalkProposalVote(user=current_user,
+                                              talk_proposal=talk_proposal,
+                                              value=vote_value)
+    else:
+        talk_proposal_vote.value = vote_value
+
+    db.session.add(talk_proposal_vote)
+    db.session.commit()
+
+    return jsonify(success=True, record_id=record_id, vote=vote)
