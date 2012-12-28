@@ -116,18 +116,24 @@ def talk_proposal_vote():
 
     record_id = request.form['record_id']
     vote = request.form['vote']
+    vote_value = {
+        'up': 1,
+        'down': -1,
+        'none': 0,
+    }[vote]
 
     talk_proposal = TalkProposal.query.get_or_404(record_id)
-    has_voted = TalkProposalVote.query.filter_by(user_id=current_user.id,
-                                                 talk_proposal_id=talk_proposal.id).first() is not None
-    if has_voted:
-        return jsonify(success=True, message='already voted')
 
-    talk_proposal_vote = TalkProposalVote(user=current_user,
-                                          talk_proposal=talk_proposal,
-                                          value=int(vote == 'up'))
+    talk_proposal_vote = talk_proposal.current_user_vote
+    if talk_proposal_vote is None:
+        # create new one
+        talk_proposal_vote = TalkProposalVote(user=current_user,
+                                              talk_proposal=talk_proposal,
+                                              value=vote_value)
+    else:
+        talk_proposal_vote.value = vote_value
 
     db.session.add(talk_proposal_vote)
     db.session.commit()
 
-    return jsonify(success=True, record_id=record_id)
+    return jsonify(success=True, record_id=record_id, vote=vote)

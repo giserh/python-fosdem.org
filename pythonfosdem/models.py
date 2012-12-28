@@ -13,6 +13,7 @@ import datetime
 from flask.ext.security import RoleMixin
 from flask.ext.security import SQLAlchemyUserDatastore
 from flask.ext.security import UserMixin
+from flask.ext.security.core import current_user
 
 from pythonfosdem.extensions import db
 
@@ -115,6 +116,18 @@ class TalkProposal(db.Model, CommonMixin):
     #event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     #event = db.relationship('Event', backref=db.backref('talk_proposals', lazy='dynamic'))
 
+    votes = db.relationship('TalkProposalVote', backref="talk_proposal")
+
+    @property
+    def points(self):
+        return sum(v.value for v in self.votes)
+
+    @property
+    def current_user_vote(self):
+        for v in self.votes:
+            if v.user_id == current_user.id:
+                return v
+        return None
 
 class TalkProposalVote(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -126,6 +139,5 @@ class TalkProposalVote(db.Model, CommonMixin):
     user = db.relationship('User')
 
     talk_proposal_id = db.Column(db.Integer, db.ForeignKey('talk_proposal.id'), nullable=False)
-    talk_proposal = db.relationship('TalkProposal')
 
     value = db.Column(db.Integer, nullable=False, default=False)
