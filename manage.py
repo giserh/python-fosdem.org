@@ -22,6 +22,42 @@ def main():
     manager.add_option('-c', '--config', dest='config', required=False)
 
     @manager.command
+    def cleanup_database():
+        from pythonfosdem.models import TalkProposal
+        # from pythonfosdem.models import Speaker
+        from pythonfosdem.models import Talk
+        from pythonfosdem.models import User
+        from pythonfosdem.models import Role
+
+        speaker_role = Role.query.filter_by(name='speaker').first()
+
+        for talk_proposal in TalkProposal.query.all():
+            user = User.query.filter_by(email=talk_proposal.email).first()
+            print "user: %r" % (user,)
+            if user is None:
+                user = User(name=u'{0.firstname} {0.lastname}'.format(talk_proposal),
+                            password='secret',
+                            email=talk_proposal.email,
+                            twitter=talk_proposal.twitter,
+                            site=talk_proposal.site_url,
+                            company=talk_proposal.company,
+                            biography=talk_proposal.biography,
+                            )
+                user.roles.append(speaker_role)
+                db.session.add(user)
+
+            talk = Talk(name=talk_proposal.title,
+                        site=talk_proposal.site_url,
+                        twitter=talk_proposal.twitter,
+                        description=talk_proposal.description,
+                        user=user
+                        )
+
+            db.session.add(talk)
+            db.session.flush()
+        db.session.commit()
+
+    @manager.command
     def import_xml(filename):
         with open(filename, 'r') as fp:
             xml_records = pythonfosdem.xml_importer.parse(fp)

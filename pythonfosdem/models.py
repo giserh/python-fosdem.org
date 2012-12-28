@@ -53,6 +53,10 @@ class User(db.Model, UserMixin, CommonMixin):
     active = db.Column(db.Boolean())
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow, nullable=False)
     confirmed_at = db.Column(db.DateTime())
+    biography = db.Column(db.Text)
+    twitter = db.Column(db.String(255))
+    site = db.Column(db.String(255))
+    company = db.Column(db.String(255))
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
 
@@ -72,6 +76,7 @@ class Speaker(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
     short_bio = db.Column(db.Text, nullable=False)
+    email = db.Column(db.String(255), nullable=False)
     twitter = db.Column(db.String(255))
     site = db.Column(db.String(255))
     company = db.Column(db.String(255))
@@ -85,12 +90,13 @@ class Speaker(db.Model, CommonMixin):
 class Talk(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
-    speaker_id = db.Column(db.Integer, db.ForeignKey('speaker.id'), nullable=False)
-    speaker = db.relationship('Speaker', backref=db.backref('talks', lazy='dynamic'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('talks', lazy='dynamic'))
     description = db.Column(db.Text, nullable=False)
     site = db.Column(db.String(255))
     twitter = db.Column(db.String(255))
     approved = db.Column(db.Boolean)
+    state = db.Column(db.String(16), default='draft')
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
                            nullable=False)
@@ -112,5 +118,6 @@ class TalkProposal(db.Model, CommonMixin):
     created_at = db.Column(db.DateTime(timezone=True),
                            default=datetime.datetime.utcnow,
                            nullable=False)
+    # active = db.Column(db.Boolean, default=True)
     #event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     #event = db.relationship('Event', backref=db.backref('talk_proposals', lazy='dynamic'))

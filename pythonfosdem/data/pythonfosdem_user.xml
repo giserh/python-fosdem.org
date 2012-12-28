@@ -5,6 +5,8 @@
         <field name='password'>secret</field>
         <field name='email'>stephane@wirtel.be</field>
         <field name='active'>1</field>
+        <field name='twitter'>@matrixise</field>
+        <field name='site'>http://wirtel.be</field>
         <field name='roles'>role_admin,role_jury_member</field>
     </record>
     <record model='User' id='user_christophe_simonis'>
@@ -12,6 +14,7 @@
         <field name='password'>secret</field>
         <field name='email'>christophe@simonis.kn.gl</field>
         <field name='active'>1</field>
+        <field name='twitter'>@KangOl</field>
         <field name='roles'>role_admin,role_jury_member</field>
     </record>
     <record model='User' id='user_ludovic_gasc'>
@@ -19,6 +22,7 @@
         <field name='password'>secret</field>
         <field name='email'>gmludo@gmail.com</field>
         <field name='active'>1</field>
+        <field name='twitter'>@GMLudo</field>
         <field name='roles'>role_jury_member</field>
     </record>
     <record model='User' id='user_tarek_ziade'>
@@ -26,6 +30,8 @@
         <field name='password'>secret</field>
         <field name='email'>tarek@ziade.org</field>
         <field name='active'>1</field>
+        <field name='twitter'>@tarek_ziade</field>
+        <field name='site'>http://ziade.org</field>
         <field name='roles'>role_jury_member</field>
     </record>
 </pf>
