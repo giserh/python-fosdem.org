@@ -85,6 +85,22 @@
       form p.checkbox label {
           display: inline;
       }
+
+    .triangle {
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        margin: -5px;
+        float: right;
+    }
+    .triangle.success {
+        border-top: 15px solid #468847;
+    }
+    .triangle.important {
+        border-top: 15px solid #B94A48;
+    }
+
+
     </style>
 {% endblock %}
 
@@ -136,7 +152,7 @@
         <hr>
         {% block content %}{% endblock %}
 
-    </div>        
+    </div>
 </div>
 <div id='footer'>
     <div class='container'>
