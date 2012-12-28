@@ -11,16 +11,19 @@ The command line of Python-FOSDEM.org
 
 Usage:
     manage.py -h | --help
-    manage.py run [-p PORT | --port=PORT]
-    manage.py drop
-    manage.py create [-d|--drop]
-    manage.py import <FILE>...
+    manage.py [options] run [-p PORT | --port=PORT]
+    manage.py [options] drop
+    manage.py [options] create [-d|--drop]
+    manage.py [options] import <FILE>...
 
 Options:
+    -c CONFIG_FILE          Config file to load
     -p PORT --port=PORT     Specify on with port the server must run [default: 5000]
     -d --drop               Drop database before recreating
 
 """
+import os
+import sys
 import docopt
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
@@ -70,8 +73,16 @@ def main():
             db.session.commit()
 
     app = create_app()
+
+    opts = docopt.docopt(__doc__)
+    if opts.get('-c'):
+        c = os.path.realpath(opts['-c'])
+        try:
+            app.config.from_pyfile(c)
+        except IOError, e:
+            sys.exit(e)
+
     with app.test_request_context():
-        opts = docopt.docopt(__doc__)
         if opts.get('drop') or opts.get('--drop'):
             db.drop_all()
         if opts.get('create'):
