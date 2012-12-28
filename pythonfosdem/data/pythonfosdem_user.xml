@@ -7,7 +7,7 @@
         <field name='active'>1</field>
         <field name='twitter'>@matrixise</field>
         <field name='site'>http://wirtel.be</field>
-        <field name='roles'>role_admin,role_jury_member</field>
+        <field name='roles'>role_admin,role_jury_member,role_jury_president</field>
     </record>
     <record model='User' id='user_christophe_simonis'>
         <field name='name'>Christophe Simonis</field>
