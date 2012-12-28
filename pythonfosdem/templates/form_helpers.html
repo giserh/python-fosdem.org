@@ -130,6 +130,28 @@
 </div>
 {% endmacro %}
 
+{%- macro render_field_with_errors(field) -%}
+  <p>
+    {{ field.label }} {{ field(**kwargs)|safe }}
+    {% if field.errors %}
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {% for error in field.errors %}
+        <p class='inline-block'>{{ error }}</p>
+      {% endfor %}
+      </div>
+    {% endif %}
+  </p>
+{%- endmacro -%}
+
+{%- macro render_submit_button(form, classes="") -%}
+    <p>
+        {{ form.submit(class="btn btn-primary " + classes) }}
+        {% if caller %}{{ caller() }}{% endif %}
+    </p>
+{%- endmacro -%}
+
+
 {%- macro model_show(model, record_id, label) -%}
     <a href="{{ url_for('admin.model_show', model=model, record_id=record_id) }}">{{ label }}</a>
 {%- endmacro -%}

@@ -1,5 +1,13 @@
 #!/usr/bin/env python
-from collections import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:
+    import sys
+    if sys.python_version[:2] < (2, 7):
+        from ordereddict import OrderedDict     # noqa
+    else:
+        raise
+
 from lxml import etree
 
 
@@ -25,6 +33,9 @@ def parse(file_like):
         records[xml_id] = Record(model, xml_id)
 
         for field in item_record.findall('field'):
-            records[xml_id].fields[field.get('name')] = field.text
+            if field.get('reference'):
+                records[xml_id].fields[field.get('name')] = {'reference': field.get('reference')}
+            else:
+                records[xml_id].fields[field.get('name')] = field.text
 
     return records

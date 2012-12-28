@@ -9,4 +9,5 @@ Flask-Uploads
 Flask-WTF
 gunicorn
 lxml
+ordereddict
 psycopg2

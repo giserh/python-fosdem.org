@@ -9,4 +9,7 @@
     <record model='Role' id='role_jury_member'>
         <field name='name'>jury_member</field>
     </record>
+    <record model='Role' id='role_jury_president'>
+        <field name='name'>jury_president</field>
+    </record>
 </pf>

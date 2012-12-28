@@ -7,11 +7,16 @@
         {{ fh.render_index_header(_('Talks'), 'general.index') }}
         #}
         {% call(item) fh.render_index(records, 'talks',
-                               _('Firstname'), _('Lastname'), _('Email'), _('Title')) %}
-            {{ fh.td(item.firstname) }}
-            {{ fh.td(item.lastname) }}
-            {{ fh.td(item.email) }}
-            {{ fh.td(item.title) }}
+                               _('Speaker'), _('Email'), _('Title'), _('Points')) %}
+            {{ fh.td(item.user.name) }}
+            {{ fh.td(item.user.email) }}
+            <td>
+                <a href="{{ url_for('general.talk_show', record_id=item.id) }}">{{ item.name }}</a>
+            </td>
+            {% set klass = {-1: 'important', 1: 'success', 0: ''}.get(item.current_user_vote.value, '') %}
+            <td style="text-align:center;"><span class="label label-inverse">{{ item.points }}</span>
+                <span class="triangle {{ klass }}"></span>
+            </td>
         {% endcall %}
     </div>
 </div>

@@ -19,6 +19,8 @@ class DefaultConfig(object):
 
     BABEL_DEFAULT_LOCALE = 'fr_BE'
 
+    MAIL_PORT = 1025    # MailCatcher
+
     BOOTSTRAP_USE_CDN = True
     BOOTSTRAP_USE_MINIFIED = True
 
@@ -31,3 +33,4 @@ class DefaultConfig(object):
     SECURITY_PASSWORD_HASH = 'plaintext'
     SECURITY_PASSWORD_SALT = 'pepper'
     SECURITY_EMAIL_SENDER = 'no-reply@python-fosdem.org'
+    SECURITY_RECOVERABLE = True
