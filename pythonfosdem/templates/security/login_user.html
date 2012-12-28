@@ -2,31 +2,15 @@
 
 {% block content %}
 
-{% from "security/_macros.html" import render_field %}
-
-{% macro render_field_with_errors(field) %}
-  <p>
-    {{ field.label }} {{ field(**kwargs)|safe }}
-    {% if field.errors %}
-      <div class="alert alert-error">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-      {% for error in field.errors %}
-        <p>{{ error }}</p>
-      {% endfor %}
-      </div>
-    {% endif %}
-  </p>
-{% endmacro %}
-
-
-
-<form action="{{ url_for_security('login') }}" method="POST" name="login_user_form" id='login_user_form'>
-    <h2>{{ _('Please Sign in') }}</h2>
+<form action="{{ url_for_security('login') }}" method="POST" name="login_user_form" class="security">
+    <h2>{{ _('Please Log in') }}</h2>
   {{ login_user_form.hidden_tag() }}
-  {{ render_field_with_errors(login_user_form.email, class='input-block-level') }}
-  {{ render_field_with_errors(login_user_form.password, class='input-block-level') }}
-  {{ render_field_with_errors(login_user_form.remember) }}
-  {{ render_field(login_user_form.submit, class="btn btn-large btn-primary") }}
+  {{ fh.render_field_with_errors(login_user_form.email, class='input-block-level') }}
+  {{ fh.render_field_with_errors(login_user_form.password, class='input-block-level') }}
+  <p class="checkbox">{{ login_user_form.remember()|safe }} {{ login_user_form.remember.label }}</p>
+  {% call fh.render_submit_button(login_user_form, 'btn-large') %}
+      <a href="{{ url_for_security('forgot_password') }}" style="margin-left:3em;">Forgot your password?</a>
+  {% endcall %}
 </form>
 
 {% endblock %}
