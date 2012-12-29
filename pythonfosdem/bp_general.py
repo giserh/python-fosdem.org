@@ -23,7 +23,6 @@ from flask.ext.security.core import current_user
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
-# from pythonfosdem.models import Speaker
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkProposal
 from pythonfosdem.models import TalkVote
@@ -60,11 +59,20 @@ def profile():
                            user=current_user,
                            form=form)
 
-# NOT YET IMPLEMENTED
-# @blueprint.route('/speakers')
-# def speakers():
-#     speakers = Speaker.query.all()
-#     return render_template('general/speakers.html', speakers=speakers)
+@blueprint.route('/u/<int:user_id>')
+@blueprint.route('/u/<int:user_id>-<slug>')
+def user(user_id, slug=''):
+    user = User.query.get_or_404(user_id)
+    if user.slug != slug:
+        return redirect(url_for('general.user', user_id=user.id, slug=user.slug))
+    return render_template('general/user.html', user=user)
+
+
+@blueprint.route('/speakers')
+def speakers():
+    #speakers = User.query.filter(User.talks.isnot(None))       # TODO make it works!
+    speakers = set(t.user for t in Talk.query.filter_by(state='validated'))
+    return render_template('general/speakers.html', speakers=speakers)
 
 
 @blueprint.route('/talk_proposal')

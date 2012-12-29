@@ -15,9 +15,11 @@ from flask.ext.security import RoleMixin
 from flask.ext.security import SQLAlchemyUserDatastore
 from flask.ext.security import UserMixin
 from flask.ext.security.core import current_user
+from werkzeug import cached_property
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import images_set
+from pythonfosdem.tools import slugify
 
 
 class CommonMixin(object):
@@ -68,12 +70,24 @@ class User(db.Model, UserMixin, CommonMixin):
     def url(self):
         return images_set.url(self.photo_path)
 
+    talks = db.relationship("Talk",
+                            primaryjoin="and_(User.id == Talk.user_id, "
+                                        "     Talk.state == 'validated')",
+                            #backref=db.backref('user', lazy='joined')
+                            )
+    @cached_property
+    def is_speaker(self):
+        return bool(self.talks)
+
     def gravatar(self, size=None, default='identicon'):
         url = 'http://www.gravatar.com/avatar/{md5}.jpg?d={default}'
         if size is not None:
             url += '&s={size}'
         return url.format(md5=hashlib.md5(self.email).hexdigest(), default=default, size=size)
 
+    @cached_property
+    def slug(self):
+        return slugify(self.name)
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
@@ -106,7 +120,7 @@ class Talk(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('talks', lazy='dynamic'))
+    user = db.relationship('User', backref=db.backref('all_talks', lazy='dynamic'))
     description = db.Column(db.Text, nullable=False)
     site = db.Column(db.String(255))
     twitter = db.Column(db.String(255))
