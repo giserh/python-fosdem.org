@@ -48,7 +48,13 @@ def index():
 @blueprint.route('/profile', methods=['POST', 'GET'])
 @login_required
 def profile():
-    form = UserProfileForm()
+    form = UserProfileForm(obj=current_user)
+    if form.validate_on_submit():
+        form.populate_obj(current_user)
+        db.session.add(current_user)
+        db.session.commit()
+        flash(_('Your profile has been updated !'))
+        return redirect(url_for('general.profile'))
     return render_template('general/user_profile.html',
                            user=current_user,
                            form=form)
