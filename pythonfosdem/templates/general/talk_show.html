@@ -1,12 +1,16 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="page-header">
-    <h2>{{ _('Talk') }}</h2>
+<div class='row'>
+    <div class='span12'>
+        <div class="page-header">
+            <h2>{{ _('Talk') }} / {{ talk.name }} <small>by {{ talk.user.name }}</small></h2>
+        </div>
+    </div>
 </div>
 <div class='row'>
     {% if current_user.has_role('jury_member') %}
-        {% set size_span = 'span9' %}
+        {% set size_span = 'span10' %}
     {% else %}
         {% set size_span = 'span12' %}
     {% endif %}
@@ -25,6 +29,10 @@
                 <td><pre>{{ talk.description }}</pre></td>
             </tr>
             <tr>
+                <th>Email</th>
+                <td>{{ talk.user.email }}</td>
+            </tr>
+            <tr>
                 <th>Site</th>
                 <td>{{ talk.site_url }}</td>
             </tr>
@@ -39,7 +47,7 @@
         </table>
     </div>
     {% if current_user.has_role('jury_member') %}
-    <div class='span3'>
+    <div class='span2'>
         {% if talk.current_user_vote.value == 1 %}
             {% set btns = ('btn-success', 'btn-inverse') %}
             {% set votes = ('none', '') %}
@@ -59,7 +67,7 @@
                 data-model-id="{{ talk.id }}" data-vote='{{ votes[1] }}'
                 class="on-vote vote-down btn {{ btns[1] }} btn-small"><i class="icon-arrow-down"></i> {{ _('Vote Down') }} </a>
         </div>
-        {% if current_user.has_role('jury_president') %}
+        {% if current_user.has_role('jury_president') and talk.votes %}
         <div class='well well-small'>
             <ol>
             {% for vote in talk.votes %}

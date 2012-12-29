@@ -150,3 +150,21 @@ def talk_vote():
     db.session.commit()
 
     return jsonify(success=True, record_id=record_id, vote=vote)
+
+
+@blueprint.route('/talks/dashboard')
+@roles_accepted('jury_member', 'jury_president')
+def talks_dashboard():
+    result = db.session.execute("""
+        SELECT t.id FROM "user" u, talk t
+        LEFT OUTER JOIN (SELECT talk_id, value, user_id FROM talk_vote WHERE user_id = :user_id) tv
+        ON t.id = tv.talk_id
+        WHERE COALESCE(tv.value, 0) = 0
+        AND u.id = t.user_id
+        ORDER BY u.name
+        """,
+        {'user_id': current_user.id}
+    )
+    records = [Talk.query.get(r[0]) for r in result]
+
+    return render_template('general/talks_dashboard.html', records=records)

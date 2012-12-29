@@ -1,29 +1,15 @@
-{% extends 'layout.html' %}
+{% extends 'base_layout.html' %}
 
 {% block content %}
 <div class="row">
     <div class="span12">
         <div class="page-header">
-            <h1>{{ _('Talk Proposals') }}
-                <small>
-            {% if records|length == 0 %}
-                There is no talks !
-            {% elif records|length == 1 %}
-                There is one talk !
-            {% else %}
-                 There are {{ records|length }} talk(s) !
-            {% endif %}
-            </small>
-            </h1>
+            <h1>{{ _('Talk Dashboard') }} <small>You have {{ records|length }} talk(s) without vote !</small></h1>
         </div>
     </div>
 </div>
-
-<div class="row">
-    <div class="span12">
-        {#
-        {{ fh.render_index_header(_('Talks'), 'general.index') }}
-        #}
+<div class='row'>
+    <div class='span12'>
         {% call(item) fh.render_index(records, 'talks',
                                _('Speaker'), _('Title'), _('Points')) %}
             {{ fh.td(item.user.name) }}
