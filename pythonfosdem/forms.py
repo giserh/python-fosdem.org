@@ -10,11 +10,11 @@
 """
 import flask.ext.wtf
 from flask.ext.wtf import Form
-from flask.ext.wtf import TextField
-from flask.ext.wtf import TextAreaField
-from flask.ext.wtf import SubmitField
-from flask.ext.wtf import Required
 from flask.ext.wtf import Length
+from flask.ext.wtf import Required
+from flask.ext.wtf import SubmitField
+from flask.ext.wtf import TextAreaField
+from flask.ext.wtf import TextField
 from flask.ext.wtf.html5 import EmailField
 from flask.ext.wtf.html5 import URLField
 from flask.ext.babel import lazy_gettext
@@ -107,3 +107,44 @@ class TalkProposalForm(Form):
     )
 
     submit = SubmitField(lazy_gettext(u'Submit Your Talk'))
+
+
+class UserProfileForm(Form):
+    name = TextField(
+        lazy_gettext(u'Name'),
+        validators=[Required(), Length(min=4, max=255)],
+        placeholder=lazy_gettext(u'Your Name'),
+    )
+
+    password = TextField(
+        lazy_gettext(u'Password'),
+        validators=[Length(min=4, max=255)],
+        placeholder=lazy_gettext(u'Your password')
+    )
+
+    twitter = TwitterField(
+        lazy_gettext(u'Twitter'),
+        validators=[Length(min=4, max=128)],
+        placeholder=lazy_gettext(u'@twitter_account')
+    )
+
+    site = URLField(
+        lazy_gettext(u'Site'),
+        validators=[Length(min=4, max=255)],
+        description=lazy_gettext(u'Your website or this one of the project'),
+        placeholder=lazy_gettext(u'http://project_url')
+    )
+
+    company = TextField(
+        lazy_gettext(u'Company / Organization'),
+        validators=[Length(min=4, max=128)],
+        placeholder=lazy_gettext(u'Your company or organization')
+    )
+
+    biography = TextAreaField(
+        lazy_gettext(u'Biography'),
+        validators=[Required()],
+        placeholder=lazy_gettext(u'Could you add some lines about yourself?')
+    )
+
+    submit = SubmitField(lazy_gettext(u'Save'))

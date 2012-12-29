@@ -28,6 +28,7 @@ from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkProposal
 from pythonfosdem.models import TalkVote
 from pythonfosdem.forms import TalkProposalForm
+from pythonfosdem.forms import UserProfileForm
 
 __all__ = ['blueprint']
 
@@ -44,10 +45,13 @@ def index():
     return render_template('general/index.html')
 
 
-@blueprint.route('/profile')
+@blueprint.route('/profile', methods=['POST', 'GET'])
 @login_required
 def profile():
-    return render_template('general/user_profile.html', user=current_user)
+    form = UserProfileForm()
+    return render_template('general/user_profile.html',
+                           user=current_user,
+                           form=form)
 
 # NOT YET IMPLEMENTED
 # @blueprint.route('/speakers')

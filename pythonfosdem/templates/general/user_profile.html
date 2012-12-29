@@ -1,17 +1,30 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="page-header">
-    <h2>{{ _('User Profile') }}</h2>
+<div class='row'>
+    <div class='span3'>
+        <h3>{{ user.name }}</h3>
+        <p><img src="{{ user.gravatar() }}"/></p>
+        {% if user.roles %}
+        <ul>
+            {% for role in user.roles %}
+            <li>{{ role.name }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <div class='span9'>
+        {% call fh.render_horizontal_form(form, 'general.profile') %}
+            {% call fh.fieldset(_('Information')) %}
+                {{ fh.render_horizontal_fields(form, 'name password company biography') }}
+
+            {% endcall %}
+
+            {% call fh.fieldset(_('Internet')) %}
+                {{ fh.render_horizontal_fields(form, 'twitter site') }}
+            {% endcall %}
+        {% endcall %}
+    </div>
 </div>
-<h3>{{ user.name }}</h3>
-<p><img src="{{ user.gravatar() }}"/></p>
-{% if user.roles %}
-<ul>
-    {% for role in user.roles %}
-    <li>{{ role.name }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
 
 {% endblock %}

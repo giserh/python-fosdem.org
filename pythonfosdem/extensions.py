@@ -13,9 +13,11 @@ from flask.ext.bootstrap import Bootstrap
 from flask.ext.mail import Mail
 from flask.ext.security import Security
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.uploads import UploadSet, IMAGES
 
 bootstrap = Bootstrap()
 babel = Babel()
 mail = Mail()
 security = Security()
 db = SQLAlchemy()
+images_set = UploadSet('images', IMAGES)

@@ -5,5 +5,7 @@
 #./manage.py import_xml pythonfosdem/data/pythonfosdem_user.xml -c $PWD/conf/production.cfg
 #./manage.py cleanup_database -c $PWD/conf/production.cfg
 
+psql -d python_fosdem_org -c 'ALTER TABLE "user" ADD COLUMN photo_path VARCHAR(255);'
 ./manage.py import_xml pythonfosdem/data/pythonfosdem_init.xml -c $PWD/conf/production.cfg
 ./manage.py import_xml pythonfosdem/data/pythonfosdem_user.xml -c $PWD/conf/production.cfg
+

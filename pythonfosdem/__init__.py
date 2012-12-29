@@ -7,12 +7,14 @@ from flask import render_template
 from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.security.core import current_user
+from flask.ext.uploads import configure_uploads
 
 from pythonfosdem.bp_general import blueprint as bp_general
 from pythonfosdem.config import DefaultConfig
 from pythonfosdem.extensions import babel
 from pythonfosdem.extensions import bootstrap
 from pythonfosdem.extensions import db
+from pythonfosdem.extensions import images_set
 from pythonfosdem.extensions import mail
 from pythonfosdem.extensions import security
 
@@ -52,6 +54,7 @@ class App(Flask):
         mail.init_app(self)
         db.init_app(self)
         security.init_app(self, user_datastore)
+        configure_uploads(self, (images_set,))
 
     def configure_error_handlers(self):
         @self.errorhandler(404)

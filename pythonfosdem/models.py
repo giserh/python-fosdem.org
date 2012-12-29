@@ -17,6 +17,7 @@ from flask.ext.security import UserMixin
 from flask.ext.security.core import current_user
 
 from pythonfosdem.extensions import db
+from pythonfosdem.extensions import images_set
 
 
 class CommonMixin(object):
@@ -61,6 +62,11 @@ class User(db.Model, UserMixin, CommonMixin):
     company = db.Column(db.String(255))
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
+    photo_path = db.Column(db.String(255))
+
+    @property
+    def url(self):
+        return images_set.url(self.photo_path)
 
     def gravatar(self, size=None, default='identicon'):
         url = 'http://www.gravatar.com/avatar/{md5}.jpg?d={default}'
@@ -124,6 +130,7 @@ class Talk(db.Model, CommonMixin):
             if v.user_id == current_user.id:
                 return v
         return None
+
 
 class TalkProposal(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)

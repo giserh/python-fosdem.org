@@ -23,18 +23,20 @@
             {% for header in varargs %}
             <th>{{ header }}</th>
             {% endfor %}
+            {#
             <th>{{ _('Created On') }}</th>
             <!-- <th>{{ _('Actions') }}</th> -->
+            #}
         </tr>
     </thead>
     <tbody>
         {% for item in iterable %}
             <tr id="{{ model }}-{{item.id}}">
                 {{ caller(item) }}
+                {#
                 <td>
                     {{ item.created_on }}
                 </td>
-                {#
                 <td>
                     {{ render_edit_button(model, item.id) }}
                     {{ render_delete_button(model, item.id) }}
@@ -218,10 +220,8 @@
 
         {{ caller() }}
 
-        <div class="row-fluid">
-            <div class="form-actions">
-                {{ form.submit(class='btn btn-primary') }}
-            </div>
+        <div class="form-actions">
+            {{ form.submit(class='btn btn-primary') }}
         </div>
 
     </form>
