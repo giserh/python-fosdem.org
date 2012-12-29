@@ -1,7 +1,24 @@
 # -*- coding: utf-8 -*-
+import re
+from jinja2 import Markup
 import sqlalchemy
 import pythonfosdem.models
 
+def slugify(value):
+    """
+    Normalizes string, converts to lowercase, removes non-alpha characters,
+    and converts spaces to hyphens.
+
+    Took from pelican source (which took it from django sources).
+    """
+    value = Markup(value).striptags()
+    if type(value) == unicode:
+        import unicodedata
+        from unidecode import unidecode
+        value = unicode(unidecode(value))
+        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
+    return re.sub('[-\s]+', '-', value)
 
 def is_relationship(model, field):
     return isinstance(model.__mapper__._props[field],

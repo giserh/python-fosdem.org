@@ -59,6 +59,15 @@ def profile():
                            user=current_user,
                            form=form)
 
+@blueprint.route('/u/<int:user_id>')
+@blueprint.route('/u/<int:user_id>-<slug>')
+def user(user_id, slug=''):
+    user = User.query.get_or_404(user_id)
+    if user.slug != slug:
+        return redirect(url_for('general.user', user_id=user.id, slug=user.slug))
+    return render_template('general/user.html', user=user)
+
+
 @blueprint.route('/speakers')
 def speakers():
     #speakers = User.query.filter(User.talks.isnot(None))       # TODO make it works!

@@ -19,6 +19,7 @@ from werkzeug import cached_property
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import images_set
+from pythonfosdem.tools import slugify
 
 
 class CommonMixin(object):
@@ -84,6 +85,9 @@ class User(db.Model, UserMixin, CommonMixin):
             url += '&s={size}'
         return url.format(md5=hashlib.md5(self.email).hexdigest(), default=default, size=size)
 
+    @cached_property
+    def slug(self):
+        return slugify(self.name)
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
