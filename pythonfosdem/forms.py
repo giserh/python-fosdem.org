@@ -131,7 +131,7 @@ class UserProfileForm(Form):
     site = URLField(
         lazy_gettext(u'Site'),
         validators=[Length(min=4, max=255)],
-        description=lazy_gettext(u'Your website or this one of the project'),
+        description=lazy_gettext(u'Your website'),
         placeholder=lazy_gettext(u'http://project_url')
     )
 
