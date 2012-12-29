@@ -27,6 +27,7 @@ from pythonfosdem.extensions import mail
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkProposal
 from pythonfosdem.models import TalkVote
+from pythonfosdem.models import User
 from pythonfosdem.forms import TalkProposalForm
 from pythonfosdem.forms import UserProfileForm
 
@@ -108,7 +109,7 @@ def open_talk_proposal():
 @blueprint.route('/talk_proposals')
 @roles_accepted('admin', 'jury_member')
 def talk_proposals():
-    records = Talk.query.filter_by(state='draft').all()
+    records = Talk.query.filter_by(state='draft').join(Talk.user).order_by(User.name.asc()).all()
     # records = TalkProposal.query.all()
     return render_template('general/talk_proposals.html', records=records)
 
