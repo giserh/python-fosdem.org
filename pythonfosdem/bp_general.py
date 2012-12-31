@@ -64,6 +64,7 @@ def profile():
                            user=current_user,
                            form=form)
 
+
 @blueprint.route('/profile/change-password', methods=['POST', 'GET'])
 @login_required
 def change_password():
@@ -77,6 +78,7 @@ def change_password():
 
     return render_template('general/change_password.html',
                            form=form)
+
 
 @blueprint.route('/u/<int:user_id>')
 @blueprint.route('/u/<int:user_id>-<slug>')
@@ -146,6 +148,8 @@ def talk_proposals():
 # @roles_accepted('admin', 'jury_member')
 def talk_show(record_id, slug=''):
     talk = Talk.query.get_or_404(record_id)
+    if talk.state != 'validated':
+        abort(403)
     if talk.slug != slug:
         return redirect(url_for('general.talk_show', record_id=talk.id, slug=talk.slug))
     return render_template('general/talk_show.html', talk=talk)
