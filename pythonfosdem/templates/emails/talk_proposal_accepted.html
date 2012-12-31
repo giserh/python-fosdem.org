@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>{{ _('Talk Proposal Accepted for Python @ FOSDEM 2013') }}</title>
+    </head>
+    <body>
+        <h2>{{ _('Dear') }} {{ talk.user.name}},</h2>
+        <p>{{ _('We are glad to let you know that your talk has been accepted for the Python DevRoom @ FOSDEM 2013.') }}</p>
+        <p>{{ _('Entitled:') }} "{{ talk.name }}"</p>
+        <p>{{ _('You will find your talk at this address:') }} <a href="{{ url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True) }}"></a></p>
+        <p>{{ _('Best regards,') }}</p>
+        <p><b>{{ _('The Python@FOSDEM 2013 Team') }}</b></p>
+        <p>{{ _('Twitter: @pythonfosdem') }}</p>
+    </body>
+</html>

@@ -9,6 +9,7 @@
     :copyright: (c) 2012 by Stephane Wirtel.
     :license: BSD, see LICENSE for more details.
 """
+from flask import render_template
 from flask.ext.script import Manager
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
@@ -20,6 +21,20 @@ import pythonfosdem.xml_importer
 def main():
     manager = Manager(create_app)
     manager.add_option('-c', '--config', dest='config', required=False)
+
+    @manager.command
+    def send_talk_proposal_emails():
+        from pythonfosdem.models import Talk
+
+        talks = Talk.query.filter_by(state='validated')
+        print "talks: %r" % (talks.count(),)
+
+        for talk in talks:
+            # print "%-30s %s" % (talk.user.name, talk.user.email,)
+            print render_template('emails/talk_proposal_accepted.txt', talk=talk)
+            print render_template('emails/talk_proposal_accepted.html', talk=talk)
+            print render_template('emails/talk_proposal_declined.txt', talk=talk)
+            print render_template('emails/talk_proposal_declined.html', talk=talk)
 
     @manager.command
     def cleanup_database():
