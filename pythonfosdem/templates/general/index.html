@@ -2,19 +2,36 @@
 
 
 {% block content %}
-<div class="jumbotron">
+
     <!-- <h1>Python @ FOSDEM 2013</h1> -->
     <!-- <p class="lead">3rd February 2013 <small>Brussels, <strong>Belgium</strong></small></p> -->
+<!-- <div class="jumbotron">
     <h1>{{ _('Thank you for the Proposals') }}</h1>
     <p class="lead">{{ _('You will be notified by email as soon as possible') }}</p>
 </div>
-{#
-<div id='schedule'>
-    <div class="page-header">
-      <h1>{{ _('The Schedule') }}<small> {{ _('100%% PYTHON TALKS') }}</small></h1>
+ -->
+
+{% if talks.count() %}
+<div class='row' id='talks'>
+    <div class='span12'>
+        <div class="jumbotron">
+            <h1>{{ _('Here are the Talks') }}</h1>
+            <p class="lead">{{ _('Thank you for your proposals !') }}</p>
+        </div>
+    </div>
+    <div class='span12'>
+        <ol>
+            {% for talk in talks %}
+            <li>
+                <h2><a href="{{ url_for('general.talk_show', record_id=talk.id) }}">{{ talk.name }}</a> <small> by <a href="{{ url_for('general.user', user_id=talk.user.id, slug=talk.user.slug) }}">{{ talk.user.name }}</a></small></h2>
+                <blockquote><pre>{{ talk.description }}</pre></blockquote>
+            </li>
+            {% endfor %}
+        </ol>
     </div>
 </div>
-
+{% endif %}
+{#
 <div class="row-fluid marketing">
     <div id='sponsor'>
         <div class='page-header'>

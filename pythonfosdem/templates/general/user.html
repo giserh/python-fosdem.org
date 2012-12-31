@@ -14,13 +14,16 @@
         {% endif %}
     </div>
     <div class='span9'>
-        <p>{{ user.company }}</p>
-        <div>{{ user.biography }}</div>
+        <h4>{{ user.company }}</h4>
+        <blockquote>{{ user.biography }}</blockquote>
 
-        <ul>
-            <li>{{ user.site }}</li>
-            <li>{{ user.twitter }}</li>
+        {% if user.urls %}
+        <ul class='unstyled'>
+            {% for address in user.urls %}
+                <li><a href="{{ address.url }}">{{ address.label }}</a></li>
+            {% endfor %}
         </ul>
+        {% endif %}
     </div>
 </div>
 

@@ -22,28 +22,32 @@
             </tr>
             <tr>
                 <th>Speaker</th>
-                <td>{{ talk.user.name }}</td>
+                <td><a href="{{ url_for('general.user', user_id=talk.user.id, slug=talk.user.slug) }}">{{ talk.user.name }}</a></td>
             </tr>
             <tr>
                 <th>Description</th>
                 <td><pre>{{ talk.description }}</pre></td>
             </tr>
+            {% if current_user.is_authenticated() %}
             <tr>
                 <th>Email</th>
-                <td>{{ talk.user.email }}</td>
-            </tr>
-            <tr>
-                <th>Site</th>
-                <td>{{ talk.site_url }}</td>
+                <td>{{ talk.user.email or '/' }}</td>
             </tr>
             <tr>
                 <th>Twitter</th>
-                <td>{{ talk.twitter }}</td>
+                <td>{{ talk.user.twitter or '/' }}</td>
             </tr>
+            {% endif %}
+            <tr>
+                <th>Site</th>
+                <td>{{ talk.site_url or '/' }}</td>
+            </tr>
+            {% if current_user.has_role('jury_member') %}
             <tr>
                 <th>State</th>
                 <td>{{ talk.state }}</td>
             </tr>
+            {% endif %}
         </table>
     </div>
     {% if current_user.has_role('jury_member') %}
@@ -66,6 +70,11 @@
             <a href="#"
                 data-model-id="{{ talk.id }}" data-vote='{{ votes[1] }}'
                 class="on-vote vote-down btn {{ btns[1] }} btn-small"><i class="icon-arrow-down"></i> {{ _('Vote Down') }} </a>
+            {% if current_user.has_role('jury_president') and talk.votes and talk.state in ('draft',) %}
+            <a href="#"
+                data-model-id='{{ talk.id }}'
+                class='on-validate btn btn-small'><i class''></i> {{ _('Validate') }}</a>
+            {% endif %}
         </div>
         {% if current_user.has_role('jury_president') and talk.votes %}
         <div class='well well-small'>
@@ -105,6 +114,22 @@
                 $.post(url, params, _callback, 'json');
             }
         };
+
+        $('a.on-validate').each(function(index, item) {
+            $(item).on('click', function(event) {
+                event.preventDefault();
+                var self = $(this),
+                    record_id = $(this).data('model-id');
+                var params = {
+                    record_id: record_id,
+                };
+
+                pythonfosdem.ajax_post('{{ url_for("general.talk_validate") }}', params, function(response) {
+                    console.log(response);
+                });
+            });
+
+        });
 
         $('a.on-vote').each(function(index, item) {
             $(item).on('click', function(event) {

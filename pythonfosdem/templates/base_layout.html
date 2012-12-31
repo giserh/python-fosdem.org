@@ -124,6 +124,9 @@
                       {% if current_user.has_role('jury_member') %}
                       <li><a href="{{ url_for('general.talks_dashboard') }}">{{ _('Talk DashBoard') }}</a></li>
                       {% endif %}
+                      {% if current_user.has_role('jury_president') %}
+                      <li><a href="{{ url_for('general.talks_to_validate') }}">{{ _('Talks to Validate') }}</a></li>
+                      {% endif %}
                       <li><a href="{{ url_for('security.logout') }}">{{ _('Log out') }}</a></li>
                   </ul>
               </li>

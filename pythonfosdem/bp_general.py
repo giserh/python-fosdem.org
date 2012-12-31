@@ -23,12 +23,13 @@ from flask.ext.security.core import current_user
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
+from pythonfosdem.forms import TalkProposalForm
+from pythonfosdem.forms import UserProfileForm
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkProposal
 from pythonfosdem.models import TalkVote
 from pythonfosdem.models import User
-from pythonfosdem.forms import TalkProposalForm
-from pythonfosdem.forms import UserProfileForm
+from pythonfosdem.presenters import UserPresenter
 
 __all__ = ['blueprint']
 
@@ -42,7 +43,8 @@ def to_index():
 @blueprint.route('/')
 def index():
     # return redirect(url_for('general.talk_proposal'))
-    return render_template('general/index.html')
+    records = Talk.query.filter_by(state='validated').order_by(Talk.name.asc()).limit(16)
+    return render_template('general/index.html', talks=records)
 
 
 @blueprint.route('/profile', methods=['POST', 'GET'])
@@ -59,13 +61,14 @@ def profile():
                            user=current_user,
                            form=form)
 
+
 @blueprint.route('/u/<int:user_id>')
 @blueprint.route('/u/<int:user_id>-<slug>')
 def user(user_id, slug=''):
     user = User.query.get_or_404(user_id)
     if user.slug != slug:
         return redirect(url_for('general.user', user_id=user.id, slug=user.slug))
-    return render_template('general/user.html', user=user)
+    return render_template('general/user.html', user=UserPresenter(user))
 
 
 @blueprint.route('/speakers')
@@ -123,7 +126,7 @@ def talk_proposals():
 
 
 @blueprint.route('/talk/<int:record_id>')
-@roles_accepted('admin', 'jury_member')
+# @roles_accepted('admin', 'jury_member')
 def talk_show(record_id):
     talk = Talk.query.get_or_404(record_id)
     return render_template('general/talk_show.html', talk=talk)
@@ -160,18 +163,56 @@ def talk_vote():
     return jsonify(success=True, record_id=record_id, vote=vote)
 
 
+@blueprint.route('/talk/validate', methods=['POST'])
+@roles_accepted('jury_president')
+def talk_validate():
+    if not request.form:
+        abort(404)
+
+    record_id = request.form['record_id']
+
+    talk = Talk.query.get_or_404(record_id)
+
+    talk.state = 'validated'
+    db.session.add(talk)
+    db.session.commit()
+
+    return jsonify(success=True, record_id=record_id)
+
+
 @blueprint.route('/talks/dashboard')
 @roles_accepted('jury_member', 'jury_president')
 def talks_dashboard():
     result = db.session.execute("""
         SELECT t.id FROM "user" u, talk t
-        LEFT OUTER JOIN (SELECT talk_id, value, user_id FROM talk_vote WHERE user_id = :user_id) tv
-        ON t.id = tv.talk_id
+         LEFT OUTER JOIN (SELECT talk_id, value, user_id FROM talk_vote WHERE user_id = :user_id) tv
+           ON t.id = tv.talk_id
         WHERE COALESCE(tv.value, 0) = 0
-        AND u.id = t.user_id
+          AND u.id = t.user_id
         ORDER BY u.name
         """,
         {'user_id': current_user.id}
+    )
+    records = [Talk.query.get(r[0]) for r in result]
+
+    return render_template('general/talks_dashboard.html', records=records)
+
+
+@blueprint.route('/talks/to_validate')
+@roles_accepted('jury_president')
+def talks_to_validate():
+    result = db.session.execute("""
+        SELECT t.id, u.name, u.email, u.twitter, t.name, tv.total
+        FROM talk t, 
+             (SELECT talk_id, sum(value) total FROM talk_vote GROUP BY talk_id) tv, 
+             "user" u 
+        WHERE t.id = tv.talk_id 
+          AND t.user_id = u.id
+          AND tv.total >= 2
+          AND t.state NOT IN ('validated')
+        ORDER BY tv.total DESC LIMIT :limit
+        """,
+        {'limit': 16}
     )
     records = [Talk.query.get(r[0]) for r in result]
 
