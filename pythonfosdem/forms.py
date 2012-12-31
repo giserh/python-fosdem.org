@@ -116,12 +116,6 @@ class UserProfileForm(Form):
         placeholder=lazy_gettext(u'Your Name'),
     )
 
-    password = TextField(
-        lazy_gettext(u'Password'),
-        validators=[Length(min=4, max=255)],
-        placeholder=lazy_gettext(u'Your password')
-    )
-
     twitter = TwitterField(
         lazy_gettext(u'Twitter'),
         validators=[Length(min=4, max=128)],

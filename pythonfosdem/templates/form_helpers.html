@@ -211,8 +211,8 @@
     {% endfor %}
 {%- endmacro -%}
 
-{%- macro render_horizontal_form(form, endpoint, id) -%}
-    <form class="form form-horizontal" enctype='multipart/form-data' method="POST" action="{{ url_for(endpoint) }}" id='{{ id }}'>
+{%- macro render_horizontal_form(form, endpoint, class) -%}
+<form class="form form-horizontal {{ class }}" enctype='multipart/form-data' method="POST" action="{{ url_for(endpoint) }}" {{ kwargs|xmlattr }}>
         {{ form.csrf_token() }}
         {{ form.hidden_tag() }}
 

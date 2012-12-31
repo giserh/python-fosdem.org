@@ -20,6 +20,9 @@ from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.security import roles_accepted, login_required
 from flask.ext.security.core import current_user
+from flask.ext.security.forms import ResetPasswordForm
+from flask.ext.security.recoverable import update_password
+from flask.ext.security.utils import get_message
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
@@ -61,6 +64,19 @@ def profile():
                            user=current_user,
                            form=form)
 
+@blueprint.route('/profile/change-password', methods=['POST', 'GET'])
+@login_required
+def change_password():
+    form = ResetPasswordForm()
+
+    if form.validate_on_submit():
+        update_password(current_user, form.password.data)
+        flash(*get_message('PASSWORD_RESET'))
+        db.session.commit()
+        return redirect(url_for('general.profile'))
+
+    return render_template('general/change_password.html',
+                           form=form)
 
 @blueprint.route('/u/<int:user_id>')
 @blueprint.route('/u/<int:user_id>-<slug>')
