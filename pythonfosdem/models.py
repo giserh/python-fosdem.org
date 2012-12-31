@@ -147,6 +147,10 @@ class Talk(db.Model, CommonMixin):
                 return v
         return None
 
+    @cached_property
+    def slug(self):
+        return slugify(self.name)
+
 
 class TalkProposal(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
