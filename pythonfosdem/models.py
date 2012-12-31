@@ -11,11 +11,12 @@
 import datetime
 import hashlib
 
+from werkzeug import cached_property
+
 from flask.ext.security import RoleMixin
 from flask.ext.security import SQLAlchemyUserDatastore
 from flask.ext.security import UserMixin
 from flask.ext.security.core import current_user
-from werkzeug import cached_property
 
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import images_set
@@ -75,6 +76,7 @@ class User(db.Model, UserMixin, CommonMixin):
                                         "     Talk.state == 'validated')",
                             #backref=db.backref('user', lazy='joined')
                             )
+
     @cached_property
     def is_speaker(self):
         return bool(self.talks)
