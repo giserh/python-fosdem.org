@@ -33,7 +33,6 @@ def main():
 
         for talk_proposal in TalkProposal.query.all():
             user = User.query.filter_by(email=talk_proposal.email).first()
-            print "user: %r" % (user,)
             if user is None:
                 user = User(name=u'{0.firstname} {0.lastname}'.format(talk_proposal),
                             password='secret',
