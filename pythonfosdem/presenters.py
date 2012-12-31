@@ -8,13 +8,11 @@ from flask.ext.babel import format_date
 
 
 class Address(object):
-    def __init__(self, url='', label='', is_http=False, is_mail=False, is_none=True, is_twitter=False):
+    def __init__(self, url='', label='', type=None):
         self.url = url
         self.label = label
-        self.is_http = is_http
-        self.is_mail = is_mail
-        self.is_none = is_none
-        self.is_twitter = is_twitter
+        assert type in ('http', 'mail', 'twitter',)
+        self.type = type
 
 
 class Presenter(object):
@@ -46,7 +44,7 @@ class UserPresenter(Presenter):
                 label = '@' + self.model.twitter
 
             return Address(url='https://twitter.com/%s' % (twitter_account,),
-                           is_twitter=True,
+                           type='twitter',
                            label=label)
         else:
             return Address()
@@ -54,7 +52,7 @@ class UserPresenter(Presenter):
     @property
     def site(self):
         if self.model.site:
-            return Address(is_http=True,
+            return Address(type='http',
                            url=self.model.site,
                            label=self.model.site)
         else:

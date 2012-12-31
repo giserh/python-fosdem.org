@@ -118,9 +118,9 @@ def open_talk_proposal():
 
 # NOT YET IMPLEMENTED
 @blueprint.route('/talk_proposals')
-@roles_accepted('admin', 'jury_member')
+@roles_accepted('admin', 'jury_member', 'jury_president')
 def talk_proposals():
-    records = Talk.query.filter_by(state='draft').join(Talk.user).order_by(User.name.asc()).all()
+    records = Talk.query.join(Talk.user).order_by(User.name.asc()).all()
     # records = TalkProposal.query.all()
     return render_template('general/talk_proposals.html', records=records)
 
