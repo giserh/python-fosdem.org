@@ -10,6 +10,7 @@
     :license: BSD, see LICENSE for more details.
 """
 from flask import render_template
+from flask import url_for
 from flask.ext.script import Manager
 from flask.ext.script.commands import ShowUrls
 from pythonfosdem import create_app
@@ -25,18 +26,38 @@ def main():
     manager.add_command('routes', ShowUrls())
 
     @manager.command
-    def send_talk_proposal_emails():
+    def send_talk_emails():
         from pythonfosdem.models import Talk
 
-        talks = Talk.query.filter_by(state='validated')
-        print "talks: %r" % (talks.count(),)
-
+        talks = Talk.query.filter_by(state='validated').limit(1)
         for talk in talks:
-            # print "%-30s %s" % (talk.user.name, talk.user.email,)
-            print render_template('emails/talk_proposal_accepted.txt', talk=talk)
-            print render_template('emails/talk_proposal_accepted.html', talk=talk)
-            print render_template('emails/talk_proposal_declined.txt', talk=talk)
-            print render_template('emails/talk_proposal_declined.html', talk=talk)
+            print "=" * 20
+            url_talk = url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True)
+            speaker = talk.user.name
+            talk_name = talk.name
+            talk_description = talk.description
+
+            print render_template('emails/talk_accepted.txt',
+                                  talk=talk,
+                                  url_talk=url_talk,
+                                  speaker=speaker,
+                                  talk_name=talk_name,
+                                  talk_description=talk_description)
+            print "=" * 20
+            #     print render_template('emails/talk_accepted.html', talk=talk)
+            #     print render_template('emails/talk_declined.txt', talk=talk)
+            #     print render_template('emails/talk_declined.html', talk=talk)
+            # elif talk.type == 'lightning_talk':
+            #     print render_template('emails/talk_accepted.txt', talk=talk)
+            #     print render_template('emails/talk_accepted.html', talk=talk)
+        # message = Message(_('Thank you for your proposal'),
+        #                   recipients=[talkProposal.email],
+        #                   bcc=['stephane@wirtel.be']
+        #                   )
+        # message.body = render_template('emails/send_thank.txt', talk=talkProposal)
+        # message.html = render_template('emails/send_thank.html', talk=talkProposal)
+
+        # mail.send(message)
 
     @manager.command
     def import_xml(filename):

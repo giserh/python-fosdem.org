@@ -1,0 +1,51 @@
+{% trans %}Dear {{ speaker }},{% endtrans %}
+{% if talk.type == 'talk' %}
+{% trans %}
+We are glad to inform you that your talk "{{ talk_name }}" [2] has been accepted
+for the Python DevRoom @ FOSDEM 2013 [1].
+{%- endtrans -%}
+{% elif talk.type == 'lightning_talk' %}
+{% trans %}
+We are glad to inform you that your talk "{{ talk_name }}" [2] has been accepted 
+as a Lightning Talk for the Python DevRoom @ FOSDEM 2013 [1].
+
+As a lightning talk, your talk is limited to 15 minutes with Q/A included.
+{%- endtrans -%}
+{% endif %}
+{% trans %}
+We still have a few questions:
+1. Could you confirm your talk ?
+
+2. Could you send us your talk one week before the FOSDEM ? 
+   We want to have the best experience for the speaker without any problem with the beamer
+
+3. We thought to offer you a t-shirt, could you please tell us your size ?
+
+4. Do you have all the information concerning your arrival in Belgium (Travel and Hotel) ?
+
+
+There is a mailing list for the Python Devroom python-devroom@lists.fosdem.org,
+you can subscribe to this mailing list. [3]
+
+
+There will be a beer event in a restaurant organised by the Belgian Python Community on saturday night.
+We are really sorry but we can not refund your expenses for this talk.
+
+
+For this edition, we will follow the same Code of Conduct as the pycon US [4]
+
+Best regards,
+
+
+[1] http://fosdem.org/2013
+[2] {{ url_talk }}
+[3] https://lists.fosdem.org/listinfo/python-devroom
+[4] https://us.pycon.org/2013/about/code-of-conduct/
+
+
+The Python @ FOSDEM 2013 Team,
+--
+Web: http://python-fosdem.org
+Twitter: @pythonfosdem
+{%- endtrans -%}
+
