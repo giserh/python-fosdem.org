@@ -116,6 +116,7 @@
               {% if current_user.has_role('jury_member') %}
                 {% set links = links + [('general.talk_proposals', _('Talk Proposals'))] %}
               {% endif %}
+
               {% for endpoint, label in links %}
               <li class="{% if request.endpoint == endpoint %}active{% endif %}"><a href="{{ url_for(endpoint) }}">{{ label }}</a></li>
               {% endfor %}
@@ -136,8 +137,11 @@
               {% else %}
               <li><a href="{{ url_for('security.login') }}">{{ _('Log in') }}</a></li>
               {% endif %}
+              {% if current_user.has_role('admin') %}
+              <li><a href="{{ url_for('admin.index') }}">{{ _('Administration') }}</a></li>
+              {% endif %}
 
-              <li><a href="http://fosdem.org">{{ _('About FOSDEM') }}</a></li>
+              <!-- <li><a href="http://fosdem.org">{{ _('About FOSDEM') }}</a></li> -->
               {#
                 <li class="active"><a href="{{ url_for('general.speakers') }}">{{ _('Speakers') }}</a></li>
                 <li><a href="#">{{ _('Schedule') }}</a></li>
@@ -171,7 +175,7 @@
     </div>
 </div>
 
-<a href="https://github.com/matrixise/python-fosdem.org"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+<a href="https://github.com/matrixise/python-fosdem.org"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/static/img/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 {% endblock %}
 
 {% block bootstrap_js_bottom %}

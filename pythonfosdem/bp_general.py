@@ -28,6 +28,7 @@ from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
 from pythonfosdem.forms import TalkProposalForm
 from pythonfosdem.forms import UserProfileForm
+from pythonfosdem.forms import TalkForm
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkProposal
 from pythonfosdem.models import TalkVote
@@ -46,8 +47,12 @@ def to_index():
 @blueprint.route('/')
 def index():
     # return redirect(url_for('general.talk_proposal'))
-    records = Talk.query.filter_by(state='validated').order_by(Talk.name.asc()).limit(16)
-    return render_template('general/index.html', talks=records)
+    talks = Talk.query.filter_by(state='validated').order_by(Talk.name.asc())
+
+    lightning_talks = Talk.query.filter_by(state='validated', type='lightning_talk').order_by(Talk.name.asc()).limit(4)
+    return render_template('general/index.html',
+                           talks=talks,
+                           lightning_talks=lightning_talks)
 
 
 @blueprint.route('/profile', methods=['POST', 'GET'])
@@ -148,11 +153,36 @@ def talk_proposals():
 # @roles_accepted('admin', 'jury_member')
 def talk_show(record_id, slug=''):
     talk = Talk.query.get_or_404(record_id)
-    if talk.state != 'validated':
-        abort(403)
+    # if talk.state != 'validated':
+    #     abort(403)
     if talk.slug != slug:
         return redirect(url_for('general.talk_show', record_id=talk.id, slug=talk.slug))
     return render_template('general/talk_show.html', talk=talk)
+
+
+@blueprint.route('/talk/<int:record_id>/edit', methods=['POST', 'GET'])
+@roles_accepted('admin')
+def talk_edit(record_id):
+    talk = Talk.query.get_or_404(record_id)
+    form = TalkForm(obj=talk)
+    if form.validate_on_submit():
+        form.populate_obj(talk)
+        db.session.add(talk)
+        db.session.commit()
+        return redirect(url_for('general.talk_edit'))
+
+    return render_template('general/talk_edit.html', form=form, talk=talk)
+
+    form = UserProfileForm(obj=current_user)
+    if form.validate_on_submit():
+        form.populate_obj(current_user)
+        db.session.add(current_user)
+        db.session.commit()
+        flash(_('Your profile has been updated !'))
+        return redirect(url_for('general.profile'))
+    return render_template('general/user_profile.html',
+                           user=current_user,
+                           form=form)
 
 
 @blueprint.route('/talk/vote', methods=['POST'])
@@ -193,10 +223,13 @@ def talk_validate():
         abort(404)
 
     record_id = request.form['record_id']
+    vote = request.form['vote']
 
     talk = Talk.query.get_or_404(record_id)
 
     talk.state = 'validated'
+    talk.type = vote
+
     db.session.add(talk)
     db.session.commit()
 

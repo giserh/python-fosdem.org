@@ -31,6 +31,25 @@
     </div>
 </div>
 {% endif %}
+{% if lightning_talks.count() %}
+<div class='row' id='lightning_talks'>
+    <div class='span12'>
+        <div class="jumbotron">
+            <h1>{{ _('Here are the Lightning Talks') }}</h1>
+        </div>
+    </div>
+    <div class='span12'>
+        <ol>
+            {% for talk in lightning_talks %}
+            <li>
+                <h2><a href="{{ url_for('general.talk_show', record_id=talk.id, slug=talk.slug) }}">{{ talk.name }}</a> <small> by <a href="{{ url_for('general.user', user_id=talk.user.id, slug=talk.user.slug) }}">{{ talk.user.name }}</a></small></h2>
+                <blockquote><pre>{{ talk.description }}</pre></blockquote>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+{% endif %}
 {#
 <div class="row-fluid marketing">
     <div id='sponsor'>

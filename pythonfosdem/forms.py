@@ -12,6 +12,8 @@ import flask.ext.wtf
 from flask.ext.wtf import Form
 from flask.ext.wtf import Length
 from flask.ext.wtf import Required
+from flask.ext.wtf import BooleanField
+from flask.ext.wtf import SelectField
 from flask.ext.wtf import SubmitField
 from flask.ext.wtf import TextAreaField
 from flask.ext.wtf import TextField
@@ -140,5 +142,59 @@ class UserProfileForm(Form):
         validators=[Required()],
         placeholder=lazy_gettext(u'Could you add some lines about yourself?')
     )
+
+    submit = SubmitField(lazy_gettext(u'Save'))
+
+
+class TalkForm(Form):
+    name = TextField(lazy_gettext(u'Name'),
+                     validators=[Required(), Length(min=4, max=128)],
+                     description=lazy_gettext(u'The title of the name'))
+    description = TextAreaField(
+        lazy_gettext(u'Description'),
+        validators=[Required()],
+        placeholder=lazy_gettext(u'Could you give some lines about this Talk ?')
+    )
+
+    site = URLField(
+        lazy_gettext(u'Site'),
+        validators=[Length(min=4, max=255)],
+        description=lazy_gettext(u'Your website'),
+        placeholder=lazy_gettext(u'http://project_url')
+    )
+
+    twitter = TwitterField(
+        lazy_gettext(u'Twitter'),
+        validators=[Length(min=4, max=128)],
+        placeholder=lazy_gettext(u'@twitter_account')
+    )
+
+    approved = BooleanField(lazy_gettext(u'Approved'),
+                            description=lazy_gettext(u'Do you confirm this talk is approved'))
+
+    state = SelectField(
+        'State',
+        choices=[
+            ('draft', lazy_gettext(u'Draft')),
+            ('validated', lazy_gettext(u'Validated')),
+            ('declined', lazy_gettext(u'Declined')),
+            ('canceled', lazy_gettext(u'Canceled')),
+        ],
+        validators=[Required()]
+    )
+
+    type = SelectField(
+        'Type',
+        choices=[
+            ('talk', lazy_gettext(u'Talk')),
+            ('lightning_talk', lazy_gettext(u'Lightning Talk')),
+        ],
+        validators=[Required()]
+    )
+
+    # start_at = db.Column(db.DateTime(timezone=True))
+    # stop_at = db.Column(db.DateTime(timezone=True))
+
+    # type = db.Column(db.String(16), default='talk')
 
     submit = SubmitField(lazy_gettext(u'Save'))

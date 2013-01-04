@@ -91,6 +91,9 @@ class User(db.Model, UserMixin, CommonMixin):
     def slug(self):
         return slugify(self.name)
 
+    def __unicode__(self):
+        return self.name
+
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
@@ -118,6 +121,28 @@ class Speaker(db.Model, CommonMixin):
     #    event = db.relationship('Event', backref=db.backref('speakers', lazy='dynamic'))
 
 
+from sqlalchemy import types
+from dateutil.tz import tzutc
+
+
+class UTCDateTime(types.TypeDecorator):
+
+    impl = types.DateTime
+
+    def process_bind_param(self, value, engine):
+        if value is not None:
+            if value.tzinfo is None:
+                return value.replace(tzinfo=tzutc())
+            else:
+                return value.astimezone(tzutc())
+
+    def process_result_value(self, value, engine):
+        if value is not None:
+            return datetime.datetime(value.year, value.month, value.day,
+                                     value.hour, value.minute, value.second,
+                                     value.microsecond, tzinfo=tzutc())
+
+
 class Talk(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
@@ -128,9 +153,15 @@ class Talk(db.Model, CommonMixin):
     twitter = db.Column(db.String(255))
     approved = db.Column(db.Boolean)
     state = db.Column(db.String(16), default='draft')
-    created_at = db.Column(db.DateTime(timezone=True),
+    created_at = db.Column(db.DateTime(timezone=False),
                            default=datetime.datetime.utcnow,
                            nullable=False)
+    start_at = db.Column(db.DateTime(timezone=False))
+    stop_at = db.Column(db.DateTime(timezone=False))
+
+    type = db.Column(db.String(16), default='talk')
+    # talk, lightning_talk
+
     #    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     #    event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
 

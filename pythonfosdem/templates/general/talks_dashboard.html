@@ -23,7 +23,12 @@
             {% if current_user.has_role('jury_president') and item.votes and item.state in ('draft',) %}
             <td>
             <a href="#"
-                data-model-id='{{ item.id }}'
+                data-model-id='{{ item.id }}' data-vote='talk'
+                class='on-validate btn btn-small'><i class''></i> {{ _('Validate') }}</a>
+            </td>
+            <td>
+            <a href="#"
+                data-model-id='{{ item.id }}' data-vote='lightning_talk'
                 class='on-validate btn btn-small'><i class''></i> {{ _('Validate') }}</a>
             </td>
             {% endif %}
@@ -52,6 +57,7 @@
                         }
                     } else {
                         // Error handling
+                        console.log(response);
                     }
                 };
                 $.post(url, params, _callback, 'json');
@@ -62,16 +68,17 @@
             $(item).on('click', function(event) {
                 event.preventDefault();
                 var self = $(this),
-                    record_id = $(this).data('model-id');
+                    record_id = $(this).data('model-id'),
+                    vote = $(this).data('vote');
                 var params = {
                     record_id: record_id,
+                    vote: vote,
                 };
 
                 pythonfosdem.ajax_post('{{ url_for("general.talk_validate") }}', params, function(response) {
                     console.log(response);
                 });
             });
-
         });
     });
     </script>

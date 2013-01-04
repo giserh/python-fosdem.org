@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class='row'>
+    <div class='span12'>
+        <form class="form form-horizontal"
+                enctype='multipart/form-data'
+                method="POST"
+                action="{{ url_for('general.talk_edit', record_id=talk.id) }}">
+            {{ form.csrf_token() }}
+            {{ form.hidden_tag() }}
+
+            {{ wtf.form_errors(form) }}
+
+            {% call fh.fieldset(_('Information')) %}
+                {{ fh.render_horizontal_fields(form, 'name description type') }}
+            {% endcall %}
+            {% call fh.fieldset(_('Internet')) %}
+                {{ fh.render_horizontal_fields(form, 'twitter site') }}
+            {% endcall %}
+            {% call fh.fieldset(_('Internet')) %}
+                {{ fh.render_horizontal_fields(form, 'state') }}
+            {% endcall %}
+            <div class="form-actions">
+                {{ form.submit(class='btn btn-primary') }}
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

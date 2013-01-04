@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>{{ _('Forbidden !') }}</h1>
+    <p class="lead">{{ _("You don't have the permission to access the requested resource") }}</p>
+    <a class="btn btn-large btn-success" href="{{ url_for('general.index') }}">{{ _('Return to the main mage') }}</a>
+</div>
+
+{% endblock %}
