@@ -102,6 +102,7 @@ class App(Flask):
         admin.add_view(TalkModelView(db.session))
 
         class UserModelView(ModelView):
+            inline_models = (Talk,)
             column_list = ('name', 'email', 'created_at', 'is_speaker',)
             column_sortable_list = ('email', 'name',)
             # can_delete = False
