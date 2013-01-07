@@ -8,8 +8,8 @@
 """
 import os
 DOCUMENT_ROOT = os.path.dirname(__file__)
-ENVIRONMENT = os.path.join(DOCUMENT_ROOT, 'env')
-EGG_DIRECTORY = os.path.join(DOCUMENT_ROOT, 'eggs')
+ENVIRONMENT = os.path.join(DOCUMENT_ROOT, '..', 'env')
+EGG_DIRECTORY = os.path.join(DOCUMENT_ROOT, '..', 'eggs')
 
 activate_this = os.path.join(ENVIRONMENT, 'bin', 'activate_this.py')
 execfile(activate_this, dict(__file__=activate_this))
