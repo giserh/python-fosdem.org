@@ -5,7 +5,6 @@ from gunicorn.app.base import Application
 from werkzeug.contrib.fixers import ProxyFix
 
 from pythonfosdem import create_app
-from pythonfosdem.config import DefaultConfig
 
 
 def count_worker():
@@ -17,6 +16,7 @@ class PythonFosdemApp(Application):
         if options is None:
             options = {}
 
+        self.prog = None
         self.usage = None
         self.callable = None
         self.options = options
