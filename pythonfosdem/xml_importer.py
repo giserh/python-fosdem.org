@@ -2,11 +2,7 @@
 try:
     from collections import OrderedDict
 except ImportError:
-    import sys
-    if sys.python_version[:2] < (2, 7):
-        from ordereddict import OrderedDict     # noqa
-    else:
-        raise
+    from ordereddict import OrderedDict     # noqa
 
 from lxml import etree
 
