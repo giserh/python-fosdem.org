@@ -55,9 +55,6 @@ def main():
         with mail.connect() as conn:
             for user in User.query.order_by(User.name).all():
                 if user.is_speaker:
-                    print user.name
-                    print user.password
-                    print render_template('emails/speaker_email.txt', user=user)
                     message = Message(_('[Python-FOSDEM] Information and Questions'),
                                       sender='info@python-fosdem.org',
                                       recipients=['stephane@wirtel.be'],
