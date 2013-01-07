@@ -16,6 +16,7 @@ from pythonfosdem.config import DefaultConfig
 from pythonfosdem.extensions import admin
 from pythonfosdem.extensions import babel
 from pythonfosdem.extensions import bootstrap
+from pythonfosdem.extensions import cache
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import images_set
 from pythonfosdem.extensions import mail
@@ -59,6 +60,7 @@ class App(Flask):
         security.init_app(self, user_datastore)
         configure_uploads(self, (images_set,))
         self.configure_admin()
+        cache.init_app(self)
 
     def configure_admin(self):
         admin.init_app(self)

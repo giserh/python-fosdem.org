@@ -1,6 +1,7 @@
 Flask-Admin
 Flask-Babel==0.8
 Flask-Bootstrap==2.2.2-1
+Flask-Cache
 Flask-Mail==0.7.4
 Flask-SQLAlchemy==0.16
 Flask-Script==0.5.2

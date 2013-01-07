@@ -9,6 +9,7 @@
     :license: BSD, see LICENSE for more details.
 """
 from flask.ext.babel import Babel
+from flask.ext.cache import Cache
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.mail import Mail
 from flask.ext.security import Security
@@ -25,3 +26,4 @@ security = Security()
 db = SQLAlchemy()
 images_set = UploadSet('images', IMAGES)
 admin = Admin(name='Python @ FOSDEM', index_view=AdminView())
+cache = Cache()
