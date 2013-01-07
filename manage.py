@@ -33,9 +33,9 @@ def main():
     @manager.command
     def send_talk_emails():
         with mail.connect() as conn:
-            for talk in Talk.query.filter_by(state='validated').limit(1):
+            for talk in Talk.query.filter_by(state='validated'):
                 values = {
-                    'url_talk': url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True),
+                    'url_talk': 'http://python-fosdem.org%s' % (url_for('general.talk_show', record_id=talk.id, slug=talk.slug),),
                     'speaker': talk.user.name,
                     'talk_name': talk.name,
                     'talk_description': talk.description,
