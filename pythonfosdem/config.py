@@ -17,6 +17,8 @@ class DefaultConfig(object):
     SQLALCHEMY_ECHO = True
     DEBUG = True
 
+    CACHE_TYPE = 'simple'
+
     BABEL_DEFAULT_LOCALE = 'fr_BE'
 
     MAIL_PORT = 1025    # MailCatcher
