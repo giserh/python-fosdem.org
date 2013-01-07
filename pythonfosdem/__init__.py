@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
+import cgitb
+import sys
 
 from flask import Flask
 from flask import render_template
 
 from flask.ext.babel import _
-# from flask.ext.babel import lazy_gettext
 from flask.ext.mail import Message
 from flask.ext.security.core import current_user
 from flask.ext.uploads import configure_uploads
@@ -69,10 +70,6 @@ class App(Flask):
         from pythonfosdem.models import Event
 
         from pythonfosdem.forms import TalkForm
-        # print TalkForm.state
-
-        # import ipdb
-        # ipdb.set_trace()
 
         class TalkModelView(ModelView):
             # column_list = ('user',)
@@ -149,7 +146,7 @@ class App(Flask):
             message = Message(_('[PythonFOSDEM] Error 500'),
                               sender='internal-error@python-fosdem.org',
                               recipients=['stephane@wirtel.be'])
-            message.body = render_template('emails/send_error_500.txt', error=error)
+            message.body = render_template('emails/send_error_500.txt', error=cgitb.text(sys.exc_info()))
 
             mail.send(message)
             return render_template('errors/500.html'), 500
