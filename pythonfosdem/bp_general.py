@@ -17,20 +17,17 @@ from flask import render_template
 from flask import request
 from flask import url_for
 from flask.ext.babel import _
-from flask.ext.mail import Message
 from flask.ext.security import roles_accepted, login_required
 from flask.ext.security.core import current_user
 from flask.ext.security.forms import ResetPasswordForm
 from flask.ext.security.recoverable import update_password
 from flask.ext.security.utils import get_message
 
+from pythonfosdem.extensions import cache
 from pythonfosdem.extensions import db
-from pythonfosdem.extensions import mail
-from pythonfosdem.forms import TalkProposalForm
 from pythonfosdem.forms import UserProfileForm
 from pythonfosdem.forms import TalkForm
 from pythonfosdem.models import Talk
-from pythonfosdem.models import TalkProposal
 from pythonfosdem.models import TalkVote
 from pythonfosdem.models import User
 from pythonfosdem.presenters import UserPresenter
@@ -45,6 +42,7 @@ def to_index():
 
 
 @blueprint.route('/')
+@cache.cached(timeout=30)
 def index():
     # return redirect(url_for('general.talk_proposal'))
     talks = Talk.query.filter_by(state='validated').order_by(Talk.name.asc())
@@ -106,33 +104,6 @@ def talk_proposal():
     return render_template('general/closed_talk_proposal.html')
 
 
-#@blueprint.route('/talk_proposal', methods=['GET', 'POST'])
-def open_talk_proposal():
-    talkProposal = TalkProposal()
-    form = TalkProposalForm(obj=talkProposal)
-    if form.validate_on_submit():
-        talkProposal = TalkProposal()
-        form.populate_obj(talkProposal)
-
-        flash(_('Your proposal will be moderated as soon as possible'), 'info')
-
-        message = Message(_('Thank you for your proposal'),
-                          recipients=[talkProposal.email],
-                          bcc=['stephane@wirtel.be']
-                          )
-        message.body = render_template('emails/send_thank.txt', talk=talkProposal)
-        message.html = render_template('emails/send_thank.html', talk=talkProposal)
-
-        mail.send(message)
-
-        db.session.add(talkProposal)
-        db.session.commit()
-
-        return to_index()
-    return render_template('general/talk_proposal.html',
-                           form=form)
-
-
 # NOT YET IMPLEMENTED
 # @blueprint.route('/about')
 # def about_us():
@@ -144,17 +115,13 @@ def open_talk_proposal():
 @roles_accepted('admin', 'jury_member', 'jury_president')
 def talk_proposals():
     records = Talk.query.join(Talk.user).order_by(User.name.asc()).all()
-    # records = TalkProposal.query.all()
     return render_template('general/talk_proposals.html', records=records)
 
 
 @blueprint.route('/talk/<int:record_id>')
 @blueprint.route('/talk/<int:record_id>-<slug>')
-# @roles_accepted('admin', 'jury_member')
 def talk_show(record_id, slug=''):
     talk = Talk.query.get_or_404(record_id)
-    # if talk.state != 'validated':
-    #     abort(403)
     if talk.slug != slug:
         return redirect(url_for('general.talk_show', record_id=talk.id, slug=talk.slug))
     return render_template('general/talk_show.html', talk=talk)
