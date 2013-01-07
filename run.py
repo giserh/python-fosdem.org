@@ -8,7 +8,7 @@
 """
 import os
 DOCUMENT_ROOT = os.path.dirname(__file__)
-ENVIRONMENT = os.path.join(DOCUMENT_ROOT, 'environment')
+ENVIRONMENT = os.path.join(DOCUMENT_ROOT, 'env')
 EGG_DIRECTORY = os.path.join(DOCUMENT_ROOT, 'eggs')
 
 activate_this = os.path.join(ENVIRONMENT, 'bin', 'activate_this.py')
