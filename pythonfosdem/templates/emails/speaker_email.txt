@@ -1,0 +1,39 @@
+{% trans %}Dear {{ speaker }},
+
+You can connect to the Python FOSDEM website via your account:
+
+{% endtrans %}
+{{ _('Login: ') }} {{ user.email }}
+{{ _('Password: ') }} {{ new_password }}
+{% trans %}
+We still have a few questions:
+
+1. We thought to offer you a t-shirt, could you please tell us your size ?
+
+2. Do you have all the information concerning your arrival in Belgium (Travel and Hotel) ?
+
+
+There is a mailing list for the Python Devroom python-devroom@lists.fosdem.org,
+you can subscribe to this mailing list. [1]
+
+
+There will be a beer event in a restaurant organised by the Belgian Python Community on saturday night.
+We are really sorry but we can not refund your expenses for this talk.
+
+
+For this edition, we will follow the same Code of Conduct as the pycon US [2]
+
+Best regards,
+
+
+[1] https://lists.fosdem.org/listinfo/python-devroom
+[2] https://us.pycon.org/2013/about/code-of-conduct/
+
+
+The Python @ FOSDEM 2013 Team,
+--
+Web: http://python-fosdem.org
+email: info@python-fosdem.org
+Twitter: @pythonfosdem
+{%- endtrans -%}
+

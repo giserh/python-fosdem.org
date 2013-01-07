@@ -11,13 +11,18 @@
 """
 from flask import render_template
 from flask import url_for
+from flask.ext.babel import _
+from flask.ext.mail import Message
 from flask.ext.script import Manager
 from flask.ext.script.commands import ShowUrls
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
+from pythonfosdem.extensions import mail
 import pythonfosdem.tools
 import pythonfosdem.models
 import pythonfosdem.xml_importer
+from pythonfosdem.models import Talk
+from pythonfosdem.models import User
 
 
 def main():
@@ -27,37 +32,39 @@ def main():
 
     @manager.command
     def send_talk_emails():
-        from pythonfosdem.models import Talk
+        with mail.connect() as conn:
+            for talk in Talk.query.filter_by(state='validated').limit(1):
+                values = {
+                    'url_talk': url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True),
+                    'speaker': talk.user.name,
+                    'talk_name': talk.name,
+                    'talk_description': talk.description,
+                    'talk': talk,
+                }
 
-        talks = Talk.query.filter_by(state='validated').limit(1)
-        for talk in talks:
-            print "=" * 20
-            url_talk = url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True)
-            speaker = talk.user.name
-            talk_name = talk.name
-            talk_description = talk.description
+                message = Message(_('[Python-FOSDEM] Your talk has been accepted !'),
+                                  recipients=[talk.user.email],
+                                  sender='info@python-fosdem.org',
+                                  bcc=['stephane@wirtel.be']
+                                  )
+                message.body = render_template('emails/talk_accepted.txt', **values)
+                conn.send(message)
 
-            print render_template('emails/talk_accepted.txt',
-                                  talk=talk,
-                                  url_talk=url_talk,
-                                  speaker=speaker,
-                                  talk_name=talk_name,
-                                  talk_description=talk_description)
-            print "=" * 20
-            #     print render_template('emails/talk_accepted.html', talk=talk)
-            #     print render_template('emails/talk_declined.txt', talk=talk)
-            #     print render_template('emails/talk_declined.html', talk=talk)
-            # elif talk.type == 'lightning_talk':
-            #     print render_template('emails/talk_accepted.txt', talk=talk)
-            #     print render_template('emails/talk_accepted.html', talk=talk)
-        # message = Message(_('Thank you for your proposal'),
-        #                   recipients=[talkProposal.email],
-        #                   bcc=['stephane@wirtel.be']
-        #                   )
-        # message.body = render_template('emails/send_thank.txt', talk=talkProposal)
-        # message.html = render_template('emails/send_thank.html', talk=talkProposal)
-
-        # mail.send(message)
+    @manager.command
+    def send_speaker_emails():
+        with mail.connect() as conn:
+            for user in User.query.order_by(User.name).all():
+                if user.is_speaker:
+                    print user.name
+                    print user.password
+                    print render_template('emails/speaker_email.txt', user=user)
+                    message = Message(_('[Python-FOSDEM] Information and Questions'),
+                                      sender='info@python-fosdem.org',
+                                      recipients=['stephane@wirtel.be'],
+                                      bcc=['stephane@wirtel.be']
+                                      )
+                    message.body = render_template('emails/speaker_email.txt', user=user)
+                    conn.send(message)
 
     @manager.command
     def import_xml(filename):
