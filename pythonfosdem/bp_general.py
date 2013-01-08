@@ -45,7 +45,7 @@ def to_index():
 @cache.cached(timeout=30)
 def index():
     # return redirect(url_for('general.talk_proposal'))
-    talks = Talk.query.filter_by(state='validated').order_by(Talk.name.asc())
+    talks = Talk.query.filter_by(state='validated', type='talk').order_by(Talk.name.asc())
 
     lightning_talks = Talk.query.filter_by(state='validated', type='lightning_talk').order_by(Talk.name.asc()).limit(4)
     return render_template('general/index.html',
