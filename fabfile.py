@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+    fabfile
+    ~~~~~~~
+
+    Tool for the management of Python-FOSDEM.org
+
+    :copyright: (c) 2012-2013 by Stephane Wirtel.
+    :license: BSD, see LICENSE for more details.
+"""
 import os
 import datetime
 from fabric.api import run
@@ -10,6 +19,10 @@ from fabtools import files
 from fabtools import python
 from fabtools import require
 from fabtools import postgres
+
+
+def now():
+    return datetime.datetime.now()
 
 
 def working_directory(directory):
@@ -94,7 +107,7 @@ def virtualenv_init():
 
 @task
 def database_backup():
-    filename = '%s_%s.dump.sql' % (DATABASE, datetime.datetime.now().strftime('%Y%m%d_%H%M'))
+    filename = '%s_%s.dump.sql' % (DATABASE, now().strftime('%Y%m%d_%H%M'))
     dump_file = os.path.join(HOME_DIRECTORY, 'dump', filename)
     run('pg_dump --no-owner %s > %s' % (DATABASE, dump_file))
 
