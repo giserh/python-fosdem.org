@@ -36,7 +36,7 @@ class ModelData(db.Model, CommonMixin):
     ref_model = db.Column(db.String(80), nullable=False)
     ref_id = db.Column(db.Integer, nullable=False)
 
-    created_at = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
 
 
 roles_users = db.Table('roles_users',
@@ -48,7 +48,7 @@ class Role(db.Model, RoleMixin, CommonMixin):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
 
 
 class User(db.Model, UserMixin, CommonMixin):
@@ -57,7 +57,7 @@ class User(db.Model, UserMixin, CommonMixin):
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
-    created_at = db.Column(db.DateTime(timezone=True), default=datetime.datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
     confirmed_at = db.Column(db.DateTime())
     biography = db.Column(db.Text)
     twitter = db.Column(db.String(255))
@@ -106,43 +106,6 @@ class Event(db.Model, CommonMixin):
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
 
 
-class Speaker(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255, convert_unicode=True), nullable=False)
-    short_bio = db.Column(db.Text, nullable=False)
-    email = db.Column(db.String(255), nullable=False)
-    twitter = db.Column(db.String(255))
-    site = db.Column(db.String(255))
-    company = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.datetime.utcnow,
-                           nullable=False)
-    #    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    #    event = db.relationship('Event', backref=db.backref('speakers', lazy='dynamic'))
-
-
-from sqlalchemy import types
-from dateutil.tz import tzutc
-
-
-class UTCDateTime(types.TypeDecorator):
-
-    impl = types.DateTime
-
-    def process_bind_param(self, value, engine):
-        if value is not None:
-            if value.tzinfo is None:
-                return value.replace(tzinfo=tzutc())
-            else:
-                return value.astimezone(tzutc())
-
-    def process_result_value(self, value, engine):
-        if value is not None:
-            return datetime.datetime(value.year, value.month, value.day,
-                                     value.hour, value.minute, value.second,
-                                     value.microsecond, tzinfo=tzutc())
-
-
 class Talk(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
@@ -153,11 +116,11 @@ class Talk(db.Model, CommonMixin):
     twitter = db.Column(db.String(255))
     approved = db.Column(db.Boolean)
     state = db.Column(db.String(16), default='draft')
-    created_at = db.Column(db.DateTime(timezone=False),
-                           default=datetime.datetime.utcnow,
+    created_at = db.Column(db.DateTime(),
+                           default=datetime.datetime.now,
                            nullable=False)
-    start_at = db.Column(db.DateTime(timezone=False))
-    stop_at = db.Column(db.DateTime(timezone=False))
+    start_at = db.Column(db.DateTime())
+    stop_at = db.Column(db.DateTime())
 
     type = db.Column(db.String(16), default='talk')
     # talk, lightning_talk
@@ -183,34 +146,16 @@ class Talk(db.Model, CommonMixin):
         return slugify(self.name)
 
 
-class TalkProposal(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(255, convert_unicode=True), nullable=False)
-    lastname = db.Column(db.String(255, convert_unicode=True), nullable=False)
-    email = db.Column(db.String(255), nullable=False)
-    company = db.Column(db.String(255, convert_unicode=True))
-    twitter = db.Column(db.String(255))
-    site_url = db.Column(db.String(255))
-    biography = db.Column(db.Text, nullable=False)
-    title = db.Column(db.String(255, convert_unicode=True), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.datetime.utcnow,
-                           nullable=False)
-    # active = db.Column(db.Boolean, default=True)
-    #event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    #event = db.relationship('Event', backref=db.backref('talk_proposals', lazy='dynamic'))
-
-
 class TalkVote(db.Model, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.datetime.utcnow,
+    created_at = db.Column(db.DateTime(),
+                           default=datetime.datetime.now,
                            nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User')
 
     talk_id = db.Column(db.Integer, db.ForeignKey('talk.id'), nullable=False)
+    talk = db.relationship('Talk')
 
     value = db.Column(db.Integer, nullable=False, default=False)
