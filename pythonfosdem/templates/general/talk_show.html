@@ -40,7 +40,13 @@
             {% endif %}
             <tr>
                 <th>Site</th>
-                <td>{{ talk.site_url or '/' }}</td>
+                <td>
+                {% if talk.site %}
+                <a href="{{ talk.site}}">{{ talk.site }}</a>
+                {% else %}
+                /
+                {% endif %}
+                </td>
             </tr>
             {% if current_user.has_role('jury_member') %}
             <tr>
