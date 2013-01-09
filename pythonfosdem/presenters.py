@@ -11,7 +11,6 @@ class Address(object):
     def __init__(self, url='', label='', type=None):
         self.url = url
         self.label = label
-        assert type in ('http', 'mail', 'twitter',)
         self.type = type
 
 
