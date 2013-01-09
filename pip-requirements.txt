@@ -14,3 +14,5 @@ lxml==3.1beta1
 ordereddict==1.1
 psycopg2==2.4.6
 python-dateutil
+unidecode
+
