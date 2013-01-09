@@ -156,6 +156,5 @@ class TalkVote(db.Model, CommonMixin):
     user = db.relationship('User')
 
     talk_id = db.Column(db.Integer, db.ForeignKey('talk.id'), nullable=False)
-    talk = db.relationship('Talk')
 
     value = db.Column(db.Integer, nullable=False, default=False)
