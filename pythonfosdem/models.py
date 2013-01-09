@@ -50,6 +50,9 @@ class Role(db.Model, RoleMixin, CommonMixin):
     description = db.Column(db.String(255))
     created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
 
+    def __unicode__(self):
+        return self.name
+
 
 class User(db.Model, UserMixin, CommonMixin):
     id = db.Column(db.Integer, primary_key=True)
