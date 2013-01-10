@@ -81,7 +81,7 @@ class App(Flask):
             # Rename 'title' columns to 'Post Title' in list view$
             column_labels = dict(name='Title')
 
-            column_searchable_list = ('name',)  # , User.username)
+            column_searchable_list = ('name', 'state',)  # , User.username)
 
             column_filters = ('name',) 
                               #filters.FilterLike(Post.title, 'Fixed Title', options=(('test1', 'Test 1'), ('test2', 'Test 2'))))
