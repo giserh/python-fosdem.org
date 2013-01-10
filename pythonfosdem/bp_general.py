@@ -31,6 +31,7 @@ from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkVote
 from pythonfosdem.models import User
 from pythonfosdem.presenters import UserPresenter
+from pythonfosdem.presenters import TalkPresenter
 
 __all__ = ['blueprint']
 
@@ -41,16 +42,17 @@ def to_index():
     return redirect(url_for('general.index'))
 
 
+def convert_to_presenter(iterable, klass):
+    for item in iterable:
+        yield klass(item)
+
+
 @blueprint.route('/')
 @cache.cached(timeout=30)
 def index():
-    # return redirect(url_for('general.talk_proposal'))
-    talks = Talk.query.filter_by(state='validated', type='talk').order_by(Talk.name.asc())
-
-    lightning_talks = Talk.query.filter_by(state='validated', type='lightning_talk').order_by(Talk.name.asc()).limit(4)
-    return render_template('general/index.html',
-                           talks=talks,
-                           lightning_talks=lightning_talks)
+    talks = Talk.query.filter_by(state='validated').order_by(Talk.start_at.asc())
+    talks = convert_to_presenter(talks, TalkPresenter)
+    return render_template('general/index.html', talks=talks)
 
 
 @blueprint.route('/profile', methods=['POST', 'GET'])

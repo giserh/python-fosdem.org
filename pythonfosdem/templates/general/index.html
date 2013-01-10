@@ -1,55 +1,29 @@
 {% extends 'layout.html' %}
+{% import 'general/_talks_helper.html' as th %}
 
-
-{% block content %}
-
+{% if 0 %}
     <!-- <h1>Python @ FOSDEM 2013</h1> -->
     <!-- <p class="lead">3rd February 2013 <small>Brussels, <strong>Belgium</strong></small></p> -->
-<!-- <div class="jumbotron">
+<div class="jumbotron">
     <h1>{{ _('Thank you for the Proposals') }}</h1>
     <p class="lead">{{ _('You will be notified by email as soon as possible') }}</p>
 </div>
- -->
+{% endif %}
 
-{% if talks.count() %}
+{% block content %}
+
 <div class='row' id='talks'>
     <div class='span12'>
-        <div class="jumbotron">
-            <h1>{{ _('Here are the Talks') }}</h1>
-            <p class="lead">{{ _('Thank you for your proposals !') }}</p>
+        <div class='jumbotron'>
+            <h1>{{ _('Here is the Schedule') }}</h1>
         </div>
     </div>
     <div class='span12'>
-        <ol>
-            {% for talk in talks %}
-            <li>
-                <h2><a href="{{ url_for('general.talk_show', record_id=talk.id, slug=talk.slug) }}">{{ talk.name }}</a> <small> by <a href="{{ url_for('general.user', user_id=talk.user.id, slug=talk.user.slug) }}">{{ talk.user.name }}</a></small></h2>
-                <blockquote><pre>{{ talk.description }}</pre></blockquote>
-            </li>
-            {% endfor %}
-        </ol>
+        {{ th.render_minimalist_talks(talks) }}
     </div>
 </div>
-{% endif %}
-{% if lightning_talks.count() %}
-<div class='row' id='lightning_talks'>
-    <div class='span12'>
-        <div class="jumbotron">
-            <h1>{{ _('Here are the Lightning Talks') }}</h1>
-        </div>
-    </div>
-    <div class='span12'>
-        <ol>
-            {% for talk in lightning_talks %}
-            <li>
-                <h2><a href="{{ url_for('general.talk_show', record_id=talk.id, slug=talk.slug) }}">{{ talk.name }}</a> <small> by <a href="{{ url_for('general.user', user_id=talk.user.id, slug=talk.user.slug) }}">{{ talk.user.name }}</a></small></h2>
-                <blockquote><pre>{{ talk.description }}</pre></blockquote>
-            </li>
-            {% endfor %}
-        </ol>
-    </div>
-</div>
-{% endif %}
+
+
 {#
 <div class="row-fluid marketing">
     <div id='sponsor'>
