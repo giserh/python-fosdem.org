@@ -130,7 +130,7 @@ def talk_show(record_id, slug=''):
 
 
 @blueprint.route('/talk/<int:record_id>/edit', methods=['POST', 'GET'])
-@roles_accepted('admin', 'speaker')
+@roles_accepted('admin')
 def talk_edit(record_id):
     talk = Talk.query.get_or_404(record_id)
     form = TalkForm(obj=talk)
