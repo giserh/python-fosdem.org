@@ -50,9 +50,16 @@ def convert_to_presenter(iterable, klass):
 @blueprint.route('/')
 @cache.cached(timeout=30)
 def index():
+    return redirect(url_for('general.schedule'))
+
+
+@blueprint.route('/schedule')
+@cache.cached(timeout=30)
+def schedule():
     talks = Talk.query.filter_by(state='validated').order_by(Talk.start_at.asc())
     talks = convert_to_presenter(talks, TalkPresenter)
     return render_template('general/index.html', talks=talks)
+
 
 
 @blueprint.route('/profile', methods=['POST', 'GET'])
