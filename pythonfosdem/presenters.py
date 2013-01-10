@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
-# import jinja2
-# from flask.ext.babel import _
-from pythonfosdem.extensions import db
-# from pythonfosdem.structs import Address
+from flask.ext.babel import _
 from flask.ext.babel import format_datetime
 from flask.ext.babel import format_date
+from pythonfosdem.extensions import db
+from pythonfosdem.forms import TalkForm
 
 
 class Address(object):
@@ -64,3 +63,16 @@ class UserPresenter(Presenter):
             (getattr(self, address, None)
              for address in 'twitter site'.split())
         )
+
+
+class TalkPresenter(Presenter):
+    @property
+    def schedule(self):
+        if self.start_at and self.stop_at:
+            return "%s - %s" % (self.start_at.strftime('%H:%M'),
+                                self.stop_at.strftime('%H:%M'))
+        return ''
+
+    @property
+    def type(self):
+        return dict(TalkForm.type.kwargs['choices']).get(self.model.type, _('Undefined'))
