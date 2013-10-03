@@ -1,0 +1,8 @@
+Dear,
+
+There is an error in the application.
+
+Please, could you check the traceback ?
+
+{{ error }}
+Thank you

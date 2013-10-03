@@ -12,4 +12,4 @@
 
 {{ _('Best Regards') }}, 
 
-{{ _('The Python@FOSDEM 2014 Team') }}
+{{ _('The Python@FOSDEM 2013 Team') }}

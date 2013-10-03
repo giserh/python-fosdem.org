@@ -1,6 +1,6 @@
 {{ _('Dear') }} {{ talk.user.name }},
 
-{{ _('We are sad to let you know that your talk has been declined for the Python DevRoom @ FOSDEM 2014.') }}
+{{ _('We are sad to let you know that your talk has been declined for the Python DevRoom @ FOSDEM 2013.') }}
 
 {{ _('We hope to hear from you again for the next edition.')}}
 
@@ -9,5 +9,5 @@
 {{ _('Best regards,') }}
 
 --
-{{ _('The Python @ FOSDEM 2014 Team,') }}
+{{ _('The Python @ FOSDEM 2013 Team,') }}
 {{ _('Twitter: @pythonfosdem') }}
