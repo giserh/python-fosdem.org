@@ -1,8 +1,0 @@
-Hello,
-
-You (or someone else) entered this email address to change the password of your python-fosdem.org account.
-If you don't expected this email or just remember your password, you can safely ignore this email.
-To change your password, click the following link: {{ reset_link }}
-
-Kind regards,
-The python-fosdem.org team. 
