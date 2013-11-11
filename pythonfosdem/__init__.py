@@ -12,7 +12,7 @@ from flask.ext.security.core import current_user
 from flask.ext.uploads import configure_uploads
 
 from flask.ext.admin.contrib.sqla import ModelView
-from flask.ext.wtf import SelectField
+from wtforms.fields import SelectField
 
 from pythonfosdem.bp_general import blueprint as bp_general
 from pythonfosdem.config import DefaultConfig

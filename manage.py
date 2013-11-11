@@ -9,6 +9,7 @@
     :copyright: (c) 2012 by Stephane Wirtel.
     :license: BSD, see LICENSE for more details.
 """
+import os
 from flask import render_template
 from flask import url_for
 from flask.ext.babel import _

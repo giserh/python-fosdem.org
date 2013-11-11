@@ -8,20 +8,14 @@
     :copyright: (c) 2012 by Stephane Wirtel.
     :license: BSD, see LICENSE for more details.
 """
-import flask.ext.wtf
 from flask.ext.wtf import Form
-from flask.ext.wtf import Length
-from flask.ext.wtf import Required
-from flask.ext.wtf import BooleanField
-from flask.ext.wtf import SelectField
-from flask.ext.wtf import SubmitField
-from flask.ext.wtf import TextAreaField
-from flask.ext.wtf import TextField
-from flask.ext.wtf import RecaptchaField
-from flask.ext.wtf import PasswordField
-from flask.ext.wtf import Email
-from flask.ext.wtf import HiddenField
-from flask.ext.wtf.html5 import EmailField
+from wtforms.validators import Length
+from wtforms.validators import Required
+from wtforms.fields import BooleanField
+from wtforms.fields import SelectField
+from wtforms.fields import SubmitField
+from wtforms.fields import TextAreaField
+from wtforms.fields import StringField as TextField
 from flask.ext.wtf.html5 import URLField
 from flask.ext.babel import lazy_gettext
 from wtforms.widgets import Input
@@ -33,15 +27,12 @@ from flask_security.forms import LoginForm as BaseLoginForm
 # Fucking Workaround, I don't like THAT :/
 # WTForms does use keyword arguments the constructor of the fields,
 # it's a limitation if you want to add a custom flag
-old_init = flask.ext.wtf.Field.__init__
-
-
+import wtforms.fields
+old_init = wtforms.fields.Field.__init__
 def new_init(self, *args, **kwargs):
     self.placeholder = kwargs.pop('placeholder', False)
     return old_init(self, *args, **kwargs)
-
-
-flask.ext.wtf.Field.__init__ = new_init
+wtforms.fields.Field.__init__ = new_init
 
 
 class TwitterInput(Input):
