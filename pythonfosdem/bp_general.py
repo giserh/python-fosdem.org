@@ -8,6 +8,8 @@
     :copyright: (c) 2012 by Stephane Wirtel.
     :license: BSD, see LICENSE for more details.
 """
+import datetime
+
 from flask import abort
 from flask import Blueprint
 from flask import flash
@@ -17,6 +19,7 @@ from flask import render_template
 from flask import request
 from flask import url_for
 from flask.ext.babel import _
+from flask.ext.mail import Message
 from flask.ext.security import roles_accepted, login_required
 from flask.ext.security.core import current_user
 from flask.ext.security.forms import ResetPasswordForm
@@ -25,8 +28,13 @@ from flask.ext.security.utils import get_message
 
 from pythonfosdem.extensions import cache
 from pythonfosdem.extensions import db
+from pythonfosdem.extensions import mail
+from pythonfosdem.extensions import security
 from pythonfosdem.forms import UserProfileForm
 from pythonfosdem.forms import TalkForm
+from pythonfosdem.forms import TalkProposalForm
+#from pythonfosdem.forms import LoginForm
+#from pythonfosdem.forms import SignupForm
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkVote
 from pythonfosdem.models import User
@@ -39,7 +47,7 @@ blueprint = Blueprint('general', __name__, template_folder='templates')
 
 
 def to_index():
-    return redirect(url_for('general.index'))
+    return redirect(url_for('general.talk_proposal'))
 
 
 def convert_to_presenter(iterable, klass):
@@ -48,9 +56,13 @@ def convert_to_presenter(iterable, klass):
 
 
 @blueprint.route('/')
-@cache.cached(timeout=30)
+#@cache.cached(timeout=30)
 def index():
-    return redirect(url_for('general.schedule'))
+    scheduler_available = False
+    dateline_has_reached = datetime.date.today() >= datetime.date(2013, 12, 1)
+    return render_template('general/index.html', 
+                           dateline_has_reached=dateline_has_reached,
+                           scheduler_available=scheduler_available)
 
 
 @blueprint.route('/schedule')
@@ -100,6 +112,15 @@ def user(user_id, slug=''):
         return redirect(url_for('general.user', user_id=user.id, slug=user.slug))
     return render_template('general/user.html', user=UserPresenter(user))
 
+@blueprint.route('/login_signup')
+def login_signup():
+    from pythonfosdem.forms import RegisterForm
+    from pythonfosdem.forms import LoginForm
+    login_form = LoginForm()
+    register_form = RegisterForm()
+    return render_template('general/login_signup.html',
+                           login_form=login_form,
+                           register_form=register_form)
 
 @blueprint.route('/speakers')
 def speakers():
@@ -108,9 +129,57 @@ def speakers():
     return render_template('general/speakers.html', speakers=speakers)
 
 
-@blueprint.route('/talk_proposal')
-def talk_proposal():
-    return render_template('general/closed_talk_proposal.html')
+#@blueprint.route('/talk_proposal', methods=['GET', 'POST'])
+#@login_required
+#def talk_proposal():
+#    today = datetime.date.today()
+#
+#    if today > datetime.date(2013, 11, 30):
+#        return render_template('general/closed_talk_proposal.html')
+#
+#    talk = Talk()
+#    form = TalkProposalForm(obj=talk)
+#
+#    if form.validate_on_submit():
+#
+#        user = User(
+#            name=form.user_name,
+#            email=form.email.data,
+#            company=form.company.data,
+#            twitter=form.twitter.data,
+#            site=form.site_url.data,
+#            biography=form.biography.data,
+#        )
+#
+#        db.session.add(user)
+#        talk = Talk(
+#            name=form.title.data,
+#            user=user,
+#            description=form.description.data,
+#            twitter=form.talk_twitter.data,
+#            level=form.level.data,
+#            site=form.talk_site_url.data
+#        )
+#
+#        flash(_('Your proposal will be moderated as soon as possible'))
+#
+#        # message = Message(_('Thank you for your proposal'),
+#        #                   recipients=[talk.email],
+#        #                   bcc=['stephane@wirtel.be']
+#        #                   )
+#        # message.body = render_template('emails/send_thank.txt', talk=talk)
+#        # message.html = render_template('emails/send_thank.html', talk=talk)
+#
+#        # mail.send(message)
+#
+#        db.session.add(talk)
+#        db.session.commit()
+#
+#        return to_index()
+#    return render_template('general/talk_proposal.html',
+#                           current_nav_link='general.index',
+#                           form=form)
+
 
 
 # NOT YET IMPLEMENTED

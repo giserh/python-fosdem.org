@@ -11,6 +11,9 @@ from flask.ext.mail import Message
 from flask.ext.security.core import current_user
 from flask.ext.uploads import configure_uploads
 
+from flask.ext.admin.contrib.sqla import ModelView
+from flask.ext.wtf import SelectField
+
 from pythonfosdem.bp_general import blueprint as bp_general
 from pythonfosdem.config import DefaultConfig
 from pythonfosdem.extensions import admin
@@ -21,7 +24,13 @@ from pythonfosdem.extensions import db
 from pythonfosdem.extensions import images_set
 from pythonfosdem.extensions import mail
 from pythonfosdem.extensions import security
-
+from pythonfosdem.forms import TalkForm
+from pythonfosdem.forms import LoginForm
+from pythonfosdem.forms import RegisterForm
+from pythonfosdem.models import Event
+from pythonfosdem.models import Role
+from pythonfosdem.models import Talk
+from pythonfosdem.models import User
 from pythonfosdem.models import user_datastore
 
 __all__ = ['App', 'create_app']
@@ -44,8 +53,8 @@ class App(Flask):
         if 'PYTHONFOSDEM_SETTINGS' in os.environ:
             self.config.from_pyfile(os.environ['PYTHONFOSDEM_SETTINGS'])
 
-        self.configure_blueprints()
         self.configure_extensions()
+        self.configure_blueprints()
         self.configure_error_handlers()
         self.configure_templates()
 
@@ -57,21 +66,16 @@ class App(Flask):
         babel.init_app(self)
         mail.init_app(self)
         db.init_app(self)
-        security.init_app(self, user_datastore)
+        security._state = security.init_app(self,
+                                            user_datastore,
+                                            register_form=RegisterForm)
         configure_uploads(self, (images_set,))
         self.configure_admin()
         cache.init_app(self)
 
+
     def configure_admin(self):
         admin.init_app(self)
-        from flask.ext.admin.contrib.sqlamodel import ModelView
-        from flask.ext.wtf import SelectField
-        from pythonfosdem.models import Talk
-        from pythonfosdem.models import User
-        from pythonfosdem.models import Role
-        from pythonfosdem.models import Event
-
-        from pythonfosdem.forms import TalkForm
 
         class TalkModelView(ModelView):
             # column_list = ('user',)
