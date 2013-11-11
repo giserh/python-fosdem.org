@@ -14,7 +14,7 @@ from setuptools import find_packages
 HERE = os.path.dirname(__file__)
 
 with open(os.path.join(HERE, 'pip-requirements.txt')) as fp:
-    reqs = fp.readlines()
+    reqs = [x.strip() for x in fp.readlines()]
 
 setup(
     name='PythonFOSDEM',
@@ -26,4 +26,8 @@ setup(
     packages=find_packages(),
     install_requires=reqs,
     include_package_data=True,
+    test_requires = [
+        'nose2',
+    ],
+    test_suite='nose2.collector',
 )
