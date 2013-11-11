@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<section id="login_signup">
+<div class="row">
+    <div class="span8">
+        <img src="{{ url_for('static', filename='img/python-fosdem.png') }}" />
+    </div>
+    <div class="span4">
+        <form method="POST" action="{{ url_for('security.login') }}" class="well">
+            {{ login_form.csrf_token }}
+            {{ login_form.hidden_tag() }}
+            <fieldset>
+                <div class="control-group">
+                    <div class="controls">
+                        {{ login_form.email(size=20, class='span3', placeholder="Your email") }}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        {{ login_form.password(size=20, class='span3', placeholder="Password") }}
+                    </div>
+                </div>
+                {% call fh.render_submit_button(login_form, 'btn') %}
+                    <a href="{{ url_for_security('forgot_password') }}" style="margin-left:3em;">Forgot your password?</a>
+                {% endcall %}
+
+            </fieldset>
+        </form>
+
+        <form method="POST" action="{{ url_for('security.register') }}" class="well">
+            {{ register_form.csrf }}
+            {{ register_form.hidden_tag() }}
+            <fieldset>
+                <div class="control-group">
+                    <div class="controls">
+                        {{ register_form.name(size=20, class='span3', placeholder="Your full name") }}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        {{ register_form.email(size=20, class='span3', placeholder="Your email") }}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        {{ register_form.password(size=20, class='span3', placeholder="Password") }}
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        {{ register_form.password_confirm(size=20, class='span3', placeholder="Confirm Password") }}
+                    </div>
+                </div>
+<!--
+                <div class="control-group">
+                    <div class="controls">
+                        {{ register_form.captcha }}
+                    </div>
+                </div>
+-->
+                {{ register_form.submit(class='btn btn-primary') }}
+            </fieldset>
+        </form>
+    </div>
+</div>  
+</section>
+
+
+{% endblock content %}

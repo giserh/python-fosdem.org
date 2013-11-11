@@ -53,6 +53,7 @@ class App(Flask):
         if 'PYTHONFOSDEM_SETTINGS' in os.environ:
             self.config.from_pyfile(os.environ['PYTHONFOSDEM_SETTINGS'])
 
+        print "CONFIG: %r" % (self.config['SQLALCHEMY_DATABASE_URI'],)
         self.configure_extensions()
         self.configure_blueprints()
         self.configure_error_handlers()
@@ -70,7 +71,7 @@ class App(Flask):
                                             user_datastore,
                                             register_form=RegisterForm)
         configure_uploads(self, (images_set,))
-        self.configure_admin()
+        #self.configure_admin()
         cache.init_app(self)
 
 
