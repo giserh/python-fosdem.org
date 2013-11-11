@@ -53,7 +53,6 @@ class App(Flask):
         if 'PYTHONFOSDEM_SETTINGS' in os.environ:
             self.config.from_pyfile(os.environ['PYTHONFOSDEM_SETTINGS'])
 
-        print "CONFIG: %r" % (self.config['SQLALCHEMY_DATABASE_URI'],)
         self.configure_extensions()
         self.configure_blueprints()
         self.configure_error_handlers()
