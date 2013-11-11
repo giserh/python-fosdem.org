@@ -126,6 +126,8 @@ class Talk(db.Model, CommonMixin):
     stop_at = db.Column(db.DateTime())
 
     type = db.Column(db.String(16), default='talk')
+    level = db.Column(db.String(16), default='beginner')
+    
     # talk, lightning_talk
 
     #    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
