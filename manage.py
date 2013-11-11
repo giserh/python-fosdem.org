@@ -9,14 +9,12 @@
     :copyright: (c) 2012 by Stephane Wirtel.
     :license: BSD, see LICENSE for more details.
 """
-import os
 from flask import render_template
 from flask import url_for
 from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.script import Manager
 from flask.ext.script.commands import ShowUrls
-from flask.ext.script import Shell
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
@@ -89,50 +87,7 @@ def main():
 
     @manager.command
     def import_xml(filename):
-        if not os.path.exists(filename):
-            print "The %s file does not exists" % (filename,)
-            return
-        
-        with open(filename, 'r') as fp:
-            xml_records = pythonfosdem.xml_importer.parse(fp)
-
-            for xml_id, xml_record in xml_records.iteritems():
-                instance, proxy = pythonfosdem.tools.create_or_update(xml_record.model, xml_id)
-                instance_is_new = instance.id is None
-
-                for field_name, field_value in xml_record.fields.iteritems():
-                    current_field = getattr(instance, field_name)
-
-                    if isinstance(field_value, dict) and 'reference' in field_value:
-                        ref_model, ref_id, record = pythonfosdem.tools.get_xml_id_or_raise(field_value['reference'])
-                        setattr(instance, field_name, record)
-                    elif pythonfosdem.tools.is_relationship(proxy, field_name):
-                        for nested_xml_id in xml_record.fields[field_name].split(','):
-                            operator = '+'
-                            if nested_xml_id[0] in ('+', '-'):
-                                operator, nested_xml_id = nested_xml_id[0], nested_xml_id[1:]
-
-                            ref_model, ref_id, record = pythonfosdem.tools.get_xml_id_or_raise(nested_xml_id)
-
-                            if operator == '-':
-                                current_field.remove(record)
-                            else:
-                                current_field.append(record)
-                    else:
-                        setattr(instance, field_name, field_value)
-
-                db.session.add(instance)
-                db.session.flush()
-
-                if instance_is_new:
-                    instance_model_data = pythonfosdem.models.ModelData(name=xml_id,
-                                                                        ref_model=xml_record.model,
-                                                                        ref_id=instance.id)
-                    db.session.add(instance_model_data)
-                    db.session.flush()
-
-            db.session.commit()
-
+        pythonfosdem.tools.import_xml(filename)
 
     @manager.command
     def db_create():
@@ -144,11 +99,7 @@ def main():
 
     @manager.command
     def db_reset():
-        db_drop()
-        db_create()
-        import_xml('pythonfosdem/data/pythonfosdem_init.xml')
-        import_xml('pythonfosdem/data/pythonfosdem_user.xml')
-        import_xml('pythonfosdem/data/pythonfosdem_demo.xml')
+        pythonfosdem.tools.reset_db()
 
     manager.run()
 
