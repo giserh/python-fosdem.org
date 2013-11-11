@@ -18,6 +18,7 @@ class DefaultConfig(object):
     SQLALCHEMY_ECHO = True
     DEBUG = True
     TESTING = True
+    LOGIN_DISABLED = False
     CACHE_TYPE = 'simple'
 
     BABEL_DEFAULT_LOCALE = 'fr_BE'
@@ -43,4 +44,3 @@ class DefaultConfig(object):
 
     MAIL_PORT = 10025
     MAIL_SERVER = '127.0.0.1'
-    
