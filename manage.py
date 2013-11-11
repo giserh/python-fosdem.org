@@ -15,6 +15,7 @@ from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.script import Manager
 from flask.ext.script.commands import ShowUrls
+from flask.ext.script import Shell
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
@@ -25,10 +26,31 @@ from pythonfosdem.models import Talk
 from pythonfosdem.models import User
 
 
+def mail_message(title, recipients=None, templates=None, values=None):
+    assert isinstance(recipients, list)
+    assert isinstance(templates, dict)
+    assert isinstance(values, dict)
+
+    msg = Message(
+        _('[Python-FOSDEM] %s') % title,
+        recipients=recipients,
+        sender='info@python-fosdem.org',
+        bcc=['stephane@wirtel.be']
+    )
+
+    if 'txt' in templates:
+        msg.body = render_template(templates['txt'], **values)
+
+    return msg
+
 def main():
     manager = Manager(create_app)
     manager.add_option('-c', '--config', dest='config', required=False)
     manager.add_command('routes', ShowUrls())
+
+    @manager.command
+    def show():
+        print dir(manager)
 
     @manager.command
     def send_talk_emails():
@@ -42,13 +64,14 @@ def main():
                     'talk': talk,
                 }
 
-                message = Message(_('[Python-FOSDEM] Your talk has been accepted !'),
-                                  recipients=[talk.user.email],
-                                  sender='info@python-fosdem.org',
-                                  bcc=['stephane@wirtel.be']
-                                  )
-                message.body = render_template('emails/talk_accepted.txt', **values)
-                conn.send(message)
+                msg = mail_message(
+                    _('Your talk has been accepted !'),
+                    recipients=[talk.user.email],
+                    templates={'txt': 'emails/talk_accepted.txt'},
+                    values=values
+                )
+
+                conn.send(msg)
 
     @manager.command
     def send_speaker_emails():
@@ -105,6 +128,7 @@ def main():
 
             db.session.commit()
 
+
     @manager.command
     def db_create():
         db.create_all()
@@ -112,6 +136,14 @@ def main():
     @manager.command
     def db_drop():
         db.drop_all()
+
+    @manager.command
+    def db_reset():
+        db_drop()
+        db_create()
+        import_xml('pythonfosdem/data/pythonfosdem_init.xml')
+        import_xml('pythonfosdem/data/pythonfosdem_user.xml')
+        import_xml('pythonfosdem/data/pythonfosdem_demo.xml')
 
     manager.run()
 
