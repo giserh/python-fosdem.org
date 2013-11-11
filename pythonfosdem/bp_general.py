@@ -118,8 +118,8 @@ def speakers():
     return render_template('general/speakers.html', speakers=speakers)
 
 
-@login_required
 @blueprint.route('/talks/submit', methods=['GET', 'POST'])
+@login_required
 def talk_submit():
     #assert current_user.is_authenticated()
     today = datetime.date.today()
