@@ -23,10 +23,14 @@
             <div class="span8 offset2">
                 <div class="jumbotron">
                     <h2>Welcome to Python @ FOSDEM 2014</h2>
-                    <a href="{{ url_for('general.talk_submit')}}" class="btn btn-primary">{{ _('Call For Proposals') }}</a>
+                    {% set ano = not current_user.is_authenticated() %}
+                    {% if ano %}
                     <div class="alert alert-danger">
-                        <strong>You have to <a href="{{ url_for_security('register') }}">register</a> for the Call For Proposal</strong>
+                        <strong>You need to <a href="{{ url_for_security('register') }}">register</a> to submit a Talk Proposal</strong>
                     </div>
+                    {% else %}
+                        <a href="{{ url_for('general.talk_submit')}}" class="btn btn-primary">{{ _('Call For Proposals') }}</a>
+                    {% endif %}
                 </div>
             </div>
 
