@@ -17,8 +17,9 @@
     <div class='span9'>
         {% call fh.render_horizontal_form(form, 'general.profile') %}
             {% call fh.fieldset(_('Information')) %}
-                {{ fh.render_horizontal_fields(form, 'name company biography') }}
-
+                {{ fh.inline_horizontal_field(form.name, class='span6') }}
+                {{ fh.inline_horizontal_field(form.company, class='span6') }}
+                {{ fh.inline_horizontal_field(form.biography, class='span6', rows=4) }}
             {% endcall %}
             {% call fh.fieldset(_('Internet')) %}
                 {{ fh.render_horizontal_fields(form, 'twitter site') }}

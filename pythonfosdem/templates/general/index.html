@@ -1,33 +1,43 @@
 {% extends 'layout.html' %}
 {% import 'general/_talks_helper.html' as th %}
 
-{% if 0 %}
-    <!-- <h1>Python @ FOSDEM 2014</h1> -->
-    <!-- <p class="lead">2nd February 2014 <small>Brussels, <strong>Belgium</strong></small></p> -->
-<div class="jumbotron">
-    <h1>{{ _('Thank you for the Proposals') }}</h1>
-    <p class="lead">{{ _('You will be notified by email as soon as possible') }}</p>
-</div>
-{% endif %}
-
-{#
 {% block content %}
-
-<div class='row' id='talks'>
-    <div class='span12'>
-        <div class='jumbotron'>
-            <h1>{{ _('Here is the Schedule') }}</h1>
+    {% if scheduler_available %}
+        <div class='row' id='talks'>
+            <div class='span12'>
+                <div class='jumbotron'>
+                    <h1>{{ _('Here is the Schedule') }}</h1>
+                </div>
+            </div>
+            <div class='span12'>
+                {{ th.render_minimalist_talks(talks) }}
+            </div>
         </div>
-    </div>
-    <div class='span12'>
-        {{ th.render_minimalist_talks(talks) }}
-    </div>
-</div>
-#}
+    {% elif dateline_has_reached %}
+        <div class="jumbotron">
+            <h1>{{ _('Thank you for the Proposals') }}</h1>
+            <p class="lead">{{ _('You will be notified by email as soon as possible') }}</p>
+        </div>
+    {% else %}
+        <div class="row-fluid">
+            <div class="span8 offset2">
+                <div class="jumbotron">
+                    <h2>Welcome to Python @ FOSDEM 2014</h2>
+                    <a href="{{ url_for('general.talk_proposal')}}" class="btn btn-primary">{{ _('Call For Proposals') }}</a>
+                    <div class="alert alert-danger">
+                        <strong>You have to <a href="{{ url_for_security('register') }}">register</a> for the Call For Proposal</strong>
+                    </div>
+                </div>
+            </div>
 
+            <div class="span8 offset2">
+                <script async class="speakerdeck-embed" data-id="3cc4cc70249901318fb31a2ecec744ea" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
 
-{#
-{% block content %}
+{% block content_tmp1 %}
 <div class="row-fluid marketing">
     <div id='sponsor'>
         <div class='page-header'>
@@ -59,14 +69,16 @@
 </div>
 
 {% endblock %}
-#}
 
-{% block content %}
+
+{% block content_tmp2 %}
 <div class="row-fluid marketing">
     <div class="span12">
         <div class="jumbotron">
-            <h1>There is an Python @ FOSDEM 2014 edition \o/</h1>
+            <h1>There is a Python @ FOSDEM 2014 edition \o/</h1>
         </div>
     </div>
 </div>
 {% endblock %}
+
+

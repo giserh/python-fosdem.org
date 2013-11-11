@@ -3,14 +3,18 @@
 {% block content %}
 
 <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form" class="security">
-    <h2>{{ _('Please Log in') }}</h2>
+    <h2>{{ _('Log in') }}</h2>
   {{ login_user_form.hidden_tag() }}
   {{ fh.render_field_with_errors(login_user_form.email, class='input-block-level') }}
   {{ fh.render_field_with_errors(login_user_form.password, class='input-block-level') }}
   <p class="checkbox">{{ login_user_form.remember()|safe }} {{ login_user_form.remember.label }}</p>
   {% call fh.render_submit_button(login_user_form, 'btn-large') %}
-      <a href="{{ url_for_security('forgot_password') }}" style="margin-left:3em;">Forgot your password?</a>
+      <a href="{{ url_for_security('forgot_password') }}" style="margin-left:3em;">{{ _('Forgot your password?') }}</a>
   {% endcall %}
+<hr />
+{% if security.registerable %}
+    <a href="{{ url_for_security('register') }}" class='btn btn-large'>{{ _('No Account, Register You') }}</a>
+{% endif %}
 </form>
 
 {% endblock %}
