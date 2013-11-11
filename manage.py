@@ -88,6 +88,10 @@ def main():
 
     @manager.command
     def import_xml(filename):
+        if not os.path.exists(filename):
+            print "The %s file does not exists" % (filename,)
+            return
+        
         with open(filename, 'r') as fp:
             xml_records = pythonfosdem.xml_importer.parse(fp)
 
