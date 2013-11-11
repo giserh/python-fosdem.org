@@ -13,15 +13,14 @@ import os
 
 
 class DefaultConfig(object):
+    DEFAULT_EMAIL = 'info@python-fosdem.org'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///pythonfosdem.db'
     SQLALCHEMY_ECHO = True
     DEBUG = True
-
+    TESTING = True
     CACHE_TYPE = 'simple'
 
     BABEL_DEFAULT_LOCALE = 'fr_BE'
-
-    MAIL_PORT = 1025    # MailCatcher
 
     BOOTSTRAP_USE_CDN = True
     BOOTSTRAP_USE_MINIFIED = True
@@ -29,10 +28,19 @@ class DefaultConfig(object):
     SECRET_KEY = '894a4d8c281245609a348cacda11813c'
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(days=1)
     UPLOADED_IMAGES_DEST = os.path.join(os.getcwd(), 'uploads')
-    DEFAULT_MAIL_SENDER = ('Python @ FOSDEM 2013', 'no-reply@python-fosdem.org')
+    DEFAULT_MAIL_SENDER = ('Python @ FOSDEM', DEFAULT_EMAIL)
 
     #SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'       # FIXME cannot log-in with unencrypted password. check how to configure passlib correclty
     SECURITY_PASSWORD_HASH = 'plaintext'
     SECURITY_PASSWORD_SALT = 'pepper'
-    SECURITY_EMAIL_SENDER = 'no-reply@python-fosdem.org'
+
+    SECURITY_EMAIL_SENDER = DEFAULT_EMAIL
+
+    # Don't comment this line SECURITY_RECOVERABLE because
+    # we can have an error with securitu.forgot_password
     SECURITY_RECOVERABLE = True
+    SECURITY_REGISTERABLE = True
+
+    MAIL_PORT = 10025
+    MAIL_SERVER = '127.0.0.1'
+    
