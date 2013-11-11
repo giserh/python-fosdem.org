@@ -17,11 +17,17 @@ from flask.ext.wtf import SelectField
 from flask.ext.wtf import SubmitField
 from flask.ext.wtf import TextAreaField
 from flask.ext.wtf import TextField
+from flask.ext.wtf import RecaptchaField
+from flask.ext.wtf import PasswordField
+from flask.ext.wtf import Email
+from flask.ext.wtf import HiddenField
 from flask.ext.wtf.html5 import EmailField
 from flask.ext.wtf.html5 import URLField
 from flask.ext.babel import lazy_gettext
 from wtforms.widgets import Input
 from wtforms.validators import ValidationError
+from flask_security.forms import RegisterForm as BaseRegisterForm
+from flask_security.forms import LoginForm as BaseLoginForm
 
 
 # Fucking Workaround, I don't like THAT :/
@@ -46,56 +52,13 @@ class TwitterField(TextField):
     widget = TwitterInput()
 
     def pre_validate(self, form):
-        if not self.data.startswith('@'):
+        if self.data and not self.data.startswith('@'):
             raise ValidationError(self.gettext('Not a valid Twitter account'))
 
         return super(TwitterField, self).pre_validate(form)
 
 
 class TalkProposalForm(Form):
-    firstname = TextField(
-        lazy_gettext(u'Firstname'),
-        validators=[Required(), Length(min=4, max=128)],
-        placeholder=lazy_gettext(u'Your firstname'),
-    )
-
-    lastname = TextField(
-        lazy_gettext(u'Lastname'),
-        validators=[Required(), Length(min=4, max=128)],
-        placeholder=lazy_gettext(u'Your lastname')
-    )
-
-    email = EmailField(
-        lazy_gettext(u'Email'),
-        validators=[Required(), Length(min=4, max=128)],
-        placeholder=lazy_gettext(u'Your email')
-    )
-
-    company = TextField(
-        lazy_gettext(u'Company / Organization'),
-        validators=[Length(min=4, max=128)],
-        placeholder=lazy_gettext(u'Your company or organization')
-    )
-
-    twitter = TwitterField(
-        lazy_gettext(u'Twitter'),
-        validators=[Length(min=4, max=128)],
-        placeholder=lazy_gettext(u'@twitter_account')
-    )
-
-    site_url = URLField(
-        lazy_gettext(u'Site'),
-        validators=[Length(min=4, max=128)],
-        description=lazy_gettext(u'Your website or this one of the project'),
-        placeholder=lazy_gettext(u'http://project_url')
-    )
-
-    biography = TextAreaField(
-        lazy_gettext(u'Biography'),
-        validators=[Required()],
-        placeholder=lazy_gettext(u'Could you add some lines about yourself?')
-    )
-
     title = TextField(
         lazy_gettext(u'Title'),
         validators=[Required(), Length(min=4, max=128)],
@@ -106,6 +69,30 @@ class TalkProposalForm(Form):
         lazy_gettext(u'Description'),
         validators=[Required()],
         placeholder=lazy_gettext(u'Give a description of your talk')
+    )
+
+
+    twitter = TwitterField(
+        lazy_gettext(u'Twitter'),
+        # validators=[Length(min=4, max=128)],
+        placeholder=lazy_gettext(u'@twitter_account')
+    )
+
+    site_url = URLField(
+        lazy_gettext(u'Site'),
+        validators=[Length(min=4, max=128)],
+        description=lazy_gettext(u'The website of the project'),
+        placeholder=lazy_gettext(u'http://project_url')
+    )
+
+    level = SelectField(
+        'Level',
+        choices=[
+            ('beginner', lazy_gettext(u'Beginner')),
+            ('intermediate', lazy_gettext(u'Intermediate')),
+            ('advanced', lazy_gettext(u'Advanced')),
+        ],
+        validators=[Required()]
     )
 
     submit = SubmitField(lazy_gettext(u'Submit Your Talk'))
@@ -128,7 +115,7 @@ class UserProfileForm(Form):
         lazy_gettext(u'Site'),
         validators=[Length(min=4, max=255)],
         description=lazy_gettext(u'Your website'),
-        placeholder=lazy_gettext(u'http://project_url')
+        placeholder=lazy_gettext(u'http://site_url')
     )
 
     company = TextField(
@@ -149,7 +136,7 @@ class UserProfileForm(Form):
 class TalkForm(Form):
     name = TextField(lazy_gettext(u'Name'),
                      validators=[Required(), Length(min=4, max=128)],
-                     description=lazy_gettext(u'The title of the name'))
+                     description=lazy_gettext(u'The title of the talk'))
     description = TextAreaField(
         lazy_gettext(u'Description'),
         validators=[Required()],
@@ -198,3 +185,12 @@ class TalkForm(Form):
     # type = db.Column(db.String(16), default='talk')
 
     submit = SubmitField(lazy_gettext(u'Save'))
+
+class RegisterForm(BaseRegisterForm):
+    name = TextField(lazy_gettext(u'Name'),
+                     validators=[Required(), Length(max=128)],
+                     description=lazy_gettext(u'Your name'),
+                     placeholder=lazy_gettext(u'John Doe'))
+
+class LoginForm(BaseLoginForm):
+    pass
