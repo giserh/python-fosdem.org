@@ -1,14 +1,10 @@
-
-# from flask import request
 from flask.ext.security.core import current_user
 from flask import url_for
-
-# from pythonfosdem.forms import TalkProposalForm
 
 from .common import PFTestCase
 
 class TaskProposalUnitTest(PFTestCase):
-    def test_020(self):
+    def test_create_talk(self):
         with self.app.test_request_context():
             login_user_url = url_for('security.login')
             talk_submit_url = url_for('general.talk_submit')
@@ -19,10 +15,10 @@ class TaskProposalUnitTest(PFTestCase):
                 password='secret',
             )
 
-            response = client.post(login_user_url, data=values, follow_redirects=True)
+            response = client.post(login_user_url,
+                                   data=values,
+                                   follow_redirects=True)
             self.assertEqual(response.status_code, 200)
-            # print response.data
-            #self.assert_200(user)
 
             self.assertTrue(current_user.is_authenticated())
 
@@ -33,6 +29,8 @@ class TaskProposalUnitTest(PFTestCase):
                 site_url='http://evy.com',
                 level='beginner',
             )
-            response = client.post(talk_submit_url, data=values, follow_redirects=True)
-            # print response.data
+            response = client.post(talk_submit_url,
+                                   data=values,
+                                   follow_redirects=True)
+
             self.assertEqual(response.status_code, 200)
