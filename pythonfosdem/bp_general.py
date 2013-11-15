@@ -18,6 +18,7 @@ from flask import redirect
 from flask import render_template
 from flask import request
 from flask import url_for
+from flask import current_app
 from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.security import roles_accepted
@@ -144,14 +145,14 @@ def talk_submit():
 
         flash(_('Your proposal will be moderated as soon as possible'))
 
-        # message = Message(_('Thank you for your proposal'),
-        #                   recipients=[talk.email],
-        #                   bcc=['stephane@wirtel.be']
-        #                   )
-        # message.body = render_template('emails/send_thank.txt', talk=talk)
-        # message.html = render_template('emails/send_thank.html', talk=talk)
+        message = Message(_('Thank you for your proposal'),
+                           recipients=[talk.email],
+                           bcc=[current_app.config['DEFAULT_EMAIL']],
+                           )
+        message.body = render_template('emails/send_thank.txt', talk=talk)
+        message.html = render_template('emails/send_thank.html', talk=talk)
 
-        # mail.send(message)
+        mail.send(message)
 
         db.session.add(talk)
         db.session.commit()
