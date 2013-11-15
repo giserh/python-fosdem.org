@@ -11,6 +11,7 @@
 """
 from flask import render_template
 from flask import url_for
+from flask import current_app
 from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.script import Manager
@@ -30,11 +31,12 @@ def mail_message(title, recipients=None, templates=None, values=None):
     assert isinstance(templates, dict)
     assert isinstance(values, dict)
 
+    default_email = current_app.config['DEFAULT_EMAIL']
     msg = Message(
         _('[Python-FOSDEM] %s') % title,
         recipients=recipients,
-        sender='info@python-fosdem.org',
-        bcc=['stephane@wirtel.be']
+        sender=[default_email],
+        bcc=[default_email]
     )
 
     if 'txt' in templates:
@@ -46,10 +48,6 @@ def main():
     manager = Manager(create_app)
     manager.add_option('-c', '--config', dest='config', required=False)
     manager.add_command('routes', ShowUrls())
-
-    @manager.command
-    def show():
-        print dir(manager)
 
     @manager.command
     def send_talk_emails():
@@ -76,14 +74,13 @@ def main():
     def send_speaker_emails():
         with mail.connect() as conn:
             for user in User.query.order_by(User.name).all():
-                if user.is_speaker:
-                    message = Message(_('[Python-FOSDEM] Information and Questions'),
-                                      sender='info@python-fosdem.org',
-                                      recipients=['stephane@wirtel.be'],
-                                      bcc=['stephane@wirtel.be']
-                                      )
-                    message.body = render_template('emails/speaker_email.txt', user=user)
-                    conn.send(message)
+                if not user.is_speaker:
+                    continue
+                msg = mail_message(_('Information and Questions'),
+                                   recipients=[user.email],
+                                   templates={'txt': 'emails/speaker_email.txt'},
+                                   values=dict(user=user))
+                conn.send(message)
 
     @manager.command
     def import_xml(filename):
