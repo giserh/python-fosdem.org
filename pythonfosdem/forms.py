@@ -111,7 +111,7 @@ class UserProfileForm(Form):
 
     company = TextField(
         lazy_gettext(u'Company / Organization'),
-        validators=[Length(min=4, max=128)],
+        validators=[Length(max=128)],
         placeholder=lazy_gettext(u'Your company or organization')
     )
 
