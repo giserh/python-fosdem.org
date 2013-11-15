@@ -152,7 +152,8 @@ class App(Flask):
             message = Message(_('[PythonFOSDEM] Error 500'),
                               sender='internal-error@python-fosdem.org',
                               recipients=['stephane@wirtel.be'])
-            message.body = render_template('emails/send_error_500.txt', error=cgitb.text(sys.exc_info()))
+            message.body = render_template('emails/send_error_500.txt',
+                                           error=cgitb.text(sys.exc_info()))
 
             mail.send(message)
             return render_template('errors/500.html'), 500
