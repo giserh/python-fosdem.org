@@ -1,4 +1,4 @@
-pudb==2012.3
+pudb
 nose2
 unittest2
 behave
