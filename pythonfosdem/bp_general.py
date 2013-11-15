@@ -46,7 +46,7 @@ blueprint = Blueprint('general', __name__, template_folder='templates')
 
 
 def to_index():
-    return redirect(url_for('general.talk_submit'))
+    return redirect(url_for('general.index'))
 
 
 def convert_to_presenter(iterable, klass):
@@ -121,7 +121,6 @@ def speakers():
 @blueprint.route('/talks/submit', methods=['GET', 'POST'])
 @login_required
 def talk_submit():
-    #assert current_user.is_authenticated()
     today = datetime.date.today()
 
     # TODO: Use a record from the database for the date
