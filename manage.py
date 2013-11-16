@@ -9,6 +9,8 @@
     :copyright: (c) 2012 by Stephane Wirtel.
     :license: BSD, see LICENSE for more details.
 """
+import operator
+
 from flask import render_template
 from flask import url_for
 from flask import current_app
@@ -33,9 +35,8 @@ def mail_message(title, recipients=None, templates=None, values=None):
 
     default_email = current_app.config['DEFAULT_EMAIL']
     msg = Message(
-        _('[Python-FOSDEM] %s') % title,
+        u'%s %s' % (_('[Python-FOSDEM]'), title),
         recipients=recipients,
-        sender=[default_email],
         bcc=[default_email]
     )
 
@@ -54,7 +55,7 @@ def main():
         with mail.connect() as conn:
             for talk in Talk.query.filter_by(state='validated'):
                 values = {
-                    'url_talk': 'http://python-fosdem.org%s' % (url_for('general.talk_show', record_id=talk.id, slug=talk.slug),),
+                    'url_talk': url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True),
                     'speaker': talk.user.name,
                     'talk_name': talk.name,
                     'talk_description': talk.description,
@@ -80,7 +81,21 @@ def main():
                                    recipients=[user.email],
                                    templates={'txt': 'emails/speaker_email.txt'},
                                    values=dict(user=user))
-                conn.send(message)
+                conn.send(msg)
+
+    @manager.command
+    def send_invitation_to_previous_speakers():
+        with mail.connect() as conn:
+            users = set(talk.user for talk in Talk.query.all())
+            sorted_users = sorted(users, key=operator.attrgetter('name'))
+            for user in sorted_users:
+                print user.name, user.email
+                msg = mail_message(_('Call For Proposals'),
+                                   recipients=[user.email],
+                                   templates={'txt': 'emails/cfp_invitation.txt'},
+                                   values=dict(user=user)
+                )
+                conn.send(msg)
 
     @manager.command
     def import_xml(filename):
