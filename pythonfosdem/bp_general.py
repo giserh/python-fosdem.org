@@ -146,7 +146,7 @@ def talk_submit():
         flash(_('Your proposal will be moderated as soon as possible'))
 
         message = Message(_('Thank you for your proposal'),
-                          sender=[current_app.config['DEFAULT_EMAIL']],
+                          #sender=[current_app.config['DEFAULT_EMAIL']],
                           recipients=[current_user.email],
                           bcc=[current_app.config['DEFAULT_EMAIL']],
                           )
@@ -154,7 +154,6 @@ def talk_submit():
         message.html = render_template('emails/send_thank.html', talk=talk)
 
         mail.send(message)
-
         db.session.add(talk)
         db.session.commit()
 
