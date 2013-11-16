@@ -117,7 +117,6 @@ class Talk(db.Model, CommonMixin):
     description = db.Column(db.Text, nullable=False)
     site = db.Column(db.String(255))
     twitter = db.Column(db.String(255))
-    approved = db.Column(db.Boolean)
     state = db.Column(db.String(16), default='draft')
     created_at = db.Column(db.DateTime(),
                            default=datetime.datetime.now,
@@ -128,11 +127,6 @@ class Talk(db.Model, CommonMixin):
     type = db.Column(db.String(16), default='talk')
     level = db.Column(db.String(16), default='beginner')
     
-    # talk, lightning_talk
-
-    #    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    #    event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
-
     votes = db.relationship('TalkVote', backref="talk")
 
     @property
