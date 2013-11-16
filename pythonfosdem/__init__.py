@@ -35,6 +35,7 @@ from pythonfosdem.models import user_datastore
 
 __all__ = ['App', 'create_app']
 
+# TODO: Fix the templates talk_accepted and talk_declined
 
 class App(Flask):
     def __init__(self, *args, **kwargs):
