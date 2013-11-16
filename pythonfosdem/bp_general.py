@@ -149,7 +149,7 @@ def talk_submit():
                           sender=[current_app.config['DEFAULT_EMAIL']],
                           recipients=[current_user.email],
                           bcc=[current_app.config['DEFAULT_EMAIL']],
-                          )ª
+                          )
         message.body = render_template('emails/send_thank.txt', talk=talk)
         message.html = render_template('emails/send_thank.html', talk=talk)
 
