@@ -1,15 +1,15 @@
-{{ _('Dear') }} {{ talk.firstname }} {{ talk.lastname }},
+{{ _('Dear') }} {{ talk.user.name }},
 
 {{ _('Thank you for your proposal') }}
 
 {{ _('Please find below the details about your talk') }}
 
 {{ _('Here is the description of your talk') }}:
-* {{ _('Entitled') }} {{ talk.title }}
+* {{ _('Entitled') }} {{ talk.name }}
 * {{ _('Description') }}: {{ talk.description }}
 
 {{ _('You will receive a notification by email after approval of your talk.') }}
 
-{{ _('Best Regards') }}, 
+{{ _('Best regards') }},
 
 {{ _('The Python@FOSDEM 2014 Team') }}
