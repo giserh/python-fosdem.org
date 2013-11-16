@@ -9,6 +9,8 @@ class TestConfig(object):
     WTF_CSRF_ENABLED = CSRF_ENABLED = False
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    MAIL_DEBUG = False
+    MAIL_SUPPRESS_SEND = False
 
 
 class PFTestCase(unittest2.TestCase):
