@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+
 from jinja2 import Markup
 import sqlalchemy
+from flask import current_app
+from flask import render_template
+from flask.ext.mail import Message
+
 import pythonfosdem.models
 import pythonfosdem.xml_importer
 from pythonfosdem.extensions import db
@@ -117,3 +122,17 @@ def reset_db():
     import_xml(os.path.join(DATA_DIR, 'pythonfosdem_init.xml'))
     import_xml(os.path.join(DATA_DIR, 'pythonfosdem_user.xml'))
     import_xml(os.path.join(DATA_DIR, 'pythonfosdem_demo.xml'))
+
+def mail_message(title, recipients=None, templates=None, values=None):
+    assert isinstance(recipients, list)
+    assert isinstance(templates, dict)
+    assert isinstance(values, dict)
+
+    default_email = current_app.config['DEFAULT_EMAIL']
+    subject = u' '.join(filter(None, [current_app.config.get('MAIL_DEFAULT_SUFFIX'), title]))
+    msg = Message(subject, recipients=recipients, bcc=[default_email])
+
+    if 'txt' in templates:
+        msg.body = render_template(templates['txt'], **values)
+
+    return msg

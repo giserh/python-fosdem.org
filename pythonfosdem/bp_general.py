@@ -145,15 +145,13 @@ def talk_submit():
 
         flash(_('Your proposal will be moderated as soon as possible'))
 
-        message = Message(_('Thank you for your proposal'),
-                          #sender=[current_app.config['DEFAULT_EMAIL']],
-                          recipients=[current_user.email],
-                          bcc=[current_app.config['DEFAULT_EMAIL']],
-                          )
-        message.body = render_template('emails/send_thank.txt', talk=talk)
-        message.html = render_template('emails/send_thank.html', talk=talk)
-
-        mail.send(message)
+        msg = pythonfosdem.tools.mail_message(
+            _('Thank you for your proposal'),
+            recipients=[current_user.email],
+            templates={'txt': 'emails/send_thank.txt'},
+            values=dict(talk=talk)
+        )
+        mail.send(msg)
         db.session.add(talk)
         db.session.commit()
 

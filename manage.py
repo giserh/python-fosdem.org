@@ -11,11 +11,8 @@
 """
 import operator
 
-from flask import render_template
 from flask import url_for
-from flask import current_app
 from flask.ext.babel import _
-from flask.ext.mail import Message
 from flask.ext.script import Manager
 from flask.ext.script.commands import ShowUrls
 from pythonfosdem import create_app
@@ -27,23 +24,6 @@ import pythonfosdem.xml_importer
 from pythonfosdem.models import Talk
 from pythonfosdem.models import User
 
-
-def mail_message(title, recipients=None, templates=None, values=None):
-    assert isinstance(recipients, list)
-    assert isinstance(templates, dict)
-    assert isinstance(values, dict)
-
-    default_email = current_app.config['DEFAULT_EMAIL']
-    msg = Message(
-        u'%s %s' % (_('[Python-FOSDEM]'), title),
-        recipients=recipients,
-        bcc=[default_email]
-    )
-
-    if 'txt' in templates:
-        msg.body = render_template(templates['txt'], **values)
-
-    return msg
 
 def main():
     manager = Manager(create_app)
@@ -62,7 +42,7 @@ def main():
                     'talk': talk,
                 }
 
-                msg = mail_message(
+                msg = pythonfosdem.tools.mail_message(
                     _('Your talk has been accepted !'),
                     recipients=[talk.user.email],
                     templates={'txt': 'emails/talk_accepted.txt'},
@@ -77,10 +57,12 @@ def main():
             for user in User.query.order_by(User.name).all():
                 if not user.is_speaker:
                     continue
-                msg = mail_message(_('Information and Questions'),
-                                   recipients=[user.email],
-                                   templates={'txt': 'emails/speaker_email.txt'},
-                                   values=dict(user=user))
+                msg = pythonfosdem.tools.mail_message(
+                    _('Information and Questions'),
+                   recipients=[user.email],
+                   templates={'txt': 'emails/speaker_email.txt'},
+                   values=dict(user=user)
+                )
                 conn.send(msg)
 
     @manager.command
@@ -90,10 +72,11 @@ def main():
             sorted_users = sorted(users, key=operator.attrgetter('name'))
             for user in sorted_users:
                 print user.name, user.email
-                msg = mail_message(_('Call For Proposals'),
-                                   recipients=[user.email],
-                                   templates={'txt': 'emails/cfp_invitation.txt'},
-                                   values=dict(user=user)
+                msg = pythonfosdem.tools.mail_message(
+                    _('Call For Proposals'),
+                   recipients=[user.email],
+                   templates={'txt': 'emails/cfp_invitation.txt'},
+                   values=dict(user=user)
                 )
                 conn.send(msg)
 
