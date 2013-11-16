@@ -43,3 +43,4 @@ class DefaultConfig(object):
     SECURITY_REGISTERABLE = True
 
     MAIL_PORT = 10025
+    MAIL_DEFAULT_SUFFIX = '[Python-FOSDEM 2014]'
