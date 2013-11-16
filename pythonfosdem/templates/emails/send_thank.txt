@@ -12,4 +12,5 @@
 
 {{ _('Best regards') }},
 
-{{ _('The Python@FOSDEM 2014 Team') }}
+--
+The Team Python @ FOSDEM. - {{ url_for('general.index', _external=True) }} - @PythonFOSDEM

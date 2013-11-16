@@ -9,5 +9,4 @@
 {{ _('Best regards,') }}
 
 --
-{{ _('The Python @ FOSDEM 2014 Team,') }}
-{{ _('Twitter: @pythonfosdem') }}
+The Team Python @ FOSDEM. - {{ url_for('general.index', _external=True) }} - @PythonFOSDEM
