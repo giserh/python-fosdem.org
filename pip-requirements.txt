@@ -16,4 +16,4 @@ ordereddict
 psycopg2
 python-dateutil
 unidecode
-
+docopt
