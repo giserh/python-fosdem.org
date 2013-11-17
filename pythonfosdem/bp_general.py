@@ -311,11 +311,7 @@ def subscribe():
 
     if form.validate_on_submit():
         email = form.email.data
-        sub = Subscriber.query.filter_by(email=email).first()
-        if not sub:
-            sub = Subscriber(email=email)
-        sub.active = True
-
+        sub = Subscriber.add(email)
         unsubscribe_url = url_for('general.unsubscribe', token=sub.unsubscribe_token, _external=True)
 
         msg = pythonfosdem.tools.mail_message(
@@ -326,7 +322,6 @@ def subscribe():
         )
         mail.send(msg)
 
-        db.session.add(sub)
         db.session.commit()
         flash('Thank you.')
     else:

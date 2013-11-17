@@ -168,3 +168,12 @@ class Subscriber(db.Model, CommonMixin):
     unsubscribe_token = db.Column(db.String,
                                   default=lambda: str(uuid.uuid4()).replace('-', ''),
                                   nullable=False)
+
+    @classmethod
+    def add(cls, email):
+        sub = cls.query.filter_by(email=email).first()
+        if not sub:
+            sub = cls(email=email)
+        sub.active = True
+        db.session.add(sub)
+        return sub

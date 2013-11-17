@@ -9,6 +9,7 @@ from flask import render_template
 from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.security.core import current_user
+from flask.ext.security import user_confirmed
 from flask.ext.uploads import configure_uploads
 
 from flask.ext.admin.contrib.sqla import ModelView
@@ -33,6 +34,7 @@ from pythonfosdem.models import Role
 from pythonfosdem.models import Talk
 from pythonfosdem.models import User
 from pythonfosdem.models import user_datastore
+from pythonfosdem.models import Subscriber
 
 __all__ = ['App', 'create_app']
 
@@ -57,6 +59,7 @@ class App(Flask):
         self.configure_extensions()
         self.configure_blueprints()
         self.configure_error_handlers()
+        self.configure_signals()
         self.configure_templates()
 
     def configure_blueprints(self):
@@ -165,6 +168,10 @@ class App(Flask):
         def inject_user():
             return dict(current_user=current_user)
 
+    def configure_signals(self):
+        @user_confirmed.connect_via(self)
+        def _auto_subscribe_user(app, user):
+            Subscriber.add(user.email)
 
 def create_app(config=None):
     return App(__name__, config=config)
