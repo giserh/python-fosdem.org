@@ -5,7 +5,7 @@
 {{ _('Please find below the details about your talk') }}
 
 {{ _('Here is the description of your talk') }}:
-* {{ _('Entitled') }} {{ talk.name }}
+* {{ _('Entitled') }}: {{ talk.name }}
 * {{ _('Description') }}: {{ talk.description }}
 
 {{ _('You will receive a notification by email after approval of your talk.') }}
