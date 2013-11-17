@@ -31,4 +31,8 @@ setup(
         'nose2',
     ],
     test_suite='nose2.collector',
+    entry_points="""
+    [console_scripts]
+    python-fosdem = pythonfosdem.manage:main
+    """
 )

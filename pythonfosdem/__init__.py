@@ -40,8 +40,7 @@ __all__ = ['App', 'create_app']
 class App(Flask):
     def __init__(self, *args, **kwargs):
         config = kwargs.pop('config', None)
-
-        Flask.__init__(self, *args, **kwargs)
+        super(App, self).__init__(*args, **kwargs)
 
         self.config.from_object(DefaultConfig())
 

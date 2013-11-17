@@ -136,3 +136,12 @@ def mail_message(title, recipients=None, templates=None, values=None):
         msg.body = render_template(templates['txt'], **values)
 
     return msg
+
+def count_workers():
+    """ This function computes the number of Workers.
+        The formula is: (number_of_cpu * 2) + 1
+    """
+    import multiprocessing
+    number_of_cpu = multiprocessing.cpu_count()
+    return (number_of_cpu * 2) + 1
+
