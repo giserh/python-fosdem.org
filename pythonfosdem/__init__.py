@@ -27,6 +27,7 @@ from pythonfosdem.extensions import security
 from pythonfosdem.forms import TalkForm
 from pythonfosdem.forms import LoginForm
 from pythonfosdem.forms import RegisterForm
+from pythonfosdem.forms import ConfirmRegisterForm
 from pythonfosdem.models import Event
 from pythonfosdem.models import Role
 from pythonfosdem.models import Talk
@@ -68,7 +69,8 @@ class App(Flask):
         db.init_app(self)
         security._state = security.init_app(self,
                                             user_datastore,
-                                            register_form=RegisterForm)
+                                            register_form=RegisterForm,
+                                            confirm_register_form=ConfirmRegisterForm)
         configure_uploads(self, (images_set,))
         #self.configure_admin()
         cache.init_app(self)

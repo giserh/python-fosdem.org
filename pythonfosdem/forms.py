@@ -22,6 +22,7 @@ from wtforms.widgets import Input
 from wtforms.validators import ValidationError
 from flask_security.forms import RegisterForm as BaseRegisterForm
 from flask_security.forms import LoginForm as BaseLoginForm
+from flask_security.forms import ConfirmRegisterForm as BaseConfirmRegisterForm
 
 
 # Fucking Workaround, I don't like THAT :/
@@ -183,5 +184,12 @@ class RegisterForm(BaseRegisterForm):
                      description=lazy_gettext(u'Your name'),
                      placeholder=lazy_gettext(u'John Doe'))
 
+class ConfirmRegisterForm(BaseConfirmRegisterForm):
+    name = TextField(lazy_gettext(u'Name'),
+                     validators=[Required(), Length(max=128)],
+                     description=lazy_gettext(u'Your name'),
+                     placeholder=lazy_gettext(u'John Doe'))
+
+
 class LoginForm(BaseLoginForm):
-    pass
+    """Custome LoginForm"""
