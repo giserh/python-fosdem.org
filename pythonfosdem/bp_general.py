@@ -40,6 +40,7 @@ from pythonfosdem.models import TalkVote
 from pythonfosdem.models import User
 from pythonfosdem.presenters import UserPresenter
 from pythonfosdem.presenters import TalkPresenter
+import pythonfosdem.tools
 
 __all__ = ['blueprint']
 
