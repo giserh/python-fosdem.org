@@ -36,6 +36,17 @@
             <div class="span8 offset2">
                 <script async class="speakerdeck-embed" data-id="275d764031c701315d514a2207c7cb38" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
             </div>
+
+
+            <div class="span8 offset2">
+                <form method="POST" action="{{ url_for('general.subscribe') }}" class="form-inline well">
+                    {{ subscribe_form.hidden_tag() }}
+                    <label class="control-label" for="email">Keep in touch</label>
+                    {{ subscribe_form.email(type='email', class='input-xlarge', required='required', placeholder=subscribe_form.email.placeholder) | safe }}
+                    {{ subscribe_form.submit(class='btn btn-default') }}
+                </form>
+            </div>
+
         </div>
     {% endif %}
 {% endblock %}

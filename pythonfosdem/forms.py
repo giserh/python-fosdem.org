@@ -16,7 +16,7 @@ from wtforms.fields import SelectField
 from wtforms.fields import SubmitField
 from wtforms.fields import TextAreaField
 from wtforms.fields import StringField as TextField
-from flask.ext.wtf.html5 import URLField
+from flask.ext.wtf.html5 import URLField, EmailField
 from flask.ext.babel import lazy_gettext
 from wtforms.widgets import Input
 from wtforms.validators import ValidationError
@@ -192,4 +192,14 @@ class ConfirmRegisterForm(BaseConfirmRegisterForm):
 
 
 class LoginForm(BaseLoginForm):
-    """Custome LoginForm"""
+    """Custom LoginForm"""
+    pass
+
+
+class SubscribeForm(Form):
+    email = EmailField(
+        lazy_gettext(u'Email'),
+        validators=[Required()],
+        placeholder=lazy_gettext(u'john.doe@example.com'),
+    )
+    submit = SubmitField(lazy_gettext(u'Subscribe'))

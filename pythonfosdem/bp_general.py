@@ -31,9 +31,11 @@ from flask.ext.security.utils import get_message
 from pythonfosdem.extensions import cache
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
+from pythonfosdem.forms import SubscribeForm
 from pythonfosdem.forms import UserProfileForm
 from pythonfosdem.forms import TalkForm
 from pythonfosdem.forms import TalkProposalForm
+from pythonfosdem.models import Subscriber
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkVote
 from pythonfosdem.models import User
@@ -60,9 +62,12 @@ def convert_to_presenter(iterable, klass):
 def index():
     scheduler_available = False
     dateline_has_reached = datetime.date.today() >= datetime.date(2013, 12, 1)
+    subscribe_form = SubscribeForm()
     return render_template('general/index.html', 
                            dateline_has_reached=dateline_has_reached,
-                           scheduler_available=scheduler_available)
+                           scheduler_available=scheduler_available,
+                           subscribe_form=subscribe_form,
+                          )
 
 
 @blueprint.route('/schedule')
@@ -298,3 +303,30 @@ def talks_to_validate():
     records = [Talk.query.get(r[0]) for r in result]
 
     return render_template('general/talks_dashboard.html', records=records)
+
+
+@blueprint.route('/subscribe', methods=['POST'])
+def subscribe():
+    form = SubscribeForm()
+
+    if form.validate_on_submit():
+        email = form.email.data
+        sub = Subscriber.query.filter_by(email=email).first()
+        if not sub:
+            sub = Subscriber(email=email)
+        sub.active = True
+        db.session.add(sub)
+        db.session.commit()
+        flash('Thank you.')
+    else:
+        flash('Invalid form', 'error')
+    return redirect(url_for('general.index'))
+
+@blueprint.route('/unsubscribe/<token>')
+def unsubscribe(token):
+    sub = Subscriber.query.filter_by(unsubscribe_token=token).first_or_404()
+    sub.active = False
+    db.session.add(sub)
+    db.session.commit()
+    flash("Sorry to hear you don't like us :(")
+    return redirect(url_for('general.index'))

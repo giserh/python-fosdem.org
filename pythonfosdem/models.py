@@ -10,6 +10,7 @@
 """
 import datetime
 import hashlib
+import uuid
 
 from werkzeug import cached_property
 
@@ -157,3 +158,13 @@ class TalkVote(db.Model, CommonMixin):
     talk_id = db.Column(db.Integer, db.ForeignKey('talk.id'), nullable=False)
 
     value = db.Column(db.Integer, nullable=False, default=False)
+
+
+class Subscriber(db.Model, CommonMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now, nullable=False)
+    email = db.Column(db.String, nullable=True, unique=True)
+    active = db.Column(db.Boolean)
+    unsubscribe_token = db.Column(db.String,
+                                  default=lambda: str(uuid.uuid4()).replace('-', ''),
+                                  nullable=False)
