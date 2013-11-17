@@ -31,7 +31,6 @@ from flask.ext.security.utils import get_message
 from pythonfosdem.extensions import cache
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import mail
-from pythonfosdem.extensions import security
 from pythonfosdem.forms import UserProfileForm
 from pythonfosdem.forms import TalkForm
 from pythonfosdem.forms import TalkProposalForm
