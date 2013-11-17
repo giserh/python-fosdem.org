@@ -315,6 +315,17 @@ def subscribe():
         if not sub:
             sub = Subscriber(email=email)
         sub.active = True
+
+        unsubscribe_url = url_for('general.unsubscribe', token=sub.unsubscribe_token, _external=True)
+
+        msg = pythonfosdem.tools.mail_message(
+            _('Thank you for your subscription to our newsletter'),
+            recipients=[email],
+            templates={'txt': 'emails/news_subscribe.txt'},
+            values=dict(unsubscribe_url=unsubscribe_url)
+        )
+        mail.send(msg)
+
         db.session.add(sub)
         db.session.commit()
         flash('Thank you.')
