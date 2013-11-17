@@ -46,9 +46,9 @@ class DefaultConfig(object):
     MAIL_DEFAULT_SUFFIX = '[Python-FOSDEM 2014]'
 
     # TODO: Override the function of Flask-Security
-    EMAIL_SUBJECT_REGISTER = '%s Welcome' % MAIL_DEFAULT_SUFFIX
-    EMAIL_SUBJECT_CONFIRM = '%s Please confirm your email'  % MAIL_DEFAULT_SUFFIX
-    EMAIL_SUBJECT_PASSWORDLESS = '%s Login instructions' % MAIL_DEFAULT_SUFFIX
-    EMAIL_SUBJECT_PASSWORD_NOTICE = '%s Your password has been reset' % MAIL_DEFAULT_SUFFIX
-    EMAIL_SUBJECT_PASSWORD_CHANGE_NOTICE = '%s Your password has been changed' % MAIL_DEFAULT_SUFFIX
-    EMAIL_SUBJECT_PASSWORD_RESET = '%s Password reset instructions' % MAIL_DEFAULT_SUFFIX
+    SECURITY_EMAIL_SUBJECT_REGISTER = '%s Welcome' % MAIL_DEFAULT_SUFFIX
+    SECURITY_EMAIL_SUBJECT_CONFIRM = '%s Please confirm your email'  % MAIL_DEFAULT_SUFFIX
+    SECURITY_EMAIL_SUBJECT_PASSWORDLESS = '%s Login instructions' % MAIL_DEFAULT_SUFFIX
+    SECURITY_EMAIL_SUBJECT_PASSWORD_NOTICE = '%s Your password has been reset' % MAIL_DEFAULT_SUFFIX
+    SECURITY_EMAIL_SUBJECT_PASSWORD_CHANGE_NOTICE = '%s Your password has been changed' % MAIL_DEFAULT_SUFFIX
+    SECURITY_EMAIL_SUBJECT_PASSWORD_RESET = '%s Password reset instructions' % MAIL_DEFAULT_SUFFIX
