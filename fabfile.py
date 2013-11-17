@@ -32,7 +32,8 @@ def working_directory(directory):
     return os.path.join('/', 'home', 'www', *directory)
 
 CACHE_DIRECTORY = '/home/www/pip-cache'
-HOME_DIRECTORY = working_directory('python-fosdem.org')
+WORKING_DIRECTORY = 'www.python-fosdem.org'
+HOME_DIRECTORY = working_directory(WORKING_DIRECTORY)
 
 DATABASE = 'python_fosdem_org'
 DATABASE_OWNER = 'pythonfosdem'
@@ -43,9 +44,8 @@ SRC_DIR = os.path.join(HOME_DIRECTORY, 'src')
 VIRTUALENV_PATH = os.path.join(HOME_DIRECTORY, 'env')
 REQUIREMENT_FILE = os.path.join(SRC_DIR, 'pip-requirements.txt')
 
-env.user = 'root'
-env.hosts = ['wirtel.be']
-
+env.use_ssh_config = True
+env.hosts = ['root@python-fosdem.org']
 
 @task
 def bootstrap():
@@ -58,7 +58,12 @@ def bootstrap():
     working_directory_create()
     source_fetch()
     virtualenv_init()
+    create_log_directory()
 
+@task
+def create_log_directory(directory=WORKING_DIRECTORY):
+    log_directory = os.path.join('/', 'var', 'log', 'nginx', WORKING_DIRECTORY)
+    run('mkdir -p %s' % log_directory)
 
 @task
 def postgresql_user_create():
