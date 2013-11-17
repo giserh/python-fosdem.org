@@ -28,9 +28,8 @@
                     <div class="alert alert-danger">
                         <strong>You need to <a href="{{ url_for_security('register') }}">register</a> to submit a Talk Proposal</strong>
                     </div>
-                    {% else %}
-                        <a href="{{ url_for('general.talk_submit')}}" class="btn btn-primary">{{ _('Call For Proposals') }}</a>
                     {% endif %}
+                    <a href="{{ url_for('general.talk_submit')}}" class="btn btn-primary">{{ _('Call For Proposals') }}</a>
                 </div>
             </div>
 
