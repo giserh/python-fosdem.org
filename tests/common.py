@@ -11,6 +11,11 @@ class TestConfig(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     MAIL_DEBUG = False
     MAIL_SUPPRESS_SEND = False
+    TESTING = True
+    LOGIN_DISABLED = False
+    # FIXME: There is a bug if the password is encrypted
+    SECURITY_PASSWORD_HASH = 'plaintext'
+
 
 
 class PFTestCase(unittest2.TestCase):
