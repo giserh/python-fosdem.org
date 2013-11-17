@@ -312,6 +312,8 @@ def subscribe():
     if form.validate_on_submit():
         email = form.email.data
         sub = Subscriber.add(email)
+        db.session.commit()
+
         unsubscribe_url = url_for('general.unsubscribe', token=sub.unsubscribe_token, _external=True)
 
         msg = pythonfosdem.tools.mail_message(
@@ -321,9 +323,7 @@ def subscribe():
             values=dict(unsubscribe_url=unsubscribe_url)
         )
         mail.send(msg)
-
-        db.session.commit()
-        flash('Thank you.')
+        flash('Thank you for your subscription.')
     else:
         flash('Invalid form', 'error')
     return redirect(url_for('general.index'))
