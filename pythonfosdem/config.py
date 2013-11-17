@@ -31,8 +31,8 @@ class DefaultConfig(object):
     UPLOADED_IMAGES_DEST = os.path.join(os.getcwd(), 'uploads')
     MAIL_DEFAULT_SENDER = ('Python @ FOSDEM', DEFAULT_EMAIL)
 
-    #SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'       # FIXME cannot log-in with unencrypted password. check how to configure passlib correclty
-    SECURITY_PASSWORD_HASH = 'plaintext'
+    SECURITY_PASSWORD_HASH = 'pbkdf2_sha512'       # FIXME cannot log-in with unencrypted password. check how to configure passlib correclty
+    #SECURITY_PASSWORD_HASH = 'plaintext'
     SECURITY_PASSWORD_SALT = 'pepper'
 
     SECURITY_EMAIL_SENDER = DEFAULT_EMAIL
