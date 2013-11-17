@@ -10,6 +10,7 @@
 import os
 from setuptools import setup
 from setuptools import find_packages
+from pythonfosdem import release
 
 HERE = os.path.dirname(__file__)
 
@@ -17,11 +18,11 @@ with open(os.path.join(HERE, 'pip-requirements.txt')) as fp:
     reqs = [x.strip() for x in fp.readlines()]
 
 setup(
-    name='PythonFOSDEM',
-    version='0.1dev',
-    author='Stephane Wirtel',
-    author_email='stephane@wirtel.be',
-    url='http://github.com/matrixise/python-fosdem.org',
+    name=release.name,
+    version=release.version,
+    author=release.author,
+    author_email=release.author_email,
+    url=release.url,
     license='BSD',
     packages=find_packages(),
     install_requires=reqs,
