@@ -1,6 +1,6 @@
 Dear {{ user.name }},
 
-We are happy to let you know that the Python-FOSDEM new edition will take place
+We are happy to let you know that the Python-FOSDEM [1] new edition will take place
 on 2 Feb 2014 at FOSDEM in Brussels.
 
 As you proposed a talk for the last edition, would you be interested in
@@ -9,11 +9,14 @@ submitting a new talk this year ?
 As before, a Beer event as weel as a restaurant will be organised on Friday 31
 Jan and 1 Feb respectively.  It will be a great pleasure to have you on board !
 
-
 Your login for the access is {{ user.email }} and you have to reset your password
 via this address: {{ url_for_security('forgot_password', _external=True) }}
 
 Best regards,
+
+[1] {{ url_for('general.index', _external=True) }}
+
+The Team Python @ FOSDEM
 
 --
 The Team Python @ FOSDEM. - {{ url_for('general.index', _external=True) }} - @PythonFOSDEM
