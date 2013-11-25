@@ -69,6 +69,42 @@ class ModelData(db.Model, Mixin):
     ref_id = db.Column(db.Integer, nullable=False)
 
 
+class ConfigParameter(db.Model, Mixin):
+    name = db.Column(db.String(80), unique=True, nullable=False)
+
+    value_string = db.Column(db.String)
+    value_integer = db.Column(db.Integer)
+    value_date = db.Column(db.Date)
+    value_datetime = db.Column(db.DateTime)
+
+    type = db.Column(db.String)
+
+    @property
+    def value(self):
+        if self.type == 'string':
+            return self.value_string
+        if self.type == 'integer':
+            return self.value_integer
+        if self.type == 'date':
+            return self.value_date
+        if self.type == 'datetime':
+            return self.value_datetime
+
+    @value.setter
+    def value(self, value):
+        if isinstance(value, datetime.datetime):
+            self.type = 'datetime'
+            self.value_datetime = value
+        if isinstance(value, datetime.date):
+            self.type = 'date'
+            self.value_date = value
+        if isinstance(value, (int, long)):
+            self.type = 'integer'
+            self.value_integer = value
+        if isinstance(value, basestring):
+            self.type = 'string'
+            self.value_string = value
+
 roles_users = db.Table('roles_users',
     db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
     db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
@@ -78,9 +114,6 @@ roles_users = db.Table('roles_users',
 class Role(db.Model, Mixin, RoleMixin):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
-
-    #def __unicode__(self):
-    #    return self.name
 
 
 class User(db.Model, Mixin, UserMixin):
@@ -125,8 +158,6 @@ class User(db.Model, Mixin, UserMixin):
     def slug(self):
         return slugify(self.name)
 
-    #def __unicode__(self):
-    #    return self.name
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
