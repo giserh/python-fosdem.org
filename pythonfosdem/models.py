@@ -14,6 +14,8 @@ import uuid
 
 from werkzeug import cached_property
 
+from sqlalchemy.ext.declarative import declared_attr
+
 from flask.ext.security import RoleMixin
 from flask.ext.security import SQLAlchemyUserDatastore
 from flask.ext.security import UserMixin
@@ -24,44 +26,68 @@ from pythonfosdem.extensions import images_set
 from pythonfosdem.tools import slugify
 
 
-class CommonMixin(object):
+
+
+class PrimaryKey(db.Column):
+    def __init__(self, *args, **kwargs):
+        kwargs.update(type_=db.Integer,
+                      primary_key=True)
+        super(PrimaryKey, self).__init__(**kwargs)
+
+
+class MandatoryDateTime(db.Column):
+    def __init__(self, *args, **kwargs):
+        kwargs.update(type_=db.DateTime,
+                      default=datetime.datetime.now,
+                      nullable=False)
+        super(MandatoryDateTime, self).__init__(**kwargs)
+
+
+class Mixin(object):
+    id = PrimaryKey()
+    created_at = MandatoryDateTime()
+
+    @declared_attr
+    def __tablename__(cls):
+        return cls.__name__.lower()
+
     @property
     def created_on(self):
-        return datetime.date(self.created_at.year, self.created_at.month, self.created_at.day)
+        return self.created_at.date()
 
+    def __unicode__(self):
+        if hasattr(self, 'name'):
+            return self.name
+        else:
+            return "<{name} {id}>".format(name=self.__class__.__name__,
+                                          id=self.id)
 
-class ModelData(db.Model, CommonMixin):
-    id = db.Column(db.Integer(), primary_key=True)
+class ModelData(db.Model, Mixin):
     name = db.Column(db.String(80), unique=True)
 
     ref_model = db.Column(db.String(80), nullable=False)
     ref_id = db.Column(db.Integer, nullable=False)
 
-    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
-
 
 roles_users = db.Table('roles_users',
-                       db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+)
 
 
-class Role(db.Model, RoleMixin, CommonMixin):
-    id = db.Column(db.Integer(), primary_key=True)
+class Role(db.Model, Mixin, RoleMixin):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
 
-    def __unicode__(self):
-        return self.name
+    #def __unicode__(self):
+    #    return self.name
 
 
-class User(db.Model, UserMixin, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
+class User(db.Model, Mixin, UserMixin):
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
-    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
     confirmed_at = db.Column(db.DateTime())
     biography = db.Column(db.Text)
     twitter = db.Column(db.String(255))
@@ -89,29 +115,28 @@ class User(db.Model, UserMixin, CommonMixin):
         url = 'http://www.gravatar.com/avatar/{md5}.jpg?d={default}'
         if size is not None:
             url += '&s={size}'
-        return url.format(md5=hashlib.md5(self.email).hexdigest(), default=default, size=size)
+        return url.format(
+            md5=hashlib.md5(self.email).hexdigest(),
+            default=default,
+            size=size
+        )
 
     @cached_property
     def slug(self):
         return slugify(self.name)
 
-    def __unicode__(self):
-        return self.name
+    #def __unicode__(self):
+    #    return self.name
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
 
-class Event(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.datetime.utcnow,
-                           nullable=False)
+class Event(db.Model, Mixin):
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
 
 
-class Talk(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
+class Talk(db.Model, Mixin):
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('all_talks', lazy='dynamic'))
@@ -119,9 +144,6 @@ class Talk(db.Model, CommonMixin):
     site = db.Column(db.String(255))
     twitter = db.Column(db.String(255))
     state = db.Column(db.String(16), default='draft')
-    created_at = db.Column(db.DateTime(),
-                           default=datetime.datetime.now,
-                           nullable=False)
     start_at = db.Column(db.DateTime())
     stop_at = db.Column(db.DateTime())
 
@@ -146,12 +168,7 @@ class Talk(db.Model, CommonMixin):
         return slugify(self.name)
 
 
-class TalkVote(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime(),
-                           default=datetime.datetime.now,
-                           nullable=False)
-
+class TalkVote(db.Model, Mixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User')
 
@@ -160,9 +177,7 @@ class TalkVote(db.Model, CommonMixin):
     value = db.Column(db.Integer, nullable=False, default=False)
 
 
-class Subscriber(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now, nullable=False)
+class Subscriber(db.Model, Mixin):
     email = db.Column(db.String, nullable=True, unique=True)
     active = db.Column(db.Boolean)
     unsubscribe_token = db.Column(db.String,
