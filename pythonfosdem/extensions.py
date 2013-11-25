@@ -12,6 +12,7 @@ from flask.ext.babel import Babel
 from flask.ext.cache import Cache
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.mail import Mail
+from flask.ext.migrate import Migrate
 from flask.ext.security import Security
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.uploads import UploadSet
@@ -27,3 +28,4 @@ db = SQLAlchemy()
 images_set = UploadSet('images', IMAGES)
 admin = Admin(name='Python @ FOSDEM', index_view=AdminView())
 cache = Cache()
+migrate = Migrate()

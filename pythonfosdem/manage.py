@@ -11,6 +11,7 @@
 """
 from flask.ext.script import Manager
 from flask.ext.script.commands import ShowUrls
+from flask.ext.migrate import MigrateCommand
 
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
@@ -26,6 +27,7 @@ import pythonfosdem.models
 def main():
     manager = Manager(create_app)
     manager.add_option('-c', '--config', dest='config', required=False)
+    manager.add_command('db', MigrateCommand)
     manager.add_command('routes', ShowUrls())
     manager.add_command('send_talk_emails',
                         SendTalkEmails())
