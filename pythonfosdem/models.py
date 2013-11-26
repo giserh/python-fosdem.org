@@ -15,6 +15,8 @@ import uuid
 from werkzeug import cached_property
 
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.event import listen
+from sqlalchemy.schema import CheckConstraint
 
 from flask.ext.security import RoleMixin
 from flask.ext.security import SQLAlchemyUserDatastore
@@ -24,8 +26,6 @@ from flask.ext.security.core import current_user
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import images_set
 from pythonfosdem.tools import slugify
-
-
 
 
 class PrimaryKey(db.Column):
@@ -165,7 +165,31 @@ user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
 class Event(db.Model, Mixin):
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
+    start_on = db.Column(db.Date(), nullable=False)
+    stop_on = db.Column(db.Date(), nullable=False)
+    duedate_start_on = db.Column(db.Date(), nullable=False)
+    duedate_stop_on = db.Column(db.Date(), nullable=False)
+    active = db.Column(db.Boolean, default=True)
 
+    @staticmethod
+    def validate_dates(mapper, connection, event):
+        if event.start_on > event.stop_on:
+            raise ValueError("The start date is greater than the stop date")
+
+        if event.duedate_stop_on > event.start_on:
+            raise ValueError("The due date has to be less than the start date")
+
+        if event.duedate_start_on > event.duedate_stop_on:
+            raise ValueError("The due date is greater than the stop date")
+
+    @classmethod
+    def current_event(cls):
+        return cls.query.filter_by(active=True).order_by(cls.start_on.desc()).limit(1).first()
+
+
+
+listen(Event, 'before_insert', Event.validate_dates)
+listen(Event, 'before_update', Event.validate_dates)
 
 class Talk(db.Model, Mixin):
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
@@ -178,10 +202,24 @@ class Talk(db.Model, Mixin):
     start_at = db.Column(db.DateTime())
     stop_at = db.Column(db.DateTime())
 
+    __table_args__ = (
+        CheckConstraint('start_at < stop_at'),
+    )
+
     type = db.Column(db.String(16), default='talk')
     level = db.Column(db.String(16), default='beginner')
+
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
     
     votes = db.relationship('TalkVote', backref="talk")
+
+    def __init__(self, *args, **kwargs):
+        event = kwargs.get('event', kwargs.pop('event_id', None))
+        if not event:
+            current_event = Event.current_event()
+            kwargs['event_id'] = current_event.id
+        super(Talk, self).__init__(*args, **kwargs)
 
     @property
     def points(self):

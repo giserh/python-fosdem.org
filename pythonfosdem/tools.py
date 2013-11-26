@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import datetime
 
 from jinja2 import Markup
 import sqlalchemy
@@ -84,6 +85,7 @@ def import_xml(filename):
 
             for field_name, field_value in xml_record.fields.iteritems():
                 current_field = getattr(instance, field_name)
+                table = proxy.__table__
 
                 if isinstance(field_value, dict) and 'reference' in field_value:
                     ref_model, ref_id, record = get_xml_id_or_raise(field_value['reference'])
@@ -101,6 +103,13 @@ def import_xml(filename):
                         else:
                             current_field.append(record)
                 else:
+                    type = getattr(table.c, field_name).type
+
+                    if isinstance(type, db.Date):
+                        field_value = datetime.datetime.strptime(field_value, '%Y-%m-%d').date()
+                    elif isinstance(type, db.DateTime):
+                        field_value = datetime.datetime.strptime(field_value, '%Y-%m-%d %H:%M:%S')
+
                     setattr(instance, field_name, field_value)
 
             db.session.add(instance)
