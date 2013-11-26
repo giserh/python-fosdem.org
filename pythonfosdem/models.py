@@ -165,10 +165,10 @@ user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
 class Event(db.Model, Mixin):
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
-    start_on = db.Column(db.Date(), nullable=False)
-    stop_on = db.Column(db.Date(), nullable=False)
-    duedate_start_on = db.Column(db.Date(), nullable=False)
-    duedate_stop_on = db.Column(db.Date(), nullable=False)
+    start_on = db.Column(db.Date(), nullable=False, default=datetime.date.today)
+    stop_on = db.Column(db.Date(), nullable=False, default=datetime.date.today)
+    duedate_start_on = db.Column(db.Date())
+    duedate_stop_on = db.Column(db.Date())
     active = db.Column(db.Boolean, default=True)
 
     @staticmethod
