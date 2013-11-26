@@ -7,8 +7,9 @@ from .common import PFTestCase
 class EventTestCase(PFTestCase):
     def test_create_event_error(self):
         with self.app.test_request_context():
+            # There is no name for the event, raise an exception
             with self.assertRaises(sqlalchemy.exc.IntegrityError):
-                event = Event(name='Python FOSDEM 2014')
+                event = Event()
                 db.session.add(event)
                 db.session.commit()
 
