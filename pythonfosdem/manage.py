@@ -11,6 +11,7 @@
 """
 from flask.ext.script import Manager
 from flask.ext.script.commands import ShowUrls
+from flask.ext.script import Shell
 from flask.ext.migrate import MigrateCommand
 
 from pythonfosdem import create_app
@@ -24,10 +25,14 @@ from pythonfosdem.commands import RunGunicorn
 import pythonfosdem.tools
 import pythonfosdem.models
 
+def _make_context():
+    return dict(db=db, models=pythonfosdem.models)
+
 def main():
     manager = Manager(create_app)
     manager.add_option('-c', '--config', dest='config', required=False)
     manager.add_command('db', MigrateCommand)
+    manager.add_command('shell', Shell(make_context=_make_context))
     manager.add_command('routes', ShowUrls())
     manager.add_command('send_talk_emails',
                         SendTalkEmails())
