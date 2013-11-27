@@ -1,0 +1,191 @@
+{% extends 'bootstrap_base.html' %}
+{% import 'bootstrap_wtf.html' as wtf %}
+{% import 'form_helpers.html' as fh %}
+
+{% block style_navbar_padding %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <!--<script type="application/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>-->
+
+{% endblock %}
+
+{% block body_content %}
+<div id='wrap'>
+    <div class="container">
+        <div class="masthead">
+            <ul class="nav nav-pills pull-right">
+                <li><a href="#beerevent">{{ _('Beer Event') }}</a></li>
+                <li><a href="#afpyro">{{ _('AFPyro') }}</a></li>
+                <li><a href="#cfp">{{ _('Call For Proposals') }}</a></li>
+                <li><a href="#schedule">{{ _('Schedule') }}</a></li>
+                <li><a href="#contact">{{ _('Contact') }}</a></li>
+                <li><a href="#team">Team</a></li>
+            </ul>
+        </div>
+        <div class="row">
+        <section id="download-bootstrap">
+          <div class="page-header">
+            <h1>1. Download</h1>
+          </div>
+          <p class="lead">Before downloading, be sure to have a code editor (we recommend <a href="http://sublimetext.com/2">Sublime Text 2</a>) and some working knowledge of HTML and CSS. We won't walk through the source files here, but they are available for download. We'll focus on getting started with the compiled Bootstrap files.</p>
+
+          <div class="row-fluid">
+            <div class="span6">
+              <h2>Download compiled</h2>
+              <p><strong>Fastest way to get started:</strong> get the compiled and minified versions of our CSS, JS, and images. No docs or original source files.</p>
+              <p><a class="btn btn-large btn-primary" href="assets/bootstrap.zip" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'Download compiled']);">Download Bootstrap</a></p>
+            </div>
+            <div class="span6">
+              <h2>Download source</h2>
+              <p>Get the original files for all CSS and JavaScript, along with a local copy of the docs by downloading the latest version directly from GitHub.</p>
+              <p><a class="btn btn-large" href="https://github.com/twbs/bootstrap/archive/v2.3.2.zip">Download Bootstrap source</a></p>
+            </div>
+          </div>
+        </section>
+        <section id="download-bootstrap2">
+          <div class="page-header">
+            <h1>1. Download</h1>
+          </div>
+          <p class="lead">Before downloading, be sure to have a code editor (we recommend <a href="http://sublimetext.com/2">Sublime Text 2</a>) and some working knowledge of HTML and CSS. We won't walk through the source files here, but they are available for download. We'll focus on getting started with the compiled Bootstrap files.</p>
+
+          <div class="row-fluid">
+            <div class="span6">
+              <h2>Download compiled</h2>
+              <p><strong>Fastest way to get started:</strong> get the compiled and minified versions of our CSS, JS, and images. No docs or original source files.</p>
+              <p><a class="btn btn-large btn-primary" href="assets/bootstrap.zip" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'Download compiled']);">Download Bootstrap</a></p>
+            </div>
+            <div class="span6">
+              <h2>Download source</h2>
+              <p>Get the original files for all CSS and JavaScript, along with a local copy of the docs by downloading the latest version directly from GitHub.</p>
+              <p><a class="btn btn-large" href="https://github.com/twbs/bootstrap/archive/v2.3.2.zip">Download Bootstrap source</a></p>
+            </div>
+          </div>
+        </section>
+        <section id="download-bootstrap3">
+          <div class="page-header">
+            <h1>1. Download</h1>
+          </div>
+          <p class="lead">Before downloading, be sure to have a code editor (we recommend <a href="http://sublimetext.com/2">Sublime Text 2</a>) and some working knowledge of HTML and CSS. We won't walk through the source files here, but they are available for download. We'll focus on getting started with the compiled Bootstrap files.</p>
+
+          <div class="row-fluid">
+            <div class="span6">
+              <h2>Download compiled</h2>
+              <p><strong>Fastest way to get started:</strong> get the compiled and minified versions of our CSS, JS, and images. No docs or original source files.</p>
+              <p><a class="btn btn-large btn-primary" href="assets/bootstrap.zip" onclick="_gaq.push(['_trackEvent', 'Getting started', 'Download', 'Download compiled']);">Download Bootstrap</a></p>
+            </div>
+            <div class="span6">
+              <h2>Download source</h2>
+              <p>Get the original files for all CSS and JavaScript, along with a local copy of the docs by downloading the latest version directly from GitHub.</p>
+              <p><a class="btn btn-large" href="https://github.com/twbs/bootstrap/archive/v2.3.2.zip">Download Bootstrap source</a></p>
+            </div>
+          </div>
+        </section>
+        <section id="beerevent">
+            <header>
+                <h2>Beer Event</h2>
+            </header>
+        </section>
+        <section id="afpyro">
+            <header>
+                <h2>AFPyro</h2>
+            </header>
+        </section>
+        <section id="cfp">
+            <header>
+                <h2>Call For Proposals</h2>
+            </header>
+        </section>
+        <section id="schedule">
+            <header>
+                <h2>Schedule</h2>
+            </header>
+        </section>
+        <section id="contact">
+            <header>
+                <h2>Contact</h2>
+            </header>
+        </section>
+        <section id="team">
+            <header>
+                <h2>Team</h2>
+            </header>
+        </section>
+
+        </div>
+
+    </div>
+</div>
+<div id='footer'>
+    <div class='container'>
+        <p style='text-align: center;'>info at python-fosdem dot org or <a href="http://twitter.com/PythonFOSDEM">@PythonFOSDEM</a></p>
+    </div>
+</div>
+
+<a href="https://github.com/matrixise/python-fosdem.org"><img style="position: absolute; top: 0; right: 0; border: 0;" src="/static/img/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+{% endblock %}
+
+{% block bootstrap_js_bottom %}
+    {{ super() }}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.string/2.3.0/underscore.string.min.js"></script>
+
+    {% block final_js %}{% endblock %}
+    <script type="application/javascript">
+        $(function() {
+          //Scrolling menus
+  var lastId,
+    topMenu = $("ul.nav"),
+    topMenuHeight = topMenu.outerHeight()+15,
+    menuItems = topMenu.find("a:not([href^='http://'],[href^='/'])"),
+    scrollItems = menuItems.map(function(){
+      var item = $($(this).attr("href"));
+      if (item.selector.length) { return item; }
+    });
+  menuItems.click(function(e){
+    console.log($(this));
+    var href = $(this).attr("href");
+    var offset = $(href).offset();
+
+      offsetTop = href === "#" ? 0 : offset.top-topMenuHeight+1;
+    if(!$('ul.nav').hasClass('open')) {
+      $('html, body').stop().animate({
+        scrollTop: offsetTop + 25
+      }, 500);
+    } else {
+      $('html, body').stop().animate({
+        scrollTop: offsetTop - 10
+      }, 500);
+    }
+    e.preventDefault();
+  });
+
+  $('#free_version>a, #scroll>a').click(function(e){
+    var href = $(this).attr("href"),
+      offsetTop = href === "#" ? 0 : $(href).offset().top-topMenuHeight+1;
+    $('html, body').stop().animate({
+      scrollTop: offsetTop + 25
+    }, 500);
+    e.preventDefault();
+  });
+
+  $(window).scroll(function(){
+
+    // Activate scrolling active states
+    var fromTop = $(this).scrollTop()+topMenuHeight;
+    var cur = scrollItems.map(function(){
+      if ($(this).offset().top < fromTop)
+        return this;
+      });
+      cur = cur[cur.length-1];
+      var id = cur && cur.length ? cur[0].id : "";
+      if (lastId !== id) {
+        lastId = id;
+      menuItems
+        .parent().removeClass("active")
+        .end().filter("[href=#"+id+"]").parent().addClass("active");
+    }
+    });
+    });
+
+    </script>
+
+{% endblock %}
