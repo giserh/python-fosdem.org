@@ -5,7 +5,7 @@
 <div class="span6">
     <form action="{{ url_for_security('register') }}" method="POST" name="register_user_form" />
     <!--class="security">-->
-        <h2>{{ _('Register You') }}</h2>
+        <h2>{{ _('Register Yourself') }}</h2>
         {{ register_user_form.hidden_tag() }}
         {{ fh.render_field_with_errors(register_user_form.name, class='input-block-level') }}
         {{ fh.render_field_with_errors(register_user_form.email, class='input-block-level') }}
