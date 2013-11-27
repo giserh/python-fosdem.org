@@ -23,6 +23,7 @@ from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.security import roles_accepted
 from flask.ext.security import login_required
+from flask.ext.security import url_for_security
 from flask.ext.security.core import current_user
 from flask.ext.security.forms import ResetPasswordForm
 from flask.ext.security.recoverable import update_password
@@ -305,8 +306,11 @@ def talks_to_validate():
     return render_template('general/talks_dashboard.html', records=records)
 
 
-@blueprint.route('/subscribe', methods=['POST'])
+@blueprint.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
+    if request.method == 'GET':
+        return redirect(url_for_security('register'))
+
     form = SubscribeForm()
 
     if form.validate_on_submit():
