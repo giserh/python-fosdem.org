@@ -308,9 +308,6 @@ def talks_to_validate():
 
 @blueprint.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
-    if request.method == 'GET':
-        return redirect(url_for_security('register'))
-
     form = SubscribeForm()
 
     if form.validate_on_submit():
@@ -328,9 +325,9 @@ def subscribe():
         )
         mail.send(msg)
         flash('Thank you for your subscription.')
-    else:
-        flash('Invalid form', 'error')
-    return redirect(url_for('general.index'))
+        return redirect(url_for('general.index'))
+
+    return render_template('general/subscribe.html', form=form)
 
 @blueprint.route('/unsubscribe/<token>')
 def unsubscribe(token):
