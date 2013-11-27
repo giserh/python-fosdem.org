@@ -336,3 +336,8 @@ def unsubscribe(token):
     db.session.commit()
     flash("Sorry to hear you don't like us :(")
     return redirect(url_for('general.index'))
+
+
+@blueprint.route('/test')
+def test():
+    return render_template('general/new_index.html')
