@@ -20,13 +20,24 @@
         <field name="biography">lol</field>
     </record>
 
+    <record model="Event" id="python_fosdem_2014">
+        <field name="name">Python FOSDEM 2014</field>
+        <field name="start_on">2014-01-31</field>
+        <field name="stop_on">2014-02-02</field>
+        <field name="duedate_start_on">2013-11-17</field>
+        <field name="duedate_stop_on">2013-12-15</field>
+    </record>
+
     <record model='Talk' id='talk1'>
-        <field name='user' reference='user_john_doe' />
+        <field name="event" reference="python_fosdem_2014" />
+        <field name="user" reference="user_john_doe" />
         <field name="name">How to use xml to store data</field>
         <field name="description">blah blah blah</field>
     </record>
+
     <record model='Talk' id='talk2'>
-        <field name='user' reference='user_barak_obama' />
+        <field name="event" reference="python_fosdem_2014" />
+        <field name="user" reference="user_barak_obama" />
         <field name="name">How to conquere the world</field>
         <field name="description">You seriously think I will tell you how?</field>
     </record>

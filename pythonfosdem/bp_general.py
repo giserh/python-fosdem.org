@@ -23,6 +23,7 @@ from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.security import roles_accepted
 from flask.ext.security import login_required
+from flask.ext.security import url_for_security
 from flask.ext.security.core import current_user
 from flask.ext.security.forms import ResetPasswordForm
 from flask.ext.security.recoverable import update_password
@@ -306,7 +307,7 @@ def talks_to_validate():
     return render_template('general/talks_dashboard.html', records=records)
 
 
-@blueprint.route('/subscribe', methods=['POST'])
+@blueprint.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
     form = SubscribeForm()
 
@@ -325,9 +326,9 @@ def subscribe():
         )
         mail.send(msg)
         flash('Thank you for your subscription.')
-    else:
-        flash('Invalid form', 'error')
-    return redirect(url_for('general.index'))
+        return redirect(url_for('general.index'))
+
+    return render_template('general/subscribe.html', form=form)
 
 @blueprint.route('/unsubscribe/<token>')
 def unsubscribe(token):

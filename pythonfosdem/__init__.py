@@ -10,6 +10,7 @@ from flask.ext.babel import _
 from flask.ext.mail import Message
 from flask.ext.security.core import current_user
 from flask.ext.security import user_confirmed
+from flask.ext.login import user_logged_in
 from flask.ext.uploads import configure_uploads
 
 from flask.ext.admin.contrib.sqla import ModelView
@@ -24,6 +25,7 @@ from pythonfosdem.extensions import cache
 from pythonfosdem.extensions import db
 from pythonfosdem.extensions import images_set
 from pythonfosdem.extensions import mail
+from pythonfosdem.extensions import migrate
 from pythonfosdem.extensions import security
 from pythonfosdem.forms import TalkForm
 from pythonfosdem.forms import LoginForm
@@ -70,6 +72,7 @@ class App(Flask):
         babel.init_app(self)
         mail.init_app(self)
         db.init_app(self)
+        migrate.init_app(self, db)
         security._state = security.init_app(self,
                                             user_datastore,
                                             register_form=RegisterForm,
@@ -172,6 +175,11 @@ class App(Flask):
         @user_confirmed.connect_via(self)
         def _auto_subscribe_user(app, user):
             Subscriber.add(user.email)
+
+        @user_logged_in.connect_via(self)
+        def user_logged(app, user):
+            pass
+
 
 def create_app(config=None):
     return App(__name__, config=config)

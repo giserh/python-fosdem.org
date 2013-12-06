@@ -10,9 +10,10 @@ class TestConfig(object):
     SQLALCHEMY_ECHO = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     MAIL_DEBUG = False
-    MAIL_SUPPRESS_SEND = False
+    MAIL_SUPPRESS_SEND = True
+    SECURITY_CONFIRMABLE = False
     TESTING = True
-    LOGIN_DISABLED = False
+    LOGIN_DISABLED = True
     # FIXME: There is a bug if the password is encrypted
     SECURITY_PASSWORD_HASH = 'plaintext'
 

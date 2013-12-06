@@ -3,6 +3,7 @@ Flask-Babel
 Flask-Bootstrap==2.2.2-1
 Flask-Cache
 Flask-Mail
+Flask-Migrate
 Flask-SQLAlchemy
 Flask-Script
 Flask-Security

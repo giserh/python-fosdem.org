@@ -1,4 +1,5 @@
 from flask.ext.security.core import current_user
+from flask.ext.security import url_for_security
 from flask import url_for
 
 from .common import PFTestCase
@@ -6,7 +7,7 @@ from .common import PFTestCase
 class TaskProposalUnitTest(PFTestCase):
     def test_create_talk(self):
         with self.app.test_request_context():
-            login_user_url = url_for('security.login')
+            login_user_url = url_for_security('login')
             talk_submit_url = url_for('general.talk_submit')
 
         with self.app.test_client() as client:

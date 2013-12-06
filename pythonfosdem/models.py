@@ -14,6 +14,10 @@ import uuid
 
 from werkzeug import cached_property
 
+from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.event import listen
+from sqlalchemy.schema import CheckConstraint
+
 from flask.ext.security import RoleMixin
 from flask.ext.security import SQLAlchemyUserDatastore
 from flask.ext.security import UserMixin
@@ -24,44 +28,99 @@ from pythonfosdem.extensions import images_set
 from pythonfosdem.tools import slugify
 
 
-class CommonMixin(object):
+class PrimaryKey(db.Column):
+    def __init__(self, *args, **kwargs):
+        kwargs.update(type_=db.Integer,
+                      primary_key=True)
+        super(PrimaryKey, self).__init__(**kwargs)
+
+
+class MandatoryDateTime(db.Column):
+    def __init__(self, *args, **kwargs):
+        kwargs.update(type_=db.DateTime,
+                      default=datetime.datetime.now,
+                      nullable=False)
+        super(MandatoryDateTime, self).__init__(**kwargs)
+
+
+class Mixin(object):
+    id = PrimaryKey()
+    created_at = MandatoryDateTime()
+
+    @declared_attr
+    def __tablename__(cls):
+        return cls.__name__.lower()
+
     @property
     def created_on(self):
-        return datetime.date(self.created_at.year, self.created_at.month, self.created_at.day)
+        return self.created_at.date()
 
+    def __unicode__(self):
+        if hasattr(self, 'name'):
+            return self.name
+        else:
+            return "<{name} {id}>".format(name=self.__class__.__name__,
+                                          id=self.id)
 
-class ModelData(db.Model, CommonMixin):
-    id = db.Column(db.Integer(), primary_key=True)
+class ModelData(db.Model, Mixin):
     name = db.Column(db.String(80), unique=True)
 
     ref_model = db.Column(db.String(80), nullable=False)
     ref_id = db.Column(db.Integer, nullable=False)
 
-    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
 
+class ConfigParameter(db.Model, Mixin):
+    name = db.Column(db.String(80), unique=True, nullable=False)
+
+    value_string = db.Column(db.String)
+    value_integer = db.Column(db.Integer)
+    value_date = db.Column(db.Date)
+    value_datetime = db.Column(db.DateTime)
+
+    type = db.Column(db.String)
+
+    @property
+    def value(self):
+        if self.type == 'string':
+            return self.value_string
+        if self.type == 'integer':
+            return self.value_integer
+        if self.type == 'date':
+            return self.value_date
+        if self.type == 'datetime':
+            return self.value_datetime
+
+    @value.setter
+    def value(self, value):
+        if isinstance(value, datetime.datetime):
+            self.type = 'datetime'
+            self.value_datetime = value
+        if isinstance(value, datetime.date):
+            self.type = 'date'
+            self.value_date = value
+        if isinstance(value, (int, long)):
+            self.type = 'integer'
+            self.value_integer = value
+        if isinstance(value, basestring):
+            self.type = 'string'
+            self.value_string = value
 
 roles_users = db.Table('roles_users',
-                       db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+)
 
 
-class Role(db.Model, RoleMixin, CommonMixin):
-    id = db.Column(db.Integer(), primary_key=True)
+class Role(db.Model, Mixin, RoleMixin):
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
-
-    def __unicode__(self):
-        return self.name
 
 
-class User(db.Model, UserMixin, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
+class User(db.Model, Mixin, UserMixin):
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
-    created_at = db.Column(db.DateTime(), default=datetime.datetime.now, nullable=False)
     confirmed_at = db.Column(db.DateTime())
     biography = db.Column(db.Text)
     twitter = db.Column(db.String(255))
@@ -89,29 +148,50 @@ class User(db.Model, UserMixin, CommonMixin):
         url = 'http://www.gravatar.com/avatar/{md5}.jpg?d={default}'
         if size is not None:
             url += '&s={size}'
-        return url.format(md5=hashlib.md5(self.email).hexdigest(), default=default, size=size)
+        return url.format(
+            md5=hashlib.md5(self.email).hexdigest(),
+            default=default,
+            size=size
+        )
 
     @cached_property
     def slug(self):
         return slugify(self.name)
 
-    def __unicode__(self):
-        return self.name
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
 
-class Event(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           default=datetime.datetime.utcnow,
-                           nullable=False)
+class Event(db.Model, Mixin):
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
+    start_on = db.Column(db.Date(), nullable=False, default=datetime.date.today)
+    stop_on = db.Column(db.Date(), nullable=False, default=datetime.date.today)
+    duedate_start_on = db.Column(db.Date())
+    duedate_stop_on = db.Column(db.Date())
+    active = db.Column(db.Boolean, default=True)
+
+    @staticmethod
+    def validate_dates(mapper, connection, event):
+        if event.start_on > event.stop_on:
+            raise ValueError("The start date is greater than the stop date")
+
+        if event.duedate_stop_on > event.start_on:
+            raise ValueError("The due date has to be less than the start date")
+
+        if event.duedate_start_on > event.duedate_stop_on:
+            raise ValueError("The due date is greater than the stop date")
+
+    @classmethod
+    def current_event(cls):
+        return cls.query.filter_by(active=True).order_by(cls.start_on.desc()).limit(1).first()
 
 
-class Talk(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
+
+listen(Event, 'before_insert', Event.validate_dates)
+listen(Event, 'before_update', Event.validate_dates)
+
+class Talk(db.Model, Mixin):
     name = db.Column(db.String(255, convert_unicode=True), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('all_talks', lazy='dynamic'))
@@ -119,16 +199,27 @@ class Talk(db.Model, CommonMixin):
     site = db.Column(db.String(255))
     twitter = db.Column(db.String(255))
     state = db.Column(db.String(16), default='draft')
-    created_at = db.Column(db.DateTime(),
-                           default=datetime.datetime.now,
-                           nullable=False)
     start_at = db.Column(db.DateTime())
     stop_at = db.Column(db.DateTime())
 
+    __table_args__ = (
+        CheckConstraint('start_at < stop_at'),
+    )
+
     type = db.Column(db.String(16), default='talk')
     level = db.Column(db.String(16), default='beginner')
+
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
     
     votes = db.relationship('TalkVote', backref="talk")
+
+    def __init__(self, *args, **kwargs):
+        event = kwargs.get('event', kwargs.pop('event_id', None))
+        if not event:
+            current_event = Event.current_event()
+            kwargs['event_id'] = current_event.id
+        super(Talk, self).__init__(*args, **kwargs)
 
     @property
     def points(self):
@@ -146,12 +237,7 @@ class Talk(db.Model, CommonMixin):
         return slugify(self.name)
 
 
-class TalkVote(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime(),
-                           default=datetime.datetime.now,
-                           nullable=False)
-
+class TalkVote(db.Model, Mixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User')
 
@@ -160,9 +246,7 @@ class TalkVote(db.Model, CommonMixin):
     value = db.Column(db.Integer, nullable=False, default=False)
 
 
-class Subscriber(db.Model, CommonMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now, nullable=False)
+class Subscriber(db.Model, Mixin):
     email = db.Column(db.String, nullable=True, unique=True)
     active = db.Column(db.Boolean)
     unsubscribe_token = db.Column(db.String,

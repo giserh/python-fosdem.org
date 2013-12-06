@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row">
+<div class="span6">
+    <form action="{{ url_for('general.subscribe') }}" method="POST" name="subscribe_form" />
+    <!--class="security">-->
+    <h2>{{ _('Keep in touch!') }}</h2>
+    <h3>{{ _('Subscribe to our newsletter') }}</h3>
+        {{ form.hidden_tag() }}
+        {{ form.email(type='email', class='input-xlarge', required='required', placeholder=form.email.placeholder) | safe }}
+        {% call fh.render_submit_button(form, 'btn-large') %}
+        {% endcall %}
+    </form>
+
+</div>
+<div class="span6">
+    <h2>Why?</h2>
+    <ul>
+        <li>keep you informed about the Python-FOSDEM</li>
+    </ul>
+</div>
+
+</div>
+
+
+{% endblock %}
+
