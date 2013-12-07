@@ -61,4 +61,41 @@ def main():
     def db_reset():
         pythonfosdem.tools.reset_db()
 
+    @manager.command
+    def change_migration():
+        import datetime
+        from pythonfosdem.models import Talk, Event
+
+        fosdem_2013 = Event.query.filter_by(name='Python FOSDEM 2013').first()
+        if not fosdem_2013:
+            fosdem_2013 = Event(
+                name='Python FOSDEM 2013',
+                start_on=datetime.date(2013, 02, 03),
+                stop_on=datetime.date(2013, 02, 03),
+                active=False
+            )
+            db.session.add(fosdem_2013)
+
+        fosdem_2014 = Event.query.filter_by(name='Python FOSDEM 2014').first()
+        if not fosdem_2014:
+            fosdem_2014 = Event(
+                name='Python FOSDEM 2014',
+                start_on=datetime.date(2014, 02, 01),
+                stop_on=datetime.date(2014, 02, 02),
+                duedate_start_on=datetime.date(2013, 11, 17),
+                duedate_stop_on=datetime.date(2013, 12, 15)
+            )
+            db.session.add(fosdem_2014)
+
+        for talk in Talk.query.order_by(Talk.id).all():
+            if talk.created_on < fosdem_2014.duedate_start_on:
+                talk.event = fosdem_2013
+            else:
+                talk.event = fosdem_2014
+
+            print "%04d" % (talk.id,), talk.created_on, talk.name, talk.start_at, talk.event.id
+            db.session.add(talk)
+
+        db.session.commit()
+
     manager.run()

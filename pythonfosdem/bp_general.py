@@ -36,6 +36,7 @@ from pythonfosdem.forms import SubscribeForm
 from pythonfosdem.forms import UserProfileForm
 from pythonfosdem.forms import TalkForm
 from pythonfosdem.forms import TalkProposalForm
+from pythonfosdem.models import Event
 from pythonfosdem.models import Subscriber
 from pythonfosdem.models import Talk
 from pythonfosdem.models import TalkVote
@@ -61,9 +62,9 @@ def convert_to_presenter(iterable, klass):
 @blueprint.route('/')
 #@cache.cached(timeout=30)
 def index():
+    event = Event.current_event()
     scheduler_available = False
-    dateline_has_reached = False
-    #datetime.date.today() >= datetime.date(2013, 12, 1)
+    dateline_has_reached = datetime.date.today() >= event.duedate_stop_on
     subscribe_form = SubscribeForm()
     return render_template('general/index.html', 
                            dateline_has_reached=dateline_has_reached,
@@ -130,14 +131,13 @@ def speakers():
 @login_required
 def talk_submit():
     today = datetime.date.today()
+    event = Event.current_event()
 
-    # TODO: Use a record from the database for the date
-    #if today > datetime.date(2013, 11, 30):
-    #    return render_template('general/closed_talk_proposal.html')
+    if today > event.duedate_stop_on:
+        return render_template('general/closed_talk_proposal.html')
 
     talk = Talk()
     form = TalkProposalForm(obj=talk)
-
 
     if form.validate_on_submit():
 
@@ -147,7 +147,8 @@ def talk_submit():
             description=form.description.data,
             twitter=form.twitter.data,
             level=form.level.data,
-            site=form.site_url.data
+            site=form.site_url.data,
+            event=event,
         )
 
         flash(_('Your proposal will be moderated as soon as possible'))

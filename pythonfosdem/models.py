@@ -176,16 +176,15 @@ class Event(db.Model, Mixin):
         if event.start_on > event.stop_on:
             raise ValueError("The start date is greater than the stop date")
 
-        if event.duedate_stop_on > event.start_on:
+        if event.duedate_stop_on and event.duedate_stop_on > event.start_on:
             raise ValueError("The due date has to be less than the start date")
 
-        if event.duedate_start_on > event.duedate_stop_on:
+        if event.duedate_start_on and event.duedate_start_on > event.duedate_stop_on:
             raise ValueError("The due date is greater than the stop date")
 
     @classmethod
     def current_event(cls):
         return cls.query.filter_by(active=True).order_by(cls.start_on.desc()).limit(1).first()
-
 
 
 listen(Event, 'before_insert', Event.validate_dates)
