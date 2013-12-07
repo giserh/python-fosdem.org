@@ -39,7 +39,7 @@ class DefaultConfig(object):
     # we can have an error with securitu.forgot_password
     SECURITY_RECOVERABLE = True
     SECURITY_REGISTERABLE = True
-    SECURITY_CONFIRMABLE = True
+    #SECURITY_CONFIRMABLE = True
 
     MAIL_PORT = 10025
     MAIL_DEFAULT_SUFFIX = '[Python-FOSDEM 2014]'
