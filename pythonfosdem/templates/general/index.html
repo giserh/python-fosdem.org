@@ -30,6 +30,7 @@
                     </div>
                     {% endif %}
                     <a href="{{ url_for('general.talk_submit')}}" class="btn btn-primary">{{ _('Call For Proposals') }}</a>
+                    <h3>Deadline {{ event.duedate_stop_on.strftime('%Y-%m-%d') }}</h3>
                 </div>
             </div>
 

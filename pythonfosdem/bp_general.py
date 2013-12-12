@@ -70,6 +70,7 @@ def index():
                            dateline_has_reached=dateline_has_reached,
                            scheduler_available=scheduler_available,
                            subscribe_form=subscribe_form,
+                           event=event,
                           )
 
 
@@ -180,7 +181,7 @@ def talk_submit():
 @blueprint.route('/talk_proposals')
 @roles_accepted('admin', 'jury_member', 'jury_president')
 def talk_proposals():
-    records = Talk.query.join(Talk.user).order_by(User.name.asc()).all()
+    records = Talk.query.join(Talk.user, Talk.event).order_by(Event.name.asc()).all()
     return render_template('general/talk_proposals.html', records=records)
 
 
