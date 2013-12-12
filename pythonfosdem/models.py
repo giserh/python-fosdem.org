@@ -27,6 +27,8 @@ from pythonfosdem.extensions import db
 from pythonfosdem.extensions import images_set
 from pythonfosdem.tools import slugify
 
+import inflection
+
 
 class PrimaryKey(db.Column):
     def __init__(self, *args, **kwargs):
@@ -49,7 +51,8 @@ class Mixin(object):
 
     @declared_attr
     def __tablename__(cls):
-        return cls.__name__.lower()
+        original_name = cls.__name__
+        return inflection.underscore(original_name)
 
     @property
     def created_on(self):
