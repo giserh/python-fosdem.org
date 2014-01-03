@@ -62,7 +62,7 @@ def convert_to_presenter(iterable, klass):
 @blueprint.route('/')
 #@cache.cached(timeout=30)
 def index():
-    scheduler_available = False
+    scheduler_available = True
     if scheduler_available:
         return redirect(url_for('general.schedule'))
 
