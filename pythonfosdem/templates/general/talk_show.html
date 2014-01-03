@@ -9,37 +9,32 @@
     </div>
 </div>
 <div class='row'>
-    {% if current_user.has_role('jury_member') %}
-        {% set size_span = 'span10' %}
-    {% else %}
-        {% set size_span = 'span12' %}
-    {% endif %}
-    <div class='{{ size_span }}'>
+    <div class='span12'>
         <table class='table table-striped table-condensed table-bordered'>
             <tr>
-                <th>Title</th>
+                <th>{{ _('Title') }}</th>
                 <td>{{ talk.name }}</td>
             </tr>
             <tr>
-                <th>Speaker</th>
+                <th>{{ _('Speaker') }}</th>
                 <td><a href="{{ url_for('general.user', user_id=talk.user.id, slug=talk.user.slug) }}">{{ talk.user.name }}</a></td>
             </tr>
             <tr>
-                <th>Description</th>
-                <td><pre>{{ talk.description }}</pre></td>
+                <th>{{ _('Description') }}</th>
+                <td>{{ talk.description }}</td>
             </tr>
             {% if current_user.is_authenticated() %}
             <tr>
-                <th>Email</th>
+                <th>{{ _('Email') }}</th>
                 <td>{{ talk.user.email or '/' }}</td>
             </tr>
             <tr>
-                <th>Twitter</th>
+                <th>{{ _('Twitter') }}</th>
                 <td>{{ talk.user.twitter or '/' }}</td>
             </tr>
             {% endif %}
             <tr>
-                <th>Site</th>
+                <th>{{ _('Site') }}</th>
                 <td>
                 {% if talk.site %}
                 <a href="{{ talk.site}}">{{ talk.site }}</a>
@@ -48,130 +43,7 @@
                 {% endif %}
                 </td>
             </tr>
-            {% if current_user.has_role('jury_member') %}
-            <tr>
-                <th>State</th>
-                <td>{{ talk.state }}</td>
-            </tr>
-            {% endif %}
         </table>
     </div>
-    {% if current_user.has_role('jury_member') %}
-    <div class='span2'>
-        {% if talk.current_user_vote.value == 1 %}
-            {% set btns = ('btn-success', 'btn-inverse') %}
-            {% set votes = ('none', '') %}
-        {% elif talk.current_user_vote.value == -1 %}
-            {% set btns = ('btn-inverse', 'btn-danger') %}
-            {% set votes = ('', 'none') %}
-        {% else %}
-            {% set btns = ('', '') %}
-            {% set votes = ('up', 'down') %}
-        {% endif %}
-        <div class="btn-group btn-group-vertical" id="btn-group">
-            <a href="#"
-                data-model-id="{{ talk.id }}" data-vote='{{ votes[0] }}'
-                class="on-vote vote-up btn {{ btns[0] }} btn-small"><i class="icon-arrow-up"></i> {{ _('Vote Up') }}</a>
-
-            <a href="#"
-                data-model-id="{{ talk.id }}" data-vote='{{ votes[1] }}'
-                class="on-vote vote-down btn {{ btns[1] }} btn-small"><i class="icon-arrow-down"></i> {{ _('Vote Down') }} </a>
-            {% if current_user.has_role('jury_president') and talk.votes and talk.state in ('draft',) %}
-            <a href="#"
-                data-model-id='{{ talk.id }}'
-                class='on-validate btn btn-small'><i class''></i> {{ _('Validate') }}</a>
-            {% endif %}
-        </div>
-        {% if current_user.has_role('jury_president') and talk.votes %}
-        <div class='well well-small'>
-            <ol>
-            {% for vote in talk.votes %}
-                <li>{{ vote.user.name }} {{ vote.value }}</li>
-            {% endfor %}
-            </ol>
-        </div>
-        {% endif %}
-    {% endif %}
 </div>
 {% endblock %}
-
-{%- block final_js %}
-    {{ super() }}
-
-    <script>
-    $(function() {
-        var pythonfosdem = {
-            ajax_post: function(url, params, on_success) {
-                var _callback = function(response) {
-                    if (response.success) {
-                        if (response.redirect_url) {
-                            window.location.href = response.redirect_url;
-                        }
-                        else if (response.reload) {
-                            window.location.reload();
-                        }
-                        else if (on_success) {
-                            return on_success(response);
-                        }
-                    } else {
-                        // Error handling
-                    }
-                };
-                $.post(url, params, _callback, 'json');
-            }
-        };
-
-        $('a.on-validate').each(function(index, item) {
-            $(item).on('click', function(event) {
-                event.preventDefault();
-                var self = $(this),
-                    record_id = $(this).data('model-id');
-                var params = {
-                    record_id: record_id,
-                };
-
-                pythonfosdem.ajax_post('{{ url_for("general.talk_validate") }}', params, function(response) {
-                    console.log(response);
-                });
-            });
-
-        });
-
-        $('a.on-vote').each(function(index, item) {
-            $(item).on('click', function(event) {
-                event.preventDefault();
-                var self = $(this),
-                    record_id = $(this).data('model-id'),
-                    vote = $(this).data('vote');
-
-                if (vote === '') {
-                    return;
-                }
-
-                var classes = {
-                    'none': ['', ''],
-                    'up': ['btn-inverse', 'btn-success'],
-                    'down': ['btn-inverse', 'btn-danger'],
-                }[vote];
-
-                var params = {
-                    record_id: record_id,
-                    vote: vote,
-                };
-
-                pythonfosdem.ajax_post('{{ url_for("general.talk_vote") }}', params, function(response) {
-                    console.log(response);
-                    $('a.on-vote').removeClass('btn-success btn-danger btn-inverse').not(self).addClass(classes[0]).data('vote', '');
-                    self.addClass(classes[1]).data('vote', 'none');
-                    if (vote === 'none') {
-                        $('a.on-vote.vote-up').data('vote', 'up');
-                        $('a.on-vote.vote-down').data('vote', 'down');
-                    }
-                });
-            });
-
-        });
-    });
-    </script>
-
-{%- endblock %}
