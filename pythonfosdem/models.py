@@ -175,7 +175,7 @@ class Event(db.Model, Mixin):
     active = db.Column(db.Boolean, default=True)
     validated_talks = db.relationship(
         'Talk',
-        primaryjoin="and_(Event.id == Talk.event_id, Talk.state == 'validated')",
+        primaryjoin="and_(Event.id == Talk.event_id, Talk.state == 'validated', Talk.is_backup == False)",
         order_by="Talk.start_at"
     )
 
