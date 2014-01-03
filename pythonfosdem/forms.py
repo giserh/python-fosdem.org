@@ -171,6 +171,16 @@ class TalkForm(Form):
         validators=[Required()]
     )
 
+    level = SelectField(
+        'Level',
+        choices=[
+            ('beginner', lazy_gettext(u'Beginner')),
+            ('intermediate', lazy_gettext(u'Intermediate')),
+            ('advanced', lazy_gettext(u'Advanced')),
+        ],
+        validators=[Required()]
+    )
+
     # start_at = db.Column(db.DateTime(timezone=True))
     # stop_at = db.Column(db.DateTime(timezone=True))
 
