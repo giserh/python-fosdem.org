@@ -1,0 +1,71 @@
+{% extends 'admin/model/list.html' %}
+
+{% block list_header scoped %}
+    {{ super() }}
+    <th>{{ _('Actions') }}</th>
+{% endblock %}
+
+{% block list_row scoped %}
+    {{ super() }}
+    <td>
+    <a href="#"
+        data-model-id='{{ get_pk_value(row) }}' data-state='draft'
+        class='on-validate btn btn-small'><i class''></i> {{ _('Draft') }}</a>
+    <a href="#"
+        data-model-id='{{ get_pk_value(row) }}' data-state='validated'
+        class='on-validate btn btn-small'><i class''></i> {{ _('Validate') }}</a>
+    <a href="#"
+        data-model-id='{{ get_pk_value(row) }}' data-state='declined'
+        class='on-validate btn btn-small'><i class''></i> {{ _('Decline') }}</a>
+    <a href="#"
+        data-model-id='{{ get_pk_value(row) }}' data-state='canceled'
+        class='on-validate btn btn-small'><i class''></i> {{ _('Cancel') }}</a>
+    </td>
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script>
+    $(function() {
+        var pythonfosdem = {
+            ajax_post: function(url, params, on_success) {
+                var _callback = function(response) {
+                    if (response.success) {
+                        if (response.redirect_url) {
+                            window.location.href = response.redirect_url;
+                        }
+                        else if (response.reload) {
+                            window.location.reload();
+                        }
+                        else if (on_success) {
+                            return on_success(response);
+                        }
+                    } else {
+                        // Error handling
+                        console.log(response);
+                    }
+                };
+                $.post(url, params, _callback, 'json');
+            }
+        };
+
+        $('a.on-validate').each(function(index, item) {
+            $(item).on('click', function(event) {
+                event.preventDefault();
+                var self = $(this),
+                    record_id = $(this).data('model-id'),
+                    vote = $(this).data('state');
+                var params = {
+                    record_id: record_id,
+                    vote: vote,
+                };
+
+                pythonfosdem.ajax_post('{{ url_for("general.change_status") }}', params, function(response) {
+                    console.log(response);
+                });
+            });
+        });
+    });
+    </script>
+
+{% endblock %}
