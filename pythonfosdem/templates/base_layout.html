@@ -30,6 +30,11 @@
                       {% if current_user.has_role('jury_president') %}
                       <li><a href="{{ url_for('general.talks_to_validate') }}">{{ _('Talks to Validate') }}</a></li>
                       {% endif %}
+                      {% if current_user.has_role('admin') %}
+                      <li class="divider"></li>
+                      <li><a href="{{ url_for('admin.index') }}">{{ _('Administration') }}</a></li>
+                      {% endif %}
+                      <li class="divider"></li>
                       <li><a href="{{ url_for('security.logout') }}">{{ _('Log out') }}</a></li>
                   </ul>
               </li>
