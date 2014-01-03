@@ -173,6 +173,12 @@ class Event(db.Model, Mixin):
     duedate_start_on = db.Column(db.Date())
     duedate_stop_on = db.Column(db.Date())
     active = db.Column(db.Boolean, default=True)
+    validated_talks = db.relationship(
+        'Talk',
+        primaryjoin="and_(Event.id == Talk.event_id, Talk.state == 'validated')",
+        order_by="Talk.start_at"
+    )
+
 
     @staticmethod
     def validate_dates(mapper, connection, event):
@@ -203,6 +209,7 @@ class Talk(db.Model, Mixin):
     state = db.Column(db.String(16), default='draft')
     start_at = db.Column(db.DateTime())
     stop_at = db.Column(db.DateTime())
+    is_backup = db.Column(db.Boolean(), default=False)
 
     __table_args__ = (
         CheckConstraint('start_at < stop_at'),
@@ -213,7 +220,7 @@ class Talk(db.Model, Mixin):
 
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     event = db.relationship('Event', backref=db.backref('talks', lazy='dynamic'))
-    
+
     votes = db.relationship('TalkVote', backref="talk")
 
     def __init__(self, *args, **kwargs):
