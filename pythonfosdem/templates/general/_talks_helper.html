@@ -2,10 +2,9 @@
     <table class="table table-striped table-condensed table-bordered">
         <thead>
             <tr>
-                <th></th>
+                <th>{{ _('Time Slot') }}</th>
                 <th>{{ _('Title') }}</th>
                 <th>{{ _('Speaker') }}</th>
-                <th>{{ _('Type') }}</th>
             </th>
         </thead>
         <tbody>
@@ -14,7 +13,6 @@
                 <td>{{ talk.schedule }}</td>
                 <td><a href="{{ url_for('general.talk_show', record_id=talk.id, slug=talk.slug) }}">{{ talk.name }}</a></td>
                 <td><a href="{{ url_for('general.user', user_id=talk.user.id, slug=talk.user.slug) }}">{{ talk.user.name }}</a></td>
-                <td>{{ talk.type }}</td>
             </tr>
             {% endfor %}
         </tbody>
