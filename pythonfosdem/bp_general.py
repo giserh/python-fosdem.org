@@ -62,8 +62,12 @@ def convert_to_presenter(iterable, klass):
 @blueprint.route('/')
 #@cache.cached(timeout=30)
 def index():
-    event = Event.current_event()
     scheduler_available = False
+    if scheduler_available:
+        return redirect(url_for('general.schedule'))
+
+    event = Event.current_event()
+
     dateline_has_reached = datetime.date.today() >= event.duedate_stop_on
     subscribe_form = SubscribeForm()
     return render_template('general/index.html', 
@@ -77,9 +81,9 @@ def index():
 @blueprint.route('/schedule')
 @cache.cached(timeout=30)
 def schedule():
-    talks = Talk.query.filter_by(state='validated').order_by(Talk.start_at.asc())
-    talks = convert_to_presenter(talks, TalkPresenter)
-    return render_template('general/index.html', talks=talks)
+    event = Event.current_event()
+    talks = list(convert_to_presenter(event.validated_talks, TalkPresenter))
+    return render_template('general/schedule.html', talks=talks)
 
 
 
@@ -176,12 +180,15 @@ def talk_submit():
 # def about_us():
 #     return render_template('general/about.html')
 
-
 # NOT YET IMPLEMENTED
 @blueprint.route('/talk_proposals')
+@blueprint.route('/talk_proposals/<int:event_id>')
 @roles_accepted('admin', 'jury_member', 'jury_president')
-def talk_proposals():
-    records = Talk.query.join(Talk.user, Talk.event).order_by(Event.name.asc()).all()
+def talk_proposals(event_id=None):
+    if event_id is None:
+        records = Talk.query.join(Talk.user, Talk.event).order_by(Talk.name.asc()).all()
+    else:
+        records = Talk.query.join(Talk.event).filter(Talk.event_id==event_id).order_by(Talk.name.asc()).all()
     return render_template('general/talk_proposals.html', records=records)
 
 
@@ -250,19 +257,18 @@ def talk_vote():
     return jsonify(success=True, record_id=record_id, vote=vote)
 
 
-@blueprint.route('/talk/validate', methods=['POST'])
+@blueprint.route('/talk/change_status', methods=['POST'])
 @roles_accepted('jury_president')
-def talk_validate():
+def change_status():
     if not request.form:
         abort(404)
 
     record_id = request.form['record_id']
-    vote = request.form['vote']
+    state = request.form['vote']
 
     talk = Talk.query.get_or_404(record_id)
 
-    talk.state = 'validated'
-    talk.type = vote
+    talk.state = state
 
     db.session.add(talk)
     db.session.commit()
@@ -273,17 +279,8 @@ def talk_validate():
 @blueprint.route('/talks/dashboard')
 @roles_accepted('jury_member', 'jury_president')
 def talks_dashboard():
-    result = db.session.execute("""
-        SELECT t.id FROM "user" u, talk t
-         LEFT OUTER JOIN (SELECT talk_id, value, user_id FROM talk_vote WHERE user_id = :user_id) tv
-           ON t.id = tv.talk_id
-        WHERE COALESCE(tv.value, 0) = 0
-          AND u.id = t.user_id
-        ORDER BY u.name
-        """,
-        {'user_id': current_user.id}
-    )
-    records = [Talk.query.get(r[0]) for r in result]
+    event = Event.current_event()
+    records = event.talks.all()
 
     return render_template('general/talks_dashboard.html', records=records)
 
@@ -291,20 +288,8 @@ def talks_dashboard():
 @blueprint.route('/talks/to_validate')
 @roles_accepted('jury_president')
 def talks_to_validate():
-    result = db.session.execute("""
-        SELECT t.id, u.name, u.email, u.twitter, t.name, tv.total
-        FROM talk t, 
-             (SELECT talk_id, sum(value) total FROM talk_vote GROUP BY talk_id) tv, 
-             "user" u 
-        WHERE t.id = tv.talk_id 
-          AND t.user_id = u.id
-          AND tv.total >= 2
-          AND t.state NOT IN ('validated')
-        ORDER BY tv.total DESC LIMIT :limit
-        """,
-        {'limit': 16}
-    )
-    records = [Talk.query.get(r[0]) for r in result]
+    event = Event.current_event()
+    records = event.talks.all()
 
     return render_template('general/talks_dashboard.html', records=records)
 
