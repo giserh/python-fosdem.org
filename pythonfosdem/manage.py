@@ -20,7 +20,9 @@ from pythonfosdem.extensions import db
 from pythonfosdem.commands import SendTalkEmails
 from pythonfosdem.commands import SendSpeakerEmails
 from pythonfosdem.commands import SendInvitationToPreviousSpeakers
+from pythonfosdem.commands import ShowCurrentEvent
 from pythonfosdem.commands import RunGunicorn
+from pythonfosdem.commands import ShowValidatedTalks
 
 import pythonfosdem.tools
 import pythonfosdem.models
@@ -34,16 +36,16 @@ def main():
     manager.add_command('db', MigrateCommand)
     manager.add_command('shell', Shell(make_context=_make_context))
     manager.add_command('routes', ShowUrls())
-    manager.add_command('send_talk_emails',
-                        SendTalkEmails())
-
-    manager.add_command('send_speaker_emails',
-                        SendSpeakerEmails())
+    manager.add_command('show_current_event', ShowCurrentEvent())
+    manager.add_command('send_talk_emails', SendTalkEmails())
+    manager.add_command('send_speaker_emails', SendSpeakerEmails())
 
     manager.add_command('send_invitation_to_previous_speakers',
                         SendInvitationToPreviousSpeakers())
 
     manager.add_command('rungunicorn', RunGunicorn())
+
+    manager.add_command('show_validated_talks', ShowValidatedTalks())
 
     @manager.command
     def import_xml(filename):

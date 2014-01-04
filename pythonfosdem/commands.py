@@ -7,45 +7,115 @@ from gunicorn.app.base import Application as BaseApplication
 from gunicorn.config import Config
 
 from flask import url_for
-from flask.ext.babel import _
-from flask.ext.script.commands import Command
-from flask.ext.script.commands import Option
+from flask_babel import _
+from flask_script.commands import Command
+from flask_script.commands import Option
+from flask_script import prompt_choices
+
 from pythonfosdem.extensions import mail
 from pythonfosdem.models import Talk
 from pythonfosdem.models import User
+from pythonfosdem.models import Event
 from pythonfosdem.tools import mail_message
 from pythonfosdem.tools import count_workers
-
-
+from pythonfosdem.presenters import TalkPresenter
 
 
 def external_url_for(endpoint, **kwargs):
     kwargs.update(_external=True)
     return url_for(endpoint, **kwargs)
 
+class ShowCurrentEvent(Command):
+    def run(self):
+        event = Event.current_event()
+        print event.id, event.name
+
+class ShowValidatedTalks(Command):
+    def run(self):
+        choices = [
+            (event.id, event.name)
+            for event in Event.query.filter_by(active=True).order_by(Event.start_on.desc()).all()
+        ]
+
+        event_id = prompt_choices("Select your event",
+                                  choices=choices,
+                                  resolve=int,
+                                  default=choices[-1][0])
+
+        event = Event.query.get(event_id)
+        if not event:
+            print "There is no event, we stop the procedure"
+            return
+
+        for idx, talk in enumerate(event.validated_talks):
+            lines = []
+            if talk.user.twitter:
+                lines.append(talk.user.twitter)
+
+            lines.extend([
+                'The talk "%s" has been accepted, by %s' % (talk.name, talk.user.name),
+                external_url_for('general.talk_show', record_id=talk.id, slug=talk.slug),
+            ])
+            result = ' '.join(lines)
+            print len(result), result
+
+            # idx, talk.id, talk.name, talk.user.name, talk.user.twitter
+
 
 class SendTalkEmails(Command):
-    def run(self):
+    def get_options(self):
+        return [
+            Option('--validated', dest='validated', action="store_true", default=False),
+            Option('--declined', dest='declined', action="store_true", default=False),
+            Option('--backup', dest='backup', action="store_true", default=False),
+        ]
+
+    def run(self, validated=False, declined=False, backup=False):
+        choices = [
+            (event.id, event.name)
+            for event in Event.query.filter_by(active=True).order_by(Event.start_on.desc()).all()
+        ]
+
+        event_id = prompt_choices("Select your event", choices=choices, resolve=int, default=choices[-1][0])
+
+        event = Event.query.get(event_id)
+        if not event:
+            print "There is no event, we stop the procedure"
+            return
+
         with mail.connect() as conn:
-            for talk in Talk.query.filter_by(state='validated'):
-                values = {
-                    'url_talk': external_url_for('general.talk_show',
-                                                 record_id=talk.id,
-                                                 slug=talk.slug),
-                    'speaker': talk.user.name,
-                    'talk_name': talk.name,
-                    'talk_description': talk.description,
-                    'talk': talk,
-                }
+            for idx, talk in enumerate(event.talks):
+                values = dict(talk=TalkPresenter(talk))
 
-                msg = mail_message(
-                    _('Your talk has been accepted !'),
-                    recipients=[talk.user.email],
-                    templates={'txt': 'emails/talk_accepted.txt'},
-                    values=values
-                )
+                msg = None
+                if declined and talk.state == 'declined':
+                    msg = mail_message(
+                        _('Your talk has been declined !'),
+                        recipients=[talk.user.email],
+                        templates={'txt': 'emails/talk_declined.txt'},
+                        values=values
+                    )
 
-                conn.send(msg)
+                if validated and talk.state == 'validated' and not talk.is_backup:
+                    msg = mail_message(
+                        _('Congratulations, your talk has been accepted!'),
+                        recipients=[talk.user.email],
+                        templates={'txt': 'emails/talk_accepted.txt'},
+                        values=values
+                    )
+
+                if backup and talk.state == 'validated' and talk.is_backup:
+                    msg = mail_message(
+                        _('Your talk has been accepted for a Backup!'),
+                        recipients=[talk.user.email],
+                        templates={'txt': 'emails/talk_accepted_backup.txt'},
+                        values=values
+                    )
+
+                if msg:
+                    print msg
+
+                # conn.send(msg)
 
 
 class SendSpeakerEmails(Command):
