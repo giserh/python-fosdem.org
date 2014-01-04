@@ -78,9 +78,12 @@ class TalkModelView(ModelView):
     )
 
 class UserModelView(ModelView):
-    inline_models = (Talk,)
+    column_searchable_list = ('name', 'email', 'twitter', 'site')
     column_list = ('name', 'email', 'created_at', 'is_speaker',)
     column_sortable_list = ('email', 'name',)
+    form_columns = (
+        'name', 'email', 'twitter', 'biography', 'site', 'company', 'active'
+    )
 
 
 class RoleModelView(ModelView):
