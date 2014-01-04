@@ -198,7 +198,7 @@ def talk_show(record_id, slug=''):
     talk = Talk.query.get_or_404(record_id)
     if talk.slug != slug:
         return redirect(url_for('general.talk_show', record_id=talk.id, slug=talk.slug))
-    return render_template('general/talk_show.html', talk=talk)
+    return render_template('general/talk_show.html', talk=TalkPresenter(talk))
 
 
 @blueprint.route('/talk/<int:record_id>/edit', methods=['POST', 'GET'])
