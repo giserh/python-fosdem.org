@@ -90,7 +90,7 @@ class SendTalkEmails(Command):
                 msg = None
                 if declined and talk.state == 'declined':
                     msg = mail_message(
-                        _('Your talk has been declined !'),
+                        _('Your talk has been declined!'),
                         recipients=[talk.user.email],
                         templates={'txt': 'emails/talk_declined.txt'},
                         values=values
@@ -113,9 +113,7 @@ class SendTalkEmails(Command):
                     )
 
                 if msg:
-                    print msg
-
-                # conn.send(msg)
+                    conn.send(msg)
 
 
 class SendSpeakerEmails(Command):
