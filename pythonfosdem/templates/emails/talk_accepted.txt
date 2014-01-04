@@ -1,36 +1,29 @@
-{% trans %}Dear {{ speaker }},{% endtrans %}
-{% if talk.type == 'talk' %}
-{% trans %}
-We are glad to inform you that your talk "{{ talk_name }}" [1] has been accepted
-for the Python DevRoom @ FOSDEM 2014 [2].
-{%- endtrans -%}
-{% elif talk.type == 'lightning_talk' %}
-{% trans %}
-We are glad to inform you that your talk "{{ talk_name }}" [1] has been accepted 
-as a Lightning Talk for the Python DevRoom @ FOSDEM 2014 [2].
+{% extends 'emails/footer.txt' %}
 
-As a lightning talk, your talk is limited to 15 minutes with Q/A included.
-{%- endtrans -%}
-{% endif %}
-{% trans %}
+{% block content %}
+Dear {{ talk.user.name }},
+
+Congratulations !
+
+We are glad to inform you that your talk "{{ talk.name }}" [1]
+has been accepted for the Python DevRoom @ FOSDEM 2014 [2].
+
+Here is the time slot for your talk: {{ talk.schedule }}.
+
 We still have a few questions:
 
-1. Could you confirm your talk ?
+1. Could you confirm your talk before 10th January 2014 ?
 
-2. Could you send us your talk one week before the FOSDEM ? 
+2. Could you send us your talk one week before the FOSDEM [3] ?
    We want to have the best experience for the speaker without any problem with the beamer
 
-
-For this edition, we will follow the same Code of Conduct as the pycon US [3]
+For this edition, we will follow the same Code of Conduct as the PyCon US [4]
 
 Best regards,
 
+[1] {{ url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True) }}
+[2] http://python-fosdem.org
+[3] http://fosdem.org/2014
+[4] https://us.pycon.org/2013/about/code-of-conduct/
 
-[1] {{ url_talk }}
-[2] http://fosdem.org/2013
-[3] https://us.pycon.org/2013/about/code-of-conduct/
-
-{%- endtrans -%}
---
-The Team Python @ FOSDEM. - {{ url_for('general.index', _external=True) }} - @PythonFOSDEM
-
+{% endblock %}

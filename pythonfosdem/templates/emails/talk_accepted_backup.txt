@@ -1,0 +1,32 @@
+{% extends 'emails/footer.txt' %}
+
+{% block content %}
+Dear {{ talk.user.name }},
+
+The selection for the schedule of the Python Devrom @ FOSDEM 2014 [1]
+has been very hard.
+
+Your talk "{{ talk.name }}" [2] has been selected as a Backup.
+
+A backup talk is needed if there is a missing speaker. In this case, your talk
+should be available for the Python @ FOSDEM 2014 [1].
+
+We still have a few questions:
+
+1. Do you agree ?
+
+2. Could you confirm your talk before 10th January 2014 ?
+
+3. Could you send us your talk one week before the FOSDEM [3] ?
+   We want to have the best experience for the speaker without any problem with the beamer.
+
+For this edition, we will follow the same Code of Conduct as the PyCon US [4]
+
+Best regards,
+
+[1] http://python-fosdem.org
+[2] {{ url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True) }}
+[3] http://fosdem.org/2014
+[4] https://us.pycon.org/2013/about/code-of-conduct/
+
+{% endblock %}

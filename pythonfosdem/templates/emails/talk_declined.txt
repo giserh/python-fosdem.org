@@ -1,12 +1,14 @@
-{{ _('Dear') }} {{ talk.user.name }},
+{% extends 'emails/footer.txt' %}
 
-{{ _('We are sad to let you know that your talk has been declined for the Python DevRoom @ FOSDEM 2014.') }}
+{% block content %}
+Dear {{ talk.user.name }},
 
-{{ _('We hope to hear from you again for the next edition.')}}
+We are sad to let you know that your talk "{{ talk.name }} "
+has been declined for the Python DevRoom @ FOSDEM 2014.
 
-{{ _('Thank you again for your proposal!')}}
+We hope to hear from you again for the next edition.
 
-{{ _('Best regards,') }}
+Thank you again for your proposal!
 
---
-The Team Python @ FOSDEM. - {{ url_for('general.index', _external=True) }} - @PythonFOSDEM
+Best regards,
+{% endblock %}
