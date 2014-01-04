@@ -20,6 +20,10 @@
                 <td><a href="{{ url_for('general.user', user_id=talk.user.id, slug=talk.user.slug) }}">{{ talk.user.name }}</a></td>
             </tr>
             <tr>
+                <th>{{ _('Time Slot') }}</th>
+                <td>{{ talk.schedule }}</td>
+            </tr>
+            <tr>
                 <th>{{ _('Description') }}</th>
                 <td>{{ talk.description }}</td>
             </tr>
