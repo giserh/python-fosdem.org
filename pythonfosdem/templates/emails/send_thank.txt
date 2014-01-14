@@ -1,16 +1,21 @@
-{{ _('Dear') }} {{ talk.user.name }},
+{% extends 'emails/footer.txt' %}
 
-{{ _('Thank you for your proposal') }}
+{% block content %}
+{% trans user_name=talk.user.name,
+         talk_name=talk.name,
+         talk_description=talk.description %}
+Dear {{ user_name }},
 
-{{ _('Please find below the details about your talk') }}
+Thank you for your proposal
 
-{{ _('Here is the description of your talk') }}:
-* {{ _('Entitled') }}: {{ talk.name }}
-* {{ _('Description') }}: {{ talk.description }}
+Please find below the details about your talk
 
-{{ _('You will receive a notification by email after approval of your talk.') }}
+Here is the description of your talk:
+* Entitled: {{ talk_name }}
+* Description: {{ talk_description }}
 
-{{ _('Best regards') }},
+You will receive a notification by email after approval of your talk.
 
---
-The Team Python @ FOSDEM. - {{ url_for('general.index', _external=True) }} - @PythonFOSDEM
+Best regards,
+{% endtrans %}
+{% endblock %}

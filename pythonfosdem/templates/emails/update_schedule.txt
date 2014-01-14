@@ -1,0 +1,18 @@
+{% extends 'emails/footer.txt' %}
+{% block content %}
+{% trans %}
+Dear {{ user.name }},
+
+We changed the schedule of the Python-FOSDEM devroom because the FOSDEM opens
+the doors at 9am and not 8am.
+
+In this case, we had to shift the schedule of one hour.
+
+Here is the schedule of your talk(s):
+
+{% for talk in talks %}
+* {{ talk.schedule }} - {{ talk.name }}
+{% endfor %}
+{% endtrans %}
+{% endblock %}
+

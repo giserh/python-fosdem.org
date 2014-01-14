@@ -1,14 +1,17 @@
 {% extends 'emails/footer.txt' %}
 
 {% block content %}
-Dear {{ talk.user.name }},
+{% trans user_name=talk.user.name,
+         talk_name=talk.name,
+         talk_schedule=talk.schedule -%}
+Dear {{ user_name }},
 
 Congratulations !
 
-We are glad to inform you that your talk "{{ talk.name }}" [1]
+We are glad to inform you that your talk "{{ talk_name }}" [1]
 has been accepted for the Python DevRoom @ FOSDEM 2014 [2].
 
-Here is the time slot for your talk: {{ talk.schedule }}.
+Here is the time slot for your talk: {{ talk_schedule }}.
 
 We still have a few questions:
 
@@ -20,6 +23,8 @@ We still have a few questions:
 For this edition, we will follow the same Code of Conduct as the PyCon US [4]
 
 Best regards,
+
+{%- endtrans %}
 
 [1] {{ url_for('general.talk_show', record_id=talk.id, slug=talk.slug, _external=True) }}
 [2] http://python-fosdem.org

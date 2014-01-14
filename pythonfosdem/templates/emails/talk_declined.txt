@@ -1,9 +1,13 @@
 {% extends 'emails/footer.txt' %}
 
 {% block content %}
-Dear {{ talk.user.name }},
+{% trans user_name=talk.user.name,
+         talk_name=talk.name,
+         talk_schedule=talk.schedule -%}
 
-We are sad to let you know that your talk "{{ talk.name }} "
+Dear {{ user_name }},
+
+We are sad to let you know that your talk "{{ talk_name }} "
 has been declined for the Python DevRoom @ FOSDEM 2014.
 
 We hope to hear from you again for the next edition.
@@ -11,4 +15,6 @@ We hope to hear from you again for the next edition.
 Thank you again for your proposal!
 
 Best regards,
+
+{% endtrans %}
 {% endblock %}

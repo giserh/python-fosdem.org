@@ -1,3 +1,6 @@
+{% extends 'emails/footer.txt' %}
+{% block content %}
+{% trans %}
 Dear,
 
 Thank you for your subscription to the newsletter of Python-FOSDEM.
@@ -10,8 +13,6 @@ If you desire, you can unsubscribe to this newsletter with this link [1]
 
 [1] {{ unsubscribe_url }}
 
-{{ _('Best regards') }},
-
---
-The Team Python @ FOSDEM. - {{ url_for('general.index', _external=True) }} - @PythonFOSDEM
-
+Best regards,
+{% endtrans %}
+{% endblock %}
