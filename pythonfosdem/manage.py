@@ -25,6 +25,7 @@ from pythonfosdem.commands import ShiftSchedule
 from pythonfosdem.commands import ShowCurrentEvent
 from pythonfosdem.commands import ShowTalkAcceptedTemplate
 from pythonfosdem.commands import ShowValidatedTalks
+from pythonfosdem.commands import SendMailToSpeakers
 
 import pythonfosdem.tools
 import pythonfosdem.models
@@ -50,6 +51,8 @@ def main():
     manager.add_command('show_validated_talks', ShowValidatedTalks())
     manager.add_command('show_talk_accepted_template', ShowTalkAcceptedTemplate())
     manager.add_command('shift_schedule', ShiftSchedule())
+    manager.add_command('send_mail_to_speakers', SendMailToSpeakers())
+
 
     @manager.command
     def import_xml(filename):

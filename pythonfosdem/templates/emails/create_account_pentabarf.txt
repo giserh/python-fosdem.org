@@ -1,0 +1,23 @@
+{% extends 'emails/footer.txt' %}
+{% block content %}
+{%- trans user_name=user.name -%}
+Dear {{ user_name }},
+
+Please, could you create a user account on Pentabarf.
+Pentabarf is the tool used by the FOSDEM for the registration
+of the speakers and the talks.
+
+https://penta.fosdem.org/submission/
+
+It's a big change for this edition.
+
+Once done, please, could you inform us ?
+
+Without that we cannot publish the schedule of the Python devroom :/
+
+Really sorry for the inconvenience.
+
+Thank you so much,
+{% endtrans %}
+{% endblock %}
+

@@ -86,8 +86,6 @@ class ShowTalkAcceptedTemplate(Command):
         print msg
 
 
-
-
 class SendTalkEmails(Command):
     def get_options(self):
         return [
@@ -280,3 +278,28 @@ class ShiftSchedule(Command):
                 )
                 conn.send(msg)
                 # print msg
+
+
+class SendMailToSpeakers(Command):
+    def get_options(self):
+        return [
+            Option('-e', '--email', dest='emails', nargs='+'),
+        ]
+
+    def run(self, emails):
+        emails = set(emails)
+        users = User.query.filter(User.email.in_(emails)).all()
+
+        if len(emails) != len(users):
+            print "There is a wrong email"
+            return
+
+        with mail.connect() as conn:
+            for user in users:
+                msg = mail_message(
+                    _('Create an account on Pentabarf'),
+                    recipients=[user.email],
+                    templates={'txt': 'emails/create_account_pentabarf.txt'},
+                    values=dict(user=user),
+                )
+                conn.send(msg)
