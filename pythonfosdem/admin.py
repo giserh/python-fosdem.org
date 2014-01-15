@@ -62,7 +62,8 @@ class TalkModelView(ModelView):
 
     form_columns = (
         'name', 'description', 'user', 'event', 'site', 'twitter',
-        'is_backup', 'state', 'type', 'level', 'start_at', 'stop_at'
+        'is_backup', 'state', 'type', 'level', 'start_at', 'stop_at',
+        'confirmed',
     )
     form_overrides = dict(
         state=SelectField,
@@ -93,10 +94,10 @@ class RoleModelView(ModelView):
 
 def configure(app):
     admin = Admin(app, 'Python @ FOSDEM', index_view=AdminView())
-    admin.add_view(RoleModelView(Role, db.session))
-    admin.add_view(EventModelView(Event, db.session))
-    admin.add_view(TalkModelView(Talk, db.session))
-    admin.add_view(UserModelView(User, db.session))
+    admin.add_view(EventModelView(Event, db.session, name="Events"))
+    admin.add_view(TalkModelView(Talk, db.session, category="Talk", name="Talks"))
+    admin.add_view(UserModelView(User, db.session, category="System", name="Users"))
+    admin.add_view(RoleModelView(Role, db.session, category="System", name="Roles"))
     from flask_admin.base import MenuLink
     admin.add_link(MenuLink("Site", endpoint='general.index'))
 
