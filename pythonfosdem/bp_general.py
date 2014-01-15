@@ -83,7 +83,10 @@ def index():
 def schedule():
     event = Event.current_event()
     talks = list(convert_to_presenter(event.validated_talks, TalkPresenter))
-    return render_template('general/schedule.html', talks=talks)
+    subscribe_form = SubscribeForm()
+    return render_template('general/schedule.html',
+                           talks=talks,
+                           subscribe_form=subscribe_form)
 
 
 
