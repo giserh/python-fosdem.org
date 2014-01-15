@@ -210,6 +210,7 @@ class Talk(db.Model, Mixin):
     start_at = db.Column(db.DateTime())
     stop_at = db.Column(db.DateTime())
     is_backup = db.Column(db.Boolean(), default=False)
+    confirmed = db.Column(db.Boolean(), default=False)
 
     __table_args__ = (
         CheckConstraint('start_at < stop_at'),
