@@ -17,11 +17,13 @@ from flask.ext.migrate import MigrateCommand
 from pythonfosdem import create_app
 from pythonfosdem.extensions import db
 
-from pythonfosdem.commands import SendTalkEmails
-from pythonfosdem.commands import SendSpeakerEmails
-from pythonfosdem.commands import SendInvitationToPreviousSpeakers
-from pythonfosdem.commands import ShowCurrentEvent
 from pythonfosdem.commands import RunGunicorn
+from pythonfosdem.commands import SendInvitationToPreviousSpeakers
+from pythonfosdem.commands import SendSpeakerEmails
+from pythonfosdem.commands import SendTalkEmails
+from pythonfosdem.commands import ShiftSchedule
+from pythonfosdem.commands import ShowCurrentEvent
+from pythonfosdem.commands import ShowTalkAcceptedTemplate
 from pythonfosdem.commands import ShowValidatedTalks
 
 import pythonfosdem.tools
@@ -46,6 +48,8 @@ def main():
     manager.add_command('rungunicorn', RunGunicorn())
 
     manager.add_command('show_validated_talks', ShowValidatedTalks())
+    manager.add_command('show_talk_accepted_template', ShowTalkAcceptedTemplate())
+    manager.add_command('shift_schedule', ShiftSchedule())
 
     @manager.command
     def import_xml(filename):

@@ -61,6 +61,32 @@ class ShowValidatedTalks(Command):
 
             # idx, talk.id, talk.name, talk.user.name, talk.user.twitter
 
+class ShowTalkAcceptedTemplate(Command):
+    def run(self):
+        choices = [
+            (event.id, event.name)
+            for event in Event.query.filter_by(active=True).order_by(Event.start_on.desc()).all()
+        ]
+
+        event_id = prompt_choices("Select your event", choices=choices, resolve=int, default=choices[-1][0])
+
+        event = Event.query.get(event_id)
+        if not event:
+            print "There is no event, we stop the procedure"
+            return
+
+        talk = event.validated_talks[0]
+        values = dict(talk=TalkPresenter(talk))
+        msg = mail_message(
+            _('Congratulations, your talk has been accepted!'),
+            recipients=[talk.user.email],
+            templates={'txt': 'emails/talk_accepted.txt'},
+            values=values
+        )
+        print msg
+
+
+
 
 class SendTalkEmails(Command):
     def get_options(self):
@@ -113,6 +139,7 @@ class SendTalkEmails(Command):
                     )
 
                 if msg:
+                    print msg
                     conn.send(msg)
 
 
@@ -221,3 +248,35 @@ class RunGunicorn(Command):
                 return self.application
 
         GunicornApplication(app, options).run()
+
+
+class ShiftSchedule(Command):
+    def run(self):
+        choices = [
+            (event.id, event.name)
+            for event in Event.query.filter_by(active=True).order_by(Event.start_on.desc()).all()
+        ]
+
+        event_id = prompt_choices("Select your event", choices=choices, resolve=int, default=choices[-1][0])
+
+        event = Event.query.get(event_id)
+        if not event:
+            print "There is no event, we stop the procedure"
+            return
+
+        import collections
+        users = collections.defaultdict(list)
+        for talk in event.validated_talks:
+            users[talk.user].append(TalkPresenter(talk))
+
+        with mail.connect() as conn:
+            for user, talks in users.iteritems():
+                print user.name, user.email
+                msg = mail_message(
+                    _('Update of the schedule'),
+                    recipients=[user.email],
+                    templates={'txt': 'emails/update_schedule.txt'},
+                    values=dict(user=user, talks=talks)
+                )
+                conn.send(msg)
+                # print msg
