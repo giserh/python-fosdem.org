@@ -50,3 +50,7 @@ div.thumbnail img {
 .carousel-control.right {
     background-image: none;
 }
+
+.page-header {
+    padding-top: 2em;
+}
