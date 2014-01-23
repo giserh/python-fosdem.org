@@ -328,3 +328,30 @@ def unsubscribe(token):
     db.session.commit()
     flash("Sorry to hear you don't like us :(")
     return redirect(url_for('general.index'))
+
+@blueprint.route('/test')
+def test():
+    from flask_googlemaps import Map
+    coordinates = (50.812505, 4.379674)
+    google_map_location = Map(
+        lat=coordinates[0],
+        lng=coordinates[1],
+        identifier="google_map_location",
+        zoom=16,
+        style="height:300px;width:300px;margin:0;",
+        markers=[coordinates]
+    )
+
+    coordinates = (50.8482509, 4.3540329)
+    google_map_leon = Map(
+        lat=coordinates[0],
+        lng=coordinates[1],
+        identifier="google_map_leon",
+        zoom=16,
+        style="height:300px;width:300px;margin:0;",
+        markers=[coordinates]
+    )
+
+    return render_template('test/index.html',
+                           google_map_location=google_map_location,
+                           google_map_leon=google_map_leon)

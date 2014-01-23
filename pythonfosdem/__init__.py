@@ -23,6 +23,7 @@ from pythonfosdem.extensions import images_set
 from pythonfosdem.extensions import mail
 from pythonfosdem.extensions import migrate
 from pythonfosdem.extensions import security
+from pythonfosdem.extensions import maps
 from pythonfosdem.forms import TalkForm
 from pythonfosdem.forms import LoginForm
 from pythonfosdem.forms import RegisterForm
@@ -75,6 +76,7 @@ class App(Flask):
                                             confirm_register_form=ConfirmRegisterForm)
         configure_admin(self)
         cache.init_app(self)
+        maps.init_app(self)
 
     def configure_error_handlers(self):
         @self.errorhandler(403)

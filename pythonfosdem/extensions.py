@@ -17,6 +17,7 @@ from flask.ext.security import Security
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.uploads import IMAGES
 from flask.ext.uploads import UploadSet
+from flask_googlemaps import GoogleMaps
 
 bootstrap = Bootstrap()
 babel = Babel()
@@ -26,3 +27,4 @@ db = SQLAlchemy()
 images_set = UploadSet('images', IMAGES)
 cache = Cache()
 migrate = Migrate()
+maps = GoogleMaps()
