@@ -338,7 +338,7 @@ def test():
         lng=coordinates[1],
         identifier="google_map_location",
         zoom=16,
-        style="height:300px;width:300px;margin:0;",
+        style="height:300px;margin:0;",
         markers=[coordinates]
     )
 
@@ -348,7 +348,7 @@ def test():
         lng=coordinates[1],
         identifier="google_map_leon",
         zoom=16,
-        style="height:300px;width:300px;margin:0;",
+        style="height:300px;margin:0;",
         markers=[coordinates]
     )
 
