@@ -332,7 +332,7 @@ def unsubscribe(token):
 @blueprint.route('/test')
 def test():
     from flask_googlemaps import Map
-    coordinates = (50.812505, 4.379674)
+    coordinates = (50.814705, 4.381739)
     google_map_location = Map(
         lat=coordinates[0],
         lng=coordinates[1],
