@@ -36,7 +36,7 @@ class DefaultConfig(object):
     SECURITY_EMAIL_SENDER = DEFAULT_EMAIL
 
     # Don't comment this line SECURITY_RECOVERABLE because
-    # we can have an error with securitu.forgot_password
+    # we can have an error with security.forgot_password
     SECURITY_RECOVERABLE = True
     SECURITY_REGISTERABLE = True
     #SECURITY_CONFIRMABLE = True
