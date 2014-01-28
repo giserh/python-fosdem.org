@@ -69,7 +69,7 @@ class TalkPresenter(Presenter):
     @property
     def schedule(self):
         if self.start_at and self.stop_at:
-            return "%s - %s" % (self.start_at.strftime('%H:%M'),
+            return "%s/%s" % (self.start_at.strftime('%H:%M'),
                                 self.stop_at.strftime('%H:%M'))
         return ''
 

@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Python-FOSDEM</title>
+        <title>Python-FOSDEM 2014</title>
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
         <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" />
         <link href="http://fonts.googleapis.com/css?family=Abel|Open+Sans:400,600" rel="stylesheet" />
@@ -25,7 +25,7 @@
             <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
             <ul class="nav navbar-nav">
                 <li><a href="#home">Welcome</a></li>
-                <li><a href="#speakers">Speakers</a></li>
+                {# <li><a href="#speakers">Speakers</a></li> #}
                 <li><a href="#programme">Programme</a></li>
                 <li><a href="#dinner">Dinner</a></li>
                 <li><a href="#stand">Stand</a></li>
@@ -48,7 +48,7 @@
                     <h1>Welcome</h1>
                 </div>
             </div>
-
+{#
             <!--
             <div class="row col-md-8 col-md-offset-2">
                 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
@@ -73,8 +73,9 @@
                 </div>                
             </div>
             -->
+#}
             <div class="row col-md-6 col-md-offset-3" id="ytplayer"></div>
-
+{#
             <div class="row col-md-10 col-md-offset-1">
                 <div class="page-header" id="speakers">
                     <h1>Speakers</h1>
@@ -89,7 +90,7 @@
                       <a href="http://github.com/benoitc"><i class="fa fa-github fa-lg"></i> Github</a>
                     </div>
                   </div>
-                </div>                
+                </div>
                 <div class="col-md-4">
                   <div class="thumbnail">
                     <img data-src="holder.js/300x200" alt="300x200" src="http://lorempixel.com/200/200/" class="img-circle">
@@ -100,7 +101,7 @@
                       <a href="http://github.com/benoitc"><i class="fa fa-github fa-lg"></i> Github</a>
                     </div>
                   </div>
-                </div>                
+                </div>
                 <div class="col-md-4">
                   <div class="thumbnail">
                     <img data-src="holder.js/300x200" alt="300x200" src="http://lorempixel.com/200/200/" class="img-circle">
@@ -111,9 +112,9 @@
                       <a href="http://github.com/benoitc"><i class="fa fa-github fa-lg"></i> Github</a>
                     </div>
                   </div>
-                </div>                
-                                               
+                </div>
             </div>
+#}
             <div class="row col-md-10 col-md-offset-1">
                 <div class="page-header" id="programme">
                     <h1>Programme <small>16 talks for this edition!</small></h1>
@@ -130,124 +131,15 @@
                         </tr>
                     </thead>
                     <tbody>
+                    {% for talk in talks %}
                         <tr>
-                            <td>1</td>
-                            <td>09:00/09:30</td>
-                            <td>Logic Programming with Python</td>
-                            <td>Pierre Carbonnelle</td>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ talk.schedule }}</td>
+                            <td>{{ talk.name }}</td>
+                            <td>{{ talk.user.name }}</td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>09:30/10:00</td>
-                            <td>Introduction to py.test fixtures</td>
-                            <td>Floris Bruynooghe</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>10:00/10:30</td>
-                            <td>OpenPyXL</td>
-                            <td>Eric Gazoni</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>10:30/11:00</td>
-                            <td>Introducing the Eve REST API Framework</td>
-                            <td>Nicola Iarocci</td>
-                        </tr>
-
-                        <tr>
-                            <td>5</td>
-                            <td>11:00/11:30</td>
-                            <td>Stack switching for fun and profit</td>
-                            <td>Saúl Ibarra Corretgé</td>
-                        </tr>
-
-                        <tr>
-                            <td>6</td>
-                            <td>11:30/12:00</td>
-                            <td>SQLAlchemy Drill</td>
-                            <td>Erik Janssens</td>
-                        </tr>
-
-                        <tr>
-                            <td>7</td>
-                            <td>12:00/12:30</td>
-                            <td>Some recipes with Alembic</td>
-                            <td>Claude Huchet</td>
-                        </tr>
-
-                        <tr>
-                            <td>8</td>
-                            <td>12:30/13:00</td>
-                            <td>Post-mortem Debugging and Web Development</td>
-                            <td>Alessandro Molina</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" class="text-center"><span class="label label-success">Lunch-time</span></td>
-                        </tr>
-                        <tr>
-                            <td>9</td>
-
-                            <td>14:00/14:30</td>
-                            <td>The next generation Python Software Foundation (PSF)</td>
-                            <td>Marc-Andre Lemburg</td>
-                        </tr>
-
-                        <tr>
-                            <td>10</td>
-                            <td>14:30/15:00</td>
-                            <td>How PyPy makes your code run fast</td>
-                            <td>Romain Guillebert</td>
-                        </tr>
-
-                        <tr>
-                            <td>11</td>
-                            <td>15:00/15:30</td>
-                            <td>Using All These Cores: Transactional Memory under the hood</td>
-                            <td>Armin Rigo</td>
-                        </tr>
-
-                        <tr>
-                            <td>12</td>
-
-                            <td>15:30/16:00</td>
-                            <td>A deep dive into PEP3156, the new asyncio module</td>
-                            <td>Saúl Ibarra Corretgé</td>
-                        </tr>
-
-                        <tr>
-                            <td>13</td>
-
-                            <td>16:00/16:30</td>
-                            <td>Concurrent programming with Python and my little experiment</td>
-                            <td>Benoit Chesneau</td>
-                        </tr>
-
-                        <tr>
-                            <td>14</td>
-
-                            <td>16:30/17:00</td>
-                            <td>Integrating Python and C using CFFI</td>
-                            <td>Floris Bruynooghe</td>
-                        </tr>
-
-                        <tr>
-                            <td>15</td>
-
-                            <td>17:00/17:30</td>
-                            <td>Web Scraping 101 in Python</td>
-                            <td>M.Yasoob Khalid</td>
-                        </tr>
-
-                        <tr>
-                            <td>16</td>
-
-                            <td>17:30/18:00</td>
-                            <td>Generators, or how to step to the infinite and beyond</td>
-                            <td>Andrea Crotti</td>
-                        </tr>
-
-                    </tbody>                        
+                    {% endfor %}
+                    </tbody>
                 </table>                
             </div>
             <div class="row col-md-10 col-md-offset-1">
@@ -320,7 +212,7 @@
                 <ul class="media-list">
                   <li class="media">
                     <a class="pull-right" href="http://www.affinitic.be" target="_blank">
-                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/affinitic.svg') }}" styles="width:200px;" alt="...">
+                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/affinitic.png') }}" alt="Affinitic">
                     </a>
                     <div class="media-body">
                       <h3 class="media-heading">Affinitic.be</h3>
@@ -339,7 +231,7 @@ presence in communities of developers.
                   </li>
                   <li class="media">
                     <a class="pull-right" href="http://www.python.org/psf/"  target="_blank">
-                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/PSF-Logo-Narrow-Shapes.svg') }}" styles="width:200px;" alt="...">
+                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/psf.png') }}" alt="The Python Software Foundation">
                     </a>
                     <div class="media-body">
                       <h3 class="media-heading">Python Software Foundation <small>PSF</small></h3>
@@ -360,7 +252,7 @@ presence in communities of developers.
 
                   <li class="media">
                     <a class="pull-right" href="http://github.com"  target="_blank">
-                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/Octocat.png') }}" alt="...">
+                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/Octocat.png') }}" alt="GitHub">
                     </a>
                     <div class="media-body">
                       <h3 class="media-heading">GitHub</h3>
@@ -379,7 +271,7 @@ presence in communities of developers.
                   </li>
                   <li class="media">
                     <a class="pull-right" href="http://www.afpy.org"  target="_blank">
-                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/afpy.svg') }}" alt="...">
+                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/afpy.png') }}" alt="Association Francophone de Python">
                     </a>
                     <div class="media-body">
                       <h3 class="media-heading">Association Francophone de Python <small>AFPy</small></h3>
@@ -398,7 +290,7 @@ presence in communities of developers.
 
                   <li class="media">
                     <a class="pull-right" href="http://www.eyepea.eu" target="_blank">
-                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/eyepea.jpg') }}" alt="...">
+                      <img class="media-object" src="{{ url_for('static', filename='img/sponsors/eyepea.jpg') }}" alt="EyePea">
                     </a>
                     <div class="media-body">
 
@@ -517,11 +409,13 @@ presence in communities of developers.
         </div>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+{#
         <script>
             $(function (){
                 $('.carousel').carousel();
             });
         </script>
+#}
         <script>
           // Load the IFrame Player API code asynchronously.
           var tag = document.createElement('script');

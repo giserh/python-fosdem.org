@@ -28,6 +28,8 @@ from flask.ext.security.core import current_user
 from flask.ext.security.forms import ResetPasswordForm
 from flask.ext.security.recoverable import update_password
 from flask.ext.security.utils import get_message
+from flask_googlemaps import Map
+
 
 from pythonfosdem.extensions import cache
 from pythonfosdem.extensions import db
@@ -59,9 +61,9 @@ def convert_to_presenter(iterable, klass):
         yield klass(item)
 
 
-@blueprint.route('/')
+# @blueprint.route('/')
 #@cache.cached(timeout=30)
-def index():
+def index2():
     scheduler_available = True
     if scheduler_available:
         return redirect(url_for('general.schedule'))
@@ -329,9 +331,8 @@ def unsubscribe(token):
     flash("Sorry to hear you don't like us :(")
     return redirect(url_for('general.index'))
 
-@blueprint.route('/test')
-def test():
-    from flask_googlemaps import Map
+@blueprint.route('/')
+def index():
     coordinates = (50.814705, 4.381739)
     google_map_location = Map(
         lat=coordinates[0],
@@ -352,6 +353,10 @@ def test():
         markers=[coordinates]
     )
 
+    event = Event.current_event()
+    talks = list(convert_to_presenter(event.validated_talks, TalkPresenter))
+
     return render_template('test/index.html',
+                           talks=talks,
                            google_map_location=google_map_location,
                            google_map_leon=google_map_leon)
