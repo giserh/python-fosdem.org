@@ -280,6 +280,38 @@ class ShiftSchedule(Command):
                 # print msg
 
 
+class SendRelevantInformation(Command):
+    def run(self):
+        choices = [
+            (event.id, event.name)
+            for event in Event.query.filter_by(active=True).order_by(Event.start_on.desc()).all()
+        ]
+
+        event_id = prompt_choices("Select your event", choices=choices, resolve=int, default=choices[-1][0])
+
+        event = Event.query.get(event_id)
+        if not event:
+            print "There is no event, we stop the procedure"
+            return
+
+        users = set()
+        for talk in event.validated_talks:
+
+            users.add(talk.user)
+
+        with mail.connect() as conn:
+            for user in users:
+                msg = mail_message(
+                    _('Relevant Information'),
+                    recipients=[user.email],
+                    templates={'txt': 'emails/last_email_for_speaker.txt'},
+                    values=dict(user=user)
+                )
+                conn.send(msg)
+                # print msg
+
+
+
 class SendMailToSpeakers(Command):
     def get_options(self):
         return [

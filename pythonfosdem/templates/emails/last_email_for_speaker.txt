@@ -1,0 +1,80 @@
+{% extends 'emails/footer.txt' %}
+
+{% block content %}
+{% trans speaker=user.name %}
+Dear {{ speaker }},
+
+Here is the last email with all relevant information.
+
+FOSDEM
+======
+
+When: 31st Jan -> 02nd Feb 2014
+
+Where:
+    Université libre de Bruxelles
+    Campus du Solbosch
+    Avenue Franklin D. Roosevelt 50
+    1050 Bruxelles
+    Belgium
+
+Beer Event (Friday, 31st Jan)
+=============================
+
+Link: https://fosdem.org/2014/practical/beerevent/
+
+When: Friday, 31 January 2014 from 18:00(-ish) onwards, but feel free
+      to join the party at any time of the evening.
+
+Where: This year’s beer event will again take place at the Delirium Café,
+       in a beautiful alley near the Grand Place in Brussels.
+
+    Impasse de la Fidélité 4
+    1000 Bruxelles
+    Belgique
+
+Dinner (Saturday, 1st Feb) / Need Registration
+==============================================
+
+The next Aperos Python Belgium will take place on saturday, February 1st in Brussels,
+during the FOSDEM conference that takes place at ULB from 1st to 2nd February.
+
+In addition to the regulars of AFPyro, we are also pleased to meet the attendees
+of FOSDEM using Python.
+
+As usual, you can come just for drinking and sharing one (or many) drinks or
+if you wish, you can also register for the meal that follows, in a near place,
+at "Chez Léon" for 20:30, rue des Bouchers 18, B-1000 Brussels.
+
+Meeting from 18:45, on first floor of Delirium cafe, Impasse De La Fidélité 4, 1000 Brussels.
+
+If you are a FOSDEM attendee, you can meet us at the Python stand, 1st floor of K Building,
+from 18h to go to Delirium cafe together.
+
+Devroom (Sunday, 2nd Feb)
+=========================
+
+Where: Building K, Room 3.201
+
+The Schedule of the devroom: https://fosdem.org/2014/schedule/track/python/
+
+the iCal version for your smartphone: https://fosdem.org/2014/schedule/track/python.ics
+
+Contact
+=======
+
+Stephane Wirtel:
+    twitter: @matrixise
+    mail: stephane@wirtel.be
+    phone: +32 (0) 474 76 80 72
+
+Nicolas Stein:
+    twitter: @twitouillenike
+    mail: nicolas.stein@internike.com
+    phone: +32 (0) 499 12 61 05
+
+PythonFOSDEM: @PythonFOSDEM
+
+Best regards,
+{%- endtrans %}
+{% endblock %}
